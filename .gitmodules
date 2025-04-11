@@ -1,0 +1,3 @@
+[submodule "RepoSteamNetworking"]
+	path = RepoSteamNetworking
+	url = https://github.com/Rune580/RepoSteamNetworking
