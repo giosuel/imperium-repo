@@ -25,6 +25,8 @@ public abstract class BaseUI : MonoBehaviour
     /// </summary>
     protected Transform container;
 
+    protected RectTransform rect;
+
     /// <summary>
     ///     Whether the UI should be closed when a movement input is detected
     /// </summary>
@@ -44,7 +46,7 @@ public abstract class BaseUI : MonoBehaviour
 
     protected ImpTooltip tooltip;
 
-    internal event Action onOpen;
+    internal event Action<bool> onOpen;
     internal event Action onClose;
 
     /// <summary>
@@ -60,6 +62,7 @@ public abstract class BaseUI : MonoBehaviour
     )
     {
         container = transform.Find("Container");
+        rect = transform.Find("Container")?.GetComponent<RectTransform>();
         tooltip = impTooltip;
         closeOnMove = closeOnMovement;
         IgnoreTab = ignoreTab;
@@ -154,10 +157,12 @@ public abstract class BaseUI : MonoBehaviour
 
     internal void OnUIOpen()
     {
+        var wasOpen = IsOpen;
+
         if (container) container.gameObject.SetActive(true);
         IsOpen = true;
 
-        onOpen?.Invoke();
+        onOpen?.Invoke(wasOpen);
         if (Imperium.Settings.Preferences.PlaySounds.Value) GameUtils.PlayClip(ImpAssets.OpenClick);
 
         if (closeOnMove)
@@ -169,7 +174,7 @@ public abstract class BaseUI : MonoBehaviour
     /// <summary>
     ///     Manually invoke the on open functionality.
     /// </summary>
-    internal void InvokeOnOpen() => onOpen?.Invoke();
+    internal void InvokeOnOpen(bool wasOpen) => onOpen?.Invoke(wasOpen);
 
     /// <summary>
     ///     Called every time the theme binding updates.
@@ -182,7 +187,7 @@ public abstract class BaseUI : MonoBehaviour
     /// <summary>
     ///     Called when the UI is opened.
     /// </summary>
-    protected virtual void OnOpen()
+    protected virtual void OnOpen(bool wasOpen)
     {
     }
 

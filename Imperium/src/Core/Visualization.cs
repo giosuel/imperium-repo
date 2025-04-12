@@ -10,6 +10,7 @@ using Imperium.Types;
 using Imperium.Util;
 using Imperium.Visualizers;
 using Librarium;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using static UnityEngine.GameObject;
@@ -120,9 +121,8 @@ internal class Visualization
 
     internal void Objects<T>(
         bool isOn,
-        Action<T, Material, string> generator,
         Material material = null
-    ) where T : Object => VisualizeObjects(isOn, material, generator);
+    ) where T : Object => VisualizeObjects<T>(isOn, material);
 
     /// <summary>
     ///     Visualizes a group of game objects with a sphere by tag or layer
@@ -272,8 +272,7 @@ internal class Visualization
 
     private void VisualizeObjects<T>(
         bool isOn,
-        Material material,
-        Action<T, Material, string> generator
+        Material material
     ) where T : Object
     {
         var identifier = typeof(T).Name;
@@ -294,7 +293,7 @@ internal class Visualization
             {
                 if (!objectDict.ContainsKey(obj.GetInstanceID()))
                 {
-                    generator(obj, material, identifier);
+                    VisualizeCollider(obj.GameObject(), identifier, 0.05f, material);
                 }
             }
         }
@@ -581,9 +580,6 @@ internal class Visualization
             ImpUtils.DictionaryGetOrNew(VisualizationObjectMap, uniqueIdentifier)[collider.GetInstanceID()] =
                 VisualizeCapsuleCollider(collider, material, uniqueIdentifier);
         }
-
-        // We don't want to visualize the collider of the noise listener
-        if (obj.name == "Imp_NoiseListener") return;
 
         foreach (var collider in obj.GetComponents<SphereCollider>())
         {

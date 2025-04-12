@@ -34,8 +34,12 @@ public class ImperiumUI : BaseUI
 
     private readonly ImpStack<WindowDefinition> controllerStack = [];
 
+    private RectTransform dockRect;
+
     protected override void InitUI()
     {
+        dockRect = container.Find("Dock").GetComponent<RectTransform>();
+
         RegisterImperiumWindow<ControlCenterWindow>(
             ImpAssets.ControlCenterWindowObject,
             "Left/ControlCenter",
@@ -194,8 +198,13 @@ public class ImperiumUI : BaseUI
 
     protected override void OnClose() => SaveLayout();
 
-    protected override void OnOpen()
+    protected override void OnOpen(bool wasOpen)
     {
+        if (dockRect && !wasOpen)
+        {
+            StartCoroutine(ImpUtils.Interface.SlideInAnimation(dockRect, Vector2.down));
+        }
+
         foreach (var windowDefinition in controllerStack.Where(controller => controller.IsOpen))
         {
             windowDefinition.Controller.InvokeOnOpen();

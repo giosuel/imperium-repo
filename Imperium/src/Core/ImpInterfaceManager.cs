@@ -51,8 +51,7 @@ internal class ImpInterfaceManager : MonoBehaviour
 
         // Instantiate Imperium Dock
         interfaceManager.imperiumDock = Instantiate(
-            ImpAssets.ImperiumDockObject,
-            interfaceManager.transform
+            ImpAssets.ImperiumDockObject, interfaceManager.transform
         ).AddComponent<ImperiumDock>();
         interfaceManager.imperiumDock.InitUI(interfaceManager.Theme, interfaceManager.tooltip);
 
@@ -156,7 +155,7 @@ internal class ImpInterfaceManager : MonoBehaviour
         Imperium.Reload();
     }
 
-    public bool IsOpen() => OpenInterface.Value != null;
+    public bool IsOpen() => OpenInterface.Value;
 
     public void Close(bool toggleCursorState)
     {
@@ -174,9 +173,6 @@ internal class ImpInterfaceManager : MonoBehaviour
 
         Imperium.InputBlocker.Unblock(this);
     }
-
-    // A memory of all input actions the manager disabled when the UI was opened
-    private readonly HashSet<InputAction> disabledInputActions = [];
 
     public void Toggle<T>(InputAction.CallbackContext _) => Toggle<T>();
 
@@ -196,7 +192,7 @@ internal class ImpInterfaceManager : MonoBehaviour
 
     private void InvokeOnOpen()
     {
-        if (OpenInterface.Value) OpenInterface.Value.InvokeOnOpen();
+        if (OpenInterface.Value) OpenInterface.Value.InvokeOnOpen(true);
     }
 
     public void Open(Type type, bool toggleCursorState = true, bool closeOthers = true)
@@ -229,8 +225,6 @@ internal class ImpInterfaceManager : MonoBehaviour
         }
 
         if (toggleCursorState) ImpUtils.Interface.ToggleCursorState(true);
-
-        disabledInputActions.Clear();
         Imperium.InputBlocker.Block(this);
     }
 

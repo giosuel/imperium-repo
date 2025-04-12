@@ -30,6 +30,9 @@ public class ImpPositionIndicator : ImpScript
         arcLine = indicator.GetComponent<LineRenderer>();
 
         Deactivate();
+
+        // Deactivate position indicator whenever the scene is reloaded
+        Imperium.SceneLoaded.onTrigger += Deactivate;
     }
 
     internal void Activate(Action<Vector3> callback, Transform originTransform = null, bool castGround = true)
@@ -44,12 +47,16 @@ public class ImpPositionIndicator : ImpScript
 
         Imperium.Interface.Close();
 
+        // Disable conflicting vanilla binds
+        InputManager.instance.inputActions[InputKey.Menu].Disable();
+        InputManager.instance.inputActions[InputKey.Grab].Disable();
+        InputManager.instance.inputActions[InputKey.Rotate].Disable();
+
+        Imperium.InputBindings.StaticMap["Escape"].performed += OnExitAction;
         Imperium.InputBindings.StaticMap["LeftClick"].performed += OnLeftClick;
         Imperium.InputBindings.StaticMap["RightClick"].performed += OnExitAction;
-        Imperium.InputBindings.StaticMap["Escape"].performed += OnExitAction;
 
         Imperium.InputBindings.BaseMap.TapeMeasure.Disable();
-        Imperium.InputBlocker.Block(this);
     }
 
     internal void Deactivate()
@@ -58,12 +65,16 @@ public class ImpPositionIndicator : ImpScript
         indicator.SetActive(false);
         registeredCallback = null;
 
+        // Re-enable conflicting vanilla actions
+        InputManager.instance.inputActions[InputKey.Menu].Enable();
+        InputManager.instance.inputActions[InputKey.Grab].Enable();
+        InputManager.instance.inputActions[InputKey.Rotate].Enable();
+
+        Imperium.InputBindings.StaticMap["Escape"].performed -= OnExitAction;
         Imperium.InputBindings.StaticMap["LeftClick"].performed -= OnLeftClick;
         Imperium.InputBindings.StaticMap["RightClick"].performed -= OnExitAction;
-        Imperium.InputBindings.StaticMap["Escape"].performed -= OnExitAction;
 
         Imperium.InputBindings.BaseMap.TapeMeasure.Enable();
-        Imperium.InputBlocker.Unblock(this);
     }
 
     private void OnExitAction(InputAction.CallbackContext context) => Deactivate();
@@ -117,8 +128,8 @@ public class ImpPositionIndicator : ImpScript
 
         arcLine.gameObject.SetActive(true);
 
-        var rotateDegrees = Imperium.Settings.Preferences.LeftHandedMode.Value ? -90 : 90;
-        var arcStartPosition = origin.position + Quaternion.AngleAxis(rotateDegrees, Vector3.up) * forward;
+        var offset = Imperium.Settings.Preferences.LeftHandedMode.Value ? -origin.right : origin.right;
+        var arcStartPosition = origin.position + offset;
 
         for (var i = 0; i < 100; i++)
         {

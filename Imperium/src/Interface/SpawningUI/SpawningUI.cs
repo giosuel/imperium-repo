@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Imperium.Types;
+using Imperium.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -269,11 +270,11 @@ internal class SpawningUI : BaseUI
 
     private void Spawn(SpawningObjectEntry spawningObjectEntry, int amount, int value)
     {
-        var useIndicator = spawningObjectEntry.SpawnType is
-            SpawnObjectType.Item or
-            SpawnObjectType.Valuable;
+        // var useIndicator = spawningObjectEntry.SpawnType is
+        //     SpawnObjectType.Item or
+        //     SpawnObjectType.Valuable;
 
-        if (Imperium.Freecam.IsFreecamEnabled.Value || Imperium.PlayerManager.IsFlying.Value || useIndicator)
+        if (Imperium.Freecam.IsFreecamEnabled.Value || Imperium.PlayerManager.IsFlying.Value)
         {
             var originTransform = Imperium.Freecam.IsFreecamEnabled.Value
                 ? Imperium.Freecam.transform
@@ -393,8 +394,10 @@ internal class SpawningUI : BaseUI
         };
     }
 
-    protected override void OnOpen()
+    protected override void OnOpen(bool wasOpen)
     {
+        if (rect && !wasOpen) StartCoroutine(ImpUtils.Interface.SlideInAnimation(rect, Vector2.down));
+
         input.text = "";
         input.ActivateInputField();
     }

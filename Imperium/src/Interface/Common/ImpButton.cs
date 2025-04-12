@@ -54,7 +54,10 @@ public abstract class ImpButton
         {
             onClick();
 
-            if (Imperium.Settings.Preferences.PlaySounds.Value && playClickSound) GameUtils.PlayClip(ImpAssets.ButtonClick);
+            if (Imperium.Settings.Preferences.PlaySounds.Value && playClickSound)
+            {
+                MenuManager.instance.MenuEffectClick(MenuManager.MenuClickEffectType.Tick, null, 1f, 1f, soundOnly: true);
+            }
         });
 
         var icon = buttonObject.Find("Icon")?.GetComponent<Image>();

@@ -36,7 +36,6 @@ public class ImpTapeMeasure : ImpScript
     private float rotationZ;
 
     private LayerMask tapeLayerMask;
-    private Camera originCamera;
 
     private readonly Vector3[] Axes =
     [
@@ -50,9 +49,9 @@ public class ImpTapeMeasure : ImpScript
         panelRect = transform.Find("Canvas/Panel").GetComponent<RectTransform>();
         distanceText = transform.Find("Canvas/Panel/Number").GetComponent<TMP_Text>();
 
-        Imperium.InputBindings.BaseMap.TapeMeasure.performed += OnTapeOpen;
+        canvasRect.GetComponent<Canvas>().sortingOrder = 2;
 
-        // var game = gameObject.GetComponent<NetworkObject>();
+        Imperium.InputBindings.BaseMap.TapeMeasure.performed += OnTapeOpen;
 
         tapeLine = ImpGeometry.CreateLine(
             transform,
@@ -65,9 +64,11 @@ public class ImpTapeMeasure : ImpScript
         endMarker = ImpGeometry.CreatePrimitive(PrimitiveType.Sphere, transform, color: new Color(1, 1, 1), 0.1f);
 
         Imperium.Freecam.IsFreecamEnabled.onUpdate += OnFreecamToggle;
-
         OnFreecamToggle(Imperium.Freecam.IsFreecamEnabled.Value);
         OnExitAction();
+
+        // Deactivate tape measure whenever the scene is reloaded
+        Imperium.SceneLoaded.onTrigger += Deactivate;
     }
 
     private void Activate()
@@ -83,12 +84,16 @@ public class ImpTapeMeasure : ImpScript
         endMarker.SetActive(false);
         panelRect.gameObject.SetActive(false);
 
+        // Disable conflicting vanilla binds
+        InputManager.instance.inputActions[InputKey.Menu].Disable();
+        InputManager.instance.inputActions[InputKey.Grab].Disable();
+        InputManager.instance.inputActions[InputKey.Rotate].Disable();
+
+        Imperium.InputBindings.StaticMap["Escape"].performed += OnExitAction;
         Imperium.InputBindings.StaticMap["LeftClick"].performed += OnLeftClick;
         Imperium.InputBindings.StaticMap["RightClick"].performed += OnExitAction;
-        Imperium.InputBindings.StaticMap["Escape"].performed += OnExitAction;
 
         Imperium.InputBindings.BaseMap.Teleport.Disable();
-        Imperium.InputBlocker.Block(this);
     }
 
     private void Deactivate()
@@ -96,12 +101,16 @@ public class ImpTapeMeasure : ImpScript
         IsActive = false;
         indicator.SetActive(false);
 
+        // Re-enable conflicting vanilla actions
+        InputManager.instance.inputActions[InputKey.Menu].Enable();
+        InputManager.instance.inputActions[InputKey.Grab].Enable();
+        InputManager.instance.inputActions[InputKey.Rotate].Enable();
+
+        Imperium.InputBindings.StaticMap["Escape"].performed -= OnExitAction;
         Imperium.InputBindings.StaticMap["LeftClick"].performed -= OnLeftClick;
         Imperium.InputBindings.StaticMap["RightClick"].performed -= OnExitAction;
-        Imperium.InputBindings.StaticMap["Escape"].performed -= OnExitAction;
 
         Imperium.InputBindings.BaseMap.Teleport.Enable();
-        Imperium.InputBlocker.Unblock(this);
     }
 
     private void OnExitAction(InputAction.CallbackContext context = default)
@@ -141,7 +150,7 @@ public class ImpTapeMeasure : ImpScript
         {
             OnExitAction();
         }
-        else if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen())
+        else if (!Imperium.Interface.IsOpen() && !MenuManager.instance.IsOpen() && !ChatManager.instance.IsOpen())
         {
             Activate();
         }
@@ -150,11 +159,13 @@ public class ImpTapeMeasure : ImpScript
     private void OnFreecamToggle(bool isOn)
     {
         tapeLayerMask = isOn ? Imperium.Settings.Freecam.FreecamLayerMask.Value : ImpConstants.TapeIndicatorMask;
-        originCamera = isOn ? Imperium.Freecam.FreecamCamera : PlayerAvatar.instance.localCamera;
     }
 
     private void LateUpdate()
     {
+        if (!Imperium.ActiveCamera.Value) return;
+        var originCamera = Imperium.ActiveCamera.Value;
+
         // Indicator rotation animation values
         if (rotationZ > 360)
         {
@@ -254,7 +265,7 @@ public class ImpTapeMeasure : ImpScript
             if (IsActive)
             {
                 tapeLine.gameObject.SetActive(true);
-                distanceText.text = $"{tapeLineVector.magnitude:0.00}u ({tapeLineVector.magnitude * 0.62:0.0}m)";
+                distanceText.text = $"{tapeLineVector.magnitude:0.00}u";
 
                 ImpGeometry.SetLinePositions(
                     tapeLine,

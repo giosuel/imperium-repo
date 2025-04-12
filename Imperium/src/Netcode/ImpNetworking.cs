@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Imperium.API.Types.Networking;
+using Imperium.Extensions;
 using Imperium.Util;
 using Librarium.Binding;
 using Photon.Pun;
@@ -22,6 +23,7 @@ public class ImpNetworking
     private readonly HashSet<INetworkSubscribable> RegisteredNetworkSubscribers = [];
 
     internal static readonly ImpBinding<int> ConnectedPlayers = new(1);
+    internal readonly ImpNetworkBinding<HashSet<ulong>> ImperiumUsers;
 
     /// <summary>
     ///     Set to true, when Imperium access is first granted. Always set to true on the host.
@@ -34,55 +36,53 @@ public class ImpNetworking
     private readonly ImpNetEvent clientRequestValues;
 
     private readonly ImpNetMessage<NetworkNotification> networkLog;
-
-    internal readonly ImpNetworkBinding<List<ulong>> ImperiumUsers;
+    private readonly Dictionary<string, ImpSubscription> subscribers = new();
 
     public ImpNetworking()
     {
         RepoSteamNetwork.RegisterPacket<ImpPacket>();
         RepoSteamNetwork.AddCallback<ImpPacket>(OnPacketReceived);
 
-        // authenticateEvent = new ImpNetEvent("AuthenticateImperium", this);
-        // enableImperiumEvent = new ImpNetEvent("EnableImperium", this);
-        // disableImperiumEvent = new ImpNetEvent("DisableImperium", this);
+        authenticateEvent = new ImpNetEvent("AuthenticateImperium", this, allowUnauthenticated: true);
+        enableImperiumEvent = new ImpNetEvent("EnableImperium", this);
+        disableImperiumEvent = new ImpNetEvent("DisableImperium", this);
         networkLog = new ImpNetMessage<NetworkNotification>("NetworkLog", this);
-        //
-        // clientRequestValues = new ImpNetEvent("ClientRequestValues", this);
-        //
-        ImperiumUsers = new ImpNetworkBinding<List<ulong>>(
+        clientRequestValues = new ImpNetEvent("ClientRequestValues", this);
+
+        ImperiumUsers = new ImpNetworkBinding<HashSet<ulong>>(
             "ImperiumUsers",
             this,
             currentValue: []
         );
-        //
-        // if (PhotonNetwork.IsMasterClient)
-        // {
-        //     authenticateEvent.OnServerReceive += OnAuthenticateRequest;
-        //     clientRequestValues.OnServerReceive += OnClientRequestValues;
-        // }
-        // else
-        // {
-        //     enableImperiumEvent.OnClientRecive += OnEnableImperiumAccess;
-        //     disableImperiumEvent.OnClientRecive += OnDisableImperiumAccess;
-        // }
-        //
-        // authenticateEvent.OnClientRecive += OnAuthenticateResponse;
-        // networkLog.OnClientRecive += OnLogReceived;
+        authenticateEvent.OnServerReceive += OnAuthenticateRequest;
+        clientRequestValues.OnServerReceive += OnClientRequestValues;
+        enableImperiumEvent.OnClientRecive += OnEnableImperiumAccess;
+        disableImperiumEvent.OnClientRecive += OnDisableImperiumAccess;
+
+        authenticateEvent.OnClientRecive += OnAuthenticateResponse;
+        networkLog.OnClientRecive += OnLogReceived;
     }
 
-    internal void OnPacketReceived(ImpPacket packet)
+    private void OnPacketReceived(ImpPacket packet)
     {
-        if (subscribers.TryGetValue(packet.Channel, out var subscriber))
+        if (!subscribers.TryGetValue(packet.Channel, out var subscription))
         {
-            subscriber.Invoke(packet);
+            Imperium.IO.LogWarning($"[NET] Received packet in unknown channel: {packet.Channel}. Ignoring.");
+            return;
         }
-    }
 
-    private readonly Dictionary<string, Action<ImpPacket>> subscribers = new();
+        if (!subscription.AllowUnauthenticated && !ImperiumUsers.Value.Contains((ulong)packet.Header.Target))
+        {
+            Imperium.IO.LogWarning($"[NET] Received packet from unauthenticated client: {packet.Header.Target}. Blocking.");
+            return;
+        }
+
+        subscription.OnPacket.Invoke(packet);
+    }
 
     internal void ClearSubscription(string channel) => subscribers.Remove(channel);
 
-    internal void SubscribeChannel(string channel, Action<ImpPacket> callback)
+    internal void SubscribeChannel(string channel, Action<ImpPacket> callback, bool allowUnauthenticated)
     {
         if (subscribers.TryGetValue(channel, out _))
         {
@@ -90,14 +90,18 @@ public class ImpNetworking
             return;
         }
 
-        subscribers[channel] = callback;
+        subscribers[channel] = new ImpSubscription
+        {
+            OnPacket = callback,
+            AllowUnauthenticated = allowUnauthenticated
+        };
     }
 
     internal static void SendPacket(
         string channel,
         object data,
         NetworkDestination destination = NetworkDestination.Everyone,
-        params ulong[] clientIds
+        params SteamId[] clientIds
     )
     {
         var packet = new ImpPacket
@@ -108,12 +112,7 @@ public class ImpNetworking
 
         if (destination == NetworkDestination.PacketTarget)
         {
-            foreach (var clientId in clientIds)
-            {
-                var header = packet.Header with { Target = clientId };
-                packet.Header = header;
-                RepoSteamNetwork.SendPacket(packet, destination);
-            }
+            clientIds.SendPacket(packet);
         }
         else
         {
@@ -152,36 +151,35 @@ public class ImpNetworking
     }
 
     [ImpAttributes.HostOnly]
-    private void OnAuthenticateRequest(ulong clientId)
+    private void OnAuthenticateRequest(ulong senderId)
     {
         // Always grant Imperium access if the request comes from the host
-        // if (clientId == NetworkManager.ServerClientId)
-        // {
-        //     authenticateEvent.DispatchToClients([NetworkManager.ServerClientId]);
-        //     return;
-        // }
-        //
-        // if (Imperium.Settings.Preferences.AllowClients.Value)
-        // {
-        //     var playerName = clientId.GetPlayerController()?.playerUsername ?? $"#{clientId}";
-        //     Imperium.IO.Send(
-        //         $"Imperium access was granted to client {playerName}.",
-        //         type: NotificationType.AccessControl
-        //     );
-        //     Imperium.IO.LogInfo($"[NET] Client #{clientId} successfully requested Imperium access ({playerName})!");
-        //
-        //     authenticateEvent.DispatchToClients([clientId]);
-        //     ImperiumUsers.Set(ImperiumUsers.Value.Concat([clientId]).ToList());
-        // }
-        // else
-        // {
-        //     var playerName = clientId.GetPlayerController()?.playerUsername ?? $"#{clientId}";
-        //     Imperium.IO.Send(
-        //         $"Imperium access was denied to client {playerName}.",
-        //         type: NotificationType.AccessControl
-        //     );
-        //     Imperium.IO.LogInfo($"[NET] Client #{clientId} failed to request Imperium access ({playerName})!");
-        // }
+        if (senderId == RepoSteamNetwork.CurrentSteamId)
+        {
+            authenticateEvent.DispatchToClients(RepoSteamNetwork.CurrentSteamId);
+            return;
+        }
+
+        var playerName = ((SteamId)senderId).GetPlayerAvatar()?.playerName ?? $"#{senderId}";
+        if (Imperium.Settings.Preferences.AllowClients.Value)
+        {
+            Imperium.IO.Send(
+                $"Imperium access was granted to client {playerName}.",
+                type: NotificationType.AccessControl
+            );
+            Imperium.IO.LogInfo($"[NET] Client #{senderId} successfully requested Imperium access ({playerName})!");
+
+            authenticateEvent.DispatchToClients(senderId);
+            ImperiumUsers.Set(ImperiumUsers.Value.Toggle(senderId));
+        }
+        else
+        {
+            Imperium.IO.Send(
+                $"Imperium access was denied to client {playerName}.",
+                type: NotificationType.AccessControl
+            );
+            Imperium.IO.LogInfo($"[NET] Client #{senderId} failed to request Imperium access ({playerName})!");
+        }
     }
 
     [ImpAttributes.HostOnly]
@@ -257,24 +255,6 @@ public class ImpNetworking
         {
             Imperium.IO.Send("Failed to acquire Imperium access! Shutting down...", isWarning: true);
         }
-    }
-
-    internal static void OnClientConnected(ulong clientId)
-    {
-        Imperium.IO.LogInfo(
-            $"[NET] Imperium has detected a connect: {clientId} (host: {PhotonNetwork.IsMasterClient})"
-        );
-        Imperium.IO.Send($"A client has connected! ID: {clientId}", "Imperium Networking");
-        ConnectedPlayers.Set(ConnectedPlayers.Value + 1);
-    }
-
-    internal static void OnClientDisconnected(ulong clientId)
-    {
-        Imperium.IO.LogInfo(
-            $"[NET] Imperium has detected a disconnect: {clientId} (host: {PhotonNetwork.IsMasterClient})"
-        );
-        Imperium.IO.Send($"A client has disconnected! ID: {clientId}", "Imperium Networking");
-        ConnectedPlayers.Set(ConnectedPlayers.Value - 1);
     }
 
     public void Unsubscribe()

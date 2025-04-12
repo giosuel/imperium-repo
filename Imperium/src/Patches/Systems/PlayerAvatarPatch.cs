@@ -11,7 +11,7 @@ internal static class PlayerAvatarPatch
     {
         if (RunManager.instance.levelCurrent != RunManager.instance.levelMainMenu && RunManager.instance.levelCurrent != RunManager.instance.levelLobbyMenu)
         {
-            Imperium.Launch();
+            Imperium.Networking.RequestImperiumAccess();
         }
     }
 }

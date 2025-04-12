@@ -1,9 +1,13 @@
 #region
 
+using System;
+using System.Collections;
 using Imperium.Core;
 using Imperium.Interface.Common;
 using Imperium.Types;
+using Imperium.Util;
 using Librarium.Binding;
+using UnityEngine;
 using UnityEngine.UI;
 
 #endregion
@@ -61,5 +65,10 @@ public class ImperiumDock : BaseUI
             new StyleOverride("", Variant.BACKGROUND),
             new StyleOverride("Border", Variant.DARKER)
         );
+    }
+
+    protected override void OnOpen(bool wasOpen)
+    {
+        if (rect && !wasOpen) StartCoroutine(ImpUtils.Interface.SlideInAnimation(rect, Vector2.right));
     }
 }

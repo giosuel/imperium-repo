@@ -7,6 +7,7 @@ using Imperium.Types;
 using Imperium.Util;
 using Librarium.Binding;
 using JetBrains.Annotations;
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,7 +33,7 @@ internal class ObjectEntry : MonoBehaviour
     internal GameObject containerObject { get; private set; }
     internal Component component { get; private set; }
 
-    internal int? objectNetId { get; private set; }
+    internal PhotonView View { get; private set; }
 
     internal ImpBinding<bool> IsObjectActive { get; private set; }
 
@@ -51,15 +52,21 @@ internal class ObjectEntry : MonoBehaviour
         IsObjectActive = new ImpBinding<bool>(true);
         Imperium.ObjectManager.DisabledObjects.onUpdate += disabledObjects =>
         {
-            if (!objectNetId.HasValue) return;
-            ObjectEntryGenerator.ToggleObject(this, !disabledObjects.Contains(objectNetId.Value));
+            if (!ObjectEntryGenerator.CanToggle(this)) return;
+            ObjectEntryGenerator.ToggleObject(this, !disabledObjects.Contains(View.ViewID));
+            IsObjectActive.Set(!disabledObjects.Contains(View.ViewID), invokeSecondary: false);
         };
 
         objectNameText = transform.Find("Name").GetComponent<TMP_Text>();
 
         activeToggle = ImpToggle.Bind("Active", transform, IsObjectActive, theme);
-        IsObjectActive.onUpdate += isOn => ObjectEntryGenerator.ToggleObject(this, isOn);
-        IsObjectActive.onTrigger += ToggleDisabledObject;
+        // IsObjectActive.onUpdate += isOn => ObjectEntryGenerator.ToggleObject(this, isOn);
+
+        // We subscribe to secondary here to be able to skip feedback loop from DisabledObject.onUpdate() above.
+        IsObjectActive.onTriggerSecondary += () =>
+        {
+            Imperium.ObjectManager.DisabledObjects.Set(Imperium.ObjectManager.DisabledObjects.Value.Toggle(View.ViewID));
+        };
 
         // Teleport to button
         teleportToButton = ImpButton.Bind("TeleportTo", transform,
@@ -113,12 +120,6 @@ internal class ObjectEntry : MonoBehaviour
         reviveButton = ImpButton.Bind("Revive", transform, () => ObjectEntryGenerator.ReviveObject(this));
     }
 
-    private void ToggleDisabledObject()
-    {
-        if (!objectNetId.HasValue) return;
-        Imperium.ObjectManager.DisabledObjects.Set(Imperium.ObjectManager.DisabledObjects.Value.Toggle(objectNetId.Value));
-    }
-
     internal void ClearItem() => ClearItem(0);
 
     internal void ClearItem(float positionY)
@@ -154,22 +155,18 @@ internal class ObjectEntry : MonoBehaviour
         containerObject = ObjectEntryGenerator.GetContainerObject(this);
         objectNameText.text = objectName;
 
-        objectNetId = 0;
-        // objectNetId = containerObject.gameObject.GetComponent<NetworkObject>()?.NetworkObjectId;
+        View = containerObject.gameObject.GetComponent<PhotonView>();
 
-        if (objectNetId.HasValue)
+        // Silently change binding to be consistent with the new object's active status
+        if (IsObjectActive.Value == Imperium.ObjectManager.DisabledObjects.Value.Contains(View.ViewID))
         {
-            // Silently change binding to be consistent with the new object's active status
-            if (IsObjectActive.Value == Imperium.ObjectManager.DisabledObjects.Value.Contains(objectNetId.Value))
-            {
-                IsObjectActive.Set(!Imperium.ObjectManager.DisabledObjects.Value.Contains(objectNetId.Value), false);
-            }
+            IsObjectActive.Set(!Imperium.ObjectManager.DisabledObjects.Value.Contains(View.ViewID), false);
         }
 
         teleportToButton.gameObject.SetActive(true);
         teleportHereButton.gameObject.SetActive(true);
         destroyButton.gameObject.SetActive(ObjectEntryGenerator.CanDestroy(this));
-        activeToggle.gameObject.SetActive(ObjectEntryGenerator.CanToggle(this) && objectNetId.HasValue);
+        activeToggle.gameObject.SetActive(ObjectEntryGenerator.CanToggle(this));
         respawnButton.gameObject.SetActive(ObjectEntryGenerator.CanRespawn(this));
         dropButton.gameObject.SetActive(ObjectEntryGenerator.CanDrop(this));
         killButton.gameObject.SetActive(ObjectEntryGenerator.CanKill(this));

@@ -23,10 +23,9 @@ public readonly struct EntitySpawnRequest()
     [SerializeField] public string MaskedName { get; init; } = null;
 }
 
-public readonly struct EntityDespawnRequest
+public readonly struct ObjectDespawnRequest
 {
-    [SerializeField] public int NetId { get; init; }
-    [SerializeField] public bool IsRespawn { get; init; }
+    [SerializeField] public int ViewId { get; init; }
 }
 
 public readonly struct ItemSpawnRequest()
@@ -71,7 +70,7 @@ public readonly struct CompanyCruiserSpawnRequest()
 public readonly struct ObjectTeleportRequest()
 {
     // This can be either the network ID or the imperium unique identifier assigned when spawning.
-    [SerializeField] public int NetworkId { get; init; } = 0;
+    [SerializeField] public int ViewId { get; init; } = 0;
     [SerializeField] public Vector3 Destination { get; init; }
 }
 

@@ -40,7 +40,8 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
         T defaultValue = default,
         Action<T> onUpdateClient = null,
         Action<T> onUpdateServer = null,
-        IBinding<T> masterBinding = null
+        IBinding<T> masterBinding = null,
+        bool allowUnauthenticated = false
     )
     {
         this.identifier = $"{identifier}_binding";
@@ -57,7 +58,7 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
         this.onUpdateServer = onUpdateServer;
         this.masterBinding = masterBinding;
 
-        networking.SubscribeChannel(this.identifier, OnPacketReceived);
+        networking.SubscribeChannel(this.identifier, OnPacketReceived, allowUnauthenticated);
         networking.RegisterSubscriber(this);
 
         if (masterBinding != null && PhotonNetwork.IsMasterClient) Set(masterBinding.Value);

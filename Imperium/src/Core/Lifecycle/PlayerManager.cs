@@ -242,13 +242,6 @@ internal class PlayerManager : ImpLifecycleObject
         // Imperium.HUDManager.HideHUD(isHidden);
     }
 
-    internal static Camera GetActiveCamera()
-    {
-        return Imperium.Freecam.IsFreecamEnabled.Value
-            ? Imperium.Freecam.FreecamCamera
-            : PlayerAvatar.instance.localCamera;
-    }
-
     #region RPC Handlers
 
     [ImpAttributes.LocalMethod]

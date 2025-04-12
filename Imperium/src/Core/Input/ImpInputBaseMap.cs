@@ -9,6 +9,15 @@ namespace Imperium.Core.Input;
 
 internal sealed class ImpInputBaseMap : LcInputActions
 {
+    [InputAction("", Name = "Movement")]
+    internal InputAction Movement { get; set; }
+
+    [InputAction("<Pointer>/delta", Name = "Look")]
+    internal InputAction Look { get; set; }
+
+    [InputAction("<Mouse>/scroll/y", Name = "Scroll")]
+    internal InputAction Scroll { get; set; }
+
     [InputAction("<Keyboard>/o", Name = "Tape Measure")]
     internal InputAction TapeMeasure { get; set; }
 
@@ -62,4 +71,15 @@ internal sealed class ImpInputBaseMap : LcInputActions
 
     [InputAction("<Keyboard>/delete", Name = "Delete Waypoint")]
     internal InputAction DeleteWaypoint { get; set; }
+
+    internal ImpInputBaseMap()
+    {
+        // ReSharper disable once ExpressionIsAlwaysNull
+        // This property will always be set by the base constructor via reflection
+        var movementComposite = Movement.AddCompositeBinding("2DVector");
+        movementComposite.With("Up", "<Keyboard>/w");
+        movementComposite.With("Down", "<Keyboard>/s");
+        movementComposite.With("Left", "<Keyboard>/a");
+        movementComposite.With("Right", "<Keyboard>/d");
+    }
 }

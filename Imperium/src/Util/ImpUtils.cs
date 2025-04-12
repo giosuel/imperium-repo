@@ -1,6 +1,7 @@
 #region
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -259,10 +260,55 @@ public abstract class ImpUtils
 
         internal static void ToggleCursorState(bool isShown)
         {
-            // PlayerAvatar.instance.quickMenuManager.isMenuOpen = isShown;
-
             Cursor.lockState = isShown ? CursorLockMode.None : CursorLockMode.Locked;
             Cursor.visible = isShown;
+        }
+
+        internal static IEnumerator SlideInAnimation(RectTransform rect, Vector2 direction)
+        {
+            const float slideDuration = 0.15f;
+
+            var offset = direction.normalized * 50;
+            var startPos = rect.anchoredPosition - offset;
+            var endPos = rect.anchoredPosition;
+
+            var elapsed = 0f;
+
+            while (elapsed < slideDuration)
+            {
+                var t = elapsed / slideDuration;
+
+                rect.anchoredPosition = Vector2.Lerp(startPos, endPos, t*t);
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            rect.anchoredPosition = endPos;
+        }
+
+        internal static IEnumerator SlideInAndBounceAnimation(RectTransform rect, Vector2 direction)
+        {
+            yield return SlideInAnimation(rect, direction);
+
+            var elapsed = 0f;
+            var endPos = rect.anchoredPosition;
+
+            const float springDuration = 0.1f;
+            const float springAmount = 10f;
+            const float springFrequency = 10f;
+
+            while (elapsed < springDuration)
+            {
+                var num = elapsed / springDuration;
+                var num2 = springFrequency * (1f - num);
+                var x = springAmount * Mathf.Sin(num2 * num * MathF.PI * 2f) * (1f - num);
+                elapsed += Time.deltaTime;
+
+                rect.anchoredPosition = endPos + direction.normalized * x;
+                yield return null;
+            }
+
+            rect.anchoredPosition = endPos;
         }
     }
 

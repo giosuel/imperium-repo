@@ -1,10 +1,12 @@
 #region
 
 using System;
+using System.Linq;
 using Imperium.Util;
 using Photon.Pun;
 using RepoSteamNetworking.API;
 using RepoSteamNetworking.Networking;
+using Steamworks;
 
 #endregion
 
@@ -22,13 +24,18 @@ public class ImpNetEvent : INetworkSubscribable
 
     private readonly ImpNetworking networking;
 
-    public ImpNetEvent(string identifier, ImpNetworking networking,  bool relayPackets = false)
+    public ImpNetEvent(
+        string identifier,
+        ImpNetworking networking,
+        bool relayPackets = false,
+        bool allowUnauthenticated = false
+    )
     {
         this.identifier = $"{identifier}_event";
         this.networking = networking;
         this.relayPackets = relayPackets;
 
-        networking.SubscribeChannel(this.identifier, OnPacketReceived);
+        networking.SubscribeChannel(this.identifier, OnPacketReceived, allowUnauthenticated);
         networking.RegisterSubscriber(this);
 
         Imperium.IO.LogDebug($"[NET] Event {identifier} has been registered.");
@@ -53,6 +60,23 @@ public class ImpNetEvent : INetworkSubscribable
         Imperium.IO.LogDebug($"[NET] Server sends event {identifier} to clients.");
         ImpNetworking.SendPacket(identifier, null, NetworkDestination.ClientsOnly);
         OnClientReceived();
+    }
+
+    [ImpAttributes.HostOnly]
+    internal void DispatchToClients(params ulong[] clientIds)
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            Imperium.IO.LogError("[NET] Trying to dispatch to clients from non-host. Blocked by Imperium policy.");
+            return;
+        }
+
+        Imperium.IO.LogDebug($"[NET] Server sends event {identifier} to clients: {clientIds}.");
+
+        ImpNetworking.SendPacket(
+            identifier, null, NetworkDestination.PacketTarget,
+            clientIds.Select(id => (SteamId)id).ToArray()
+        );
     }
 
     private void OnPacketReceived(ImpPacket packet)

@@ -91,7 +91,7 @@ public class ImpMap : ImpScript
         );
     }
 
-    private void OnMinimapOpen()
+    private void OnMinimapOpen(bool wasOpen)
     {
         Imperium.Map.Camera.enabled = true;
         Imperium.Map.Camera.rect = Minimap.CameraRect;

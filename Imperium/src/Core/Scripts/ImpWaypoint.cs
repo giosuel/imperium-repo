@@ -149,7 +149,7 @@ public class ImpWaypoint : MonoBehaviour
 
     private void LateUpdate()
     {
-        var camera = PlayerManager.GetActiveCamera();
+        var camera = Imperium.ActiveCamera.Value;
 
         lineRenderer.gameObject.SetActive(
             Vector3.Distance(camera.transform.position, lineRenderer.transform.position) > 20f

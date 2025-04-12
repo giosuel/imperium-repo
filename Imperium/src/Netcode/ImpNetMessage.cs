@@ -23,13 +23,18 @@ public class ImpNetMessage<T> : INetworkSubscribable
 
     private readonly ImpNetworking networking;
 
-    public ImpNetMessage(string identifier, ImpNetworking networking, bool relayPackets = false)
+    public ImpNetMessage(
+        string identifier,
+        ImpNetworking networking,
+        bool relayPackets = false,
+        bool allowUnauthenticated = false
+    )
     {
         this.identifier = $"{identifier}_message";
         this.networking = networking;
         this.relayPackets = relayPackets;
 
-        networking.SubscribeChannel(this.identifier, OnPacketReceived);
+        networking.SubscribeChannel(this.identifier, OnPacketReceived, allowUnauthenticated);
         networking.RegisterSubscriber(this);
 
         Imperium.IO.LogDebug($"[NET] Message {identifier} has been registered.");

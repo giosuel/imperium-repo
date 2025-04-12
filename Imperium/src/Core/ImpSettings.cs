@@ -1,5 +1,6 @@
 #region
 
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Audial.Utils;
@@ -101,8 +102,11 @@ public class ImpSettings(ConfigFile config)
             false,
             value =>
             {
-                // Restore health to full when turning on god mode
+                if (!PlayerAvatar.instance.playerHealth) return;
+
+                // Restore health to full before turning on god mode
                 if (value) PlayerAvatar.instance.playerHealth.Heal(100);
+                PlayerAvatar.instance.playerHealth.godMode = value;
             }
         );
 
@@ -490,7 +494,7 @@ public class ImpSettings(ConfigFile config)
             "Visualization.Colliders",
             "Entities",
             false,
-            value => Imperium.Visualization.Collider(value, "Enemies", IdentifierType.LAYER)
+            value => Imperium.Visualization.Objects<PhysGrabObjectBoxCollider>(value, ImpAssets.WireframeCyan)
         );
 
         internal readonly ImpConfig<bool> MapHazards = new(
@@ -1368,7 +1372,6 @@ public class ImpSettings(ConfigFile config)
     internal void LoadAll()
     {
         Load(Player);
-        Load(Grabber);
         Load(Shotgun);
         Load(Shovel);
         Load(Time);

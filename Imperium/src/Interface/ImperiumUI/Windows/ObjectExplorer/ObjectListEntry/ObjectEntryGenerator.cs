@@ -33,7 +33,6 @@ internal static class ObjectEntryGenerator
 
     internal static bool CanDrop(ObjectEntry entry) => entry.Type switch
     {
-        ObjectType.Item => true,
         _ => false
     };
 
@@ -51,31 +50,20 @@ internal static class ObjectEntryGenerator
 
     internal static bool CanToggle(ObjectEntry entry) => entry.Type switch
     {
-        ObjectType.Player => false,
-        ObjectType.Item => false,
-        ObjectType.Valuable => false,
-        _ => true
+        ObjectType.Entity => true,
+        _ => false
     };
 
     internal static void DespawnObject(ObjectEntry entry, bool isRespawn = false)
     {
         switch (entry.Type)
         {
-            case ObjectType.Entity:
-                Imperium.ObjectManager.DespawnEntity(new EntityDespawnRequest
-                {
-                    NetId = entry.objectNetId!.Value,
-                    IsRespawn = isRespawn
-                });
-                break;
-            case ObjectType.Item:
-                Imperium.ObjectManager.DespawnItem(entry.objectNetId!.Value);
-                break;
             case ObjectType.Valuable:
-                Imperium.ObjectManager.DespawnLocalObject(new LocalObjectDespawnRequest
+            case ObjectType.Item:
+            case ObjectType.Entity:
+                Imperium.ObjectManager.DespawnObject(new ObjectDespawnRequest
                 {
-                    Type = LocalObjectType.OutsideObject,
-                    Position = entry.containerObject.transform.position
+                    ViewId = entry.View.ViewID
                 });
                 break;
             default:
@@ -154,10 +142,11 @@ internal static class ObjectEntryGenerator
         switch (entry.Type)
         {
             case ObjectType.Entity:
-                // var entity = (EnemyAI)entry.component;
-                // entity.enabled = isActive;
-                // entity.agent.isStopped = !isActive;
-                // if (entity.creatureAnimator) entity.creatureAnimator.enabled = isActive;
+                var entity = (EnemyParent)entry.component;
+                entity.enabled = isActive;
+                entity.Enemy.enabled = isActive;
+                if (entity.Enemy?.NavMeshAgent?.Agent != null) entity.Enemy.NavMeshAgent.Agent.isStopped = !isActive;
+                foreach (var animator in entity.GetComponentsInChildren<Animator>()) animator.enabled = isActive;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -189,7 +178,7 @@ internal static class ObjectEntryGenerator
                     Imperium.ObjectManager.TeleportObject(new ObjectTeleportRequest
                     {
                         Destination = position,
-                        NetworkId = entry.objectNetId!.Value
+                        ViewId = entry.View.ViewID
                     });
                 }, origin, castGround: false);
                 break;
@@ -243,6 +232,7 @@ internal static class ObjectEntryGenerator
     internal static Vector3 GetTeleportPosition(ObjectEntry entry) => entry.Type switch
     {
         // ObjectType.Vent => ((EnemyVent)entry.component).floorNode.position,
+        ObjectType.Entity => ((EnemyParent)entry.component).Enemy.transform.position,
         _ => entry.containerObject.transform.position
     };
 
@@ -262,7 +252,7 @@ internal static class ObjectEntryGenerator
         if (string.IsNullOrEmpty(playerName)) playerName = $"Player {player.GetInstanceID()}";
 
         // Check if player is also using Imperium
-        if (Imperium.Networking.ImperiumUsers.Value.Contains(player.GetSteamId().Value))
+        if (Imperium.Networking.ImperiumUsers.Value.Contains(player.GetSteamId()))
         {
             playerName = $"[I] {playerName}";
         }

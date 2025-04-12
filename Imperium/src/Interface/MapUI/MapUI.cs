@@ -377,7 +377,7 @@ internal class MapUI : BaseUI
         if (Imperium.Settings.Map.UnlockView.Value) Imperium.Map.SetCameraClipped(false);
     }
 
-    protected override void OnOpen()
+    protected override void OnOpen(bool wasOpen)
     {
         Imperium.Map.Camera.enabled = true;
         Imperium.Map.Camera.rect = mapUICameraRect;

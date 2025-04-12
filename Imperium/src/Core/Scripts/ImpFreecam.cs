@@ -5,6 +5,7 @@ using Imperium.Extensions;
 using Imperium.Interface.LayerSelector;
 using Imperium.Util;
 using Librarium.Binding;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Vector2 = UnityEngine.Vector2;
@@ -22,7 +23,7 @@ public class ImpFreecam : ImpScript
 
     private static Rect minicamRect => new(100f / Screen.width, 1 - 100f / Screen.height - 0.4f, 0.4f, 0.4f);
 
-    internal Camera FreecamCamera { get; private set; }
+    private Camera camera;
     internal readonly ImpBinaryBinding IsFreecamEnabled = new(false);
 
     private readonly ImpBinaryBinding IsMinicamEnabled = new(false);
@@ -34,11 +35,11 @@ public class ImpFreecam : ImpScript
     {
         gameplayCamera = PlayerAvatar.instance.localCamera;
 
-        FreecamCamera = gameObject.AddComponent<Camera>();
-        FreecamCamera.CopyFrom(gameplayCamera);
-        FreecamCamera.cullingMask = Imperium.Settings.Freecam.FreecamLayerMask.Value;
-        FreecamCamera.farClipPlane = 2000f;
-        FreecamCamera.enabled = false;
+        camera = gameObject.AddComponent<Camera>();
+        camera.CopyFrom(gameplayCamera);
+        camera.cullingMask = Imperium.Settings.Freecam.FreecamLayerMask.Value;
+        camera.farClipPlane = 2000f;
+        camera.enabled = false;
 
         var layerSelectorObject = Instantiate(ImpAssets.LayerSelectorObject, transform);
         layerSelector = layerSelectorObject.AddComponent<LayerSelector>();
@@ -59,7 +60,10 @@ public class ImpFreecam : ImpScript
         Imperium.InputBindings.BaseMap.MinicamFullscreen.performed += OnMinicamFullscreenToggle;
         Imperium.InputBindings.BaseMap.Reset.performed += OnFreecamReset;
         Imperium.InputBindings.FreecamMap.LayerSelector.performed += OnToggleLayerSelector;
-        Imperium.Settings.Freecam.FreecamLayerMask.onUpdate += value => FreecamCamera.cullingMask = value;
+        Imperium.Settings.Freecam.FreecamLayerMask.onUpdate += value => camera.cullingMask = value;
+
+        // Disable freecam whenever the scene is reloaded
+        Imperium.SceneLoaded.onTrigger += IsFreecamEnabled.SetFalse;
     }
 
     private void OnDestroy()
@@ -88,8 +92,7 @@ public class ImpFreecam : ImpScript
 
     private void OnMinicamFullscreenToggle(InputAction.CallbackContext callbackContext)
     {
-        if (
-            Imperium.Interface.IsOpen() ||
+        if (Imperium.Interface.IsOpen() ||
             MenuManager.instance.IsOpen() ||
             ChatManager.instance.IsOpen() ||
             !IsMinicamEnabled.Value) return;
@@ -102,8 +105,8 @@ public class ImpFreecam : ImpScript
         if (IsFreecamEnabled.Value) IsFreecamEnabled.SetFalse();
 
         PlayerManager.ToggleHUD(true);
-        FreecamCamera.enabled = true;
-        FreecamCamera.rect = minicamRect;
+        camera.enabled = true;
+        camera.rect = minicamRect;
 
         IsMinicamFullscreenEnabled.SetFalse();
     }
@@ -113,17 +116,17 @@ public class ImpFreecam : ImpScript
         // Hide UI if view is not switching from minicam to freecam
         if (!IsFreecamEnabled.Value) PlayerManager.ToggleHUD(false);
 
-        FreecamCamera.enabled = false;
+        camera.enabled = false;
 
-        FreecamCamera.rect = new Rect(0, 0, 1, 1);
+        camera.rect = new Rect(0, 0, 1, 1);
     }
 
-    private void OnMinicamFullscreenEnable() => FreecamCamera.rect = new Rect(0, 0, 1, 1);
-    private void OnMinicamFullscreenDisable() => FreecamCamera.rect = minicamRect;
+    private void OnMinicamFullscreenEnable() => camera.rect = new Rect(0, 0, 1, 1);
+    private void OnMinicamFullscreenDisable() => camera.rect = minicamRect;
 
     private void OnFreecamEnable()
     {
-        if (!FreecamCamera) return;
+        if (!camera) return;
 
         Imperium.Interface.Close();
 
@@ -131,21 +134,22 @@ public class ImpFreecam : ImpScript
 
         PlayerManager.ToggleHUD(true);
         Imperium.InputBindings.FreecamMap.Enable();
-        FreecamCamera.enabled = true;
+        camera.enabled = true;
         enabled = true;
 
         if (firstTimeOpen)
         {
             firstTimeOpen = false;
-            FreecamCamera.transform.position = PlayerAvatar.instance.localCamera.transform.position + Vector3.up * 2;
+            camera.transform.position = PlayerAvatar.instance.localCamera.transform.position + Vector3.up * 2;
         }
 
+        Imperium.ActiveCamera.Set(camera);
         Imperium.InputBlocker.Block(this);
     }
 
     private void OnFreecamDisable()
     {
-        if (!FreecamCamera) return;
+        if (!camera) return;
 
         layerSelector.OnUIClose();
 
@@ -153,12 +157,10 @@ public class ImpFreecam : ImpScript
         if (!IsMinicamEnabled.Value) PlayerManager.ToggleHUD(false);
 
         Imperium.InputBindings.FreecamMap.Disable();
-        FreecamCamera.enabled = false;
-        // Imperium.StartOfRound.SwitchCamera(
-        //     PlayerAvatar.instance.isPlayerDead ? Imperium.StartOfRound.spectateCamera : gameplayCamera
-        // );
-        // PlayerAvatar.instance.isFreeCamera = false;
+        camera.enabled = false;
         enabled = false;
+
+        Imperium.ActiveCamera.Set(PlayerAvatar.instance.localCamera);
         Imperium.InputBlocker.Unblock(this);
     }
 
@@ -166,7 +168,7 @@ public class ImpFreecam : ImpScript
     {
         if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
 
-        FreecamCamera.transform.position = PlayerAvatar.instance.localCamera.transform.position + Vector3.up * 2;
+        camera.transform.position = PlayerAvatar.instance.localCamera.transform.position + Vector3.up * 2;
         Imperium.Settings.Freecam.FreecamFieldOfView.Set(ImpConstants.DefaultFOV);
     }
 
@@ -191,7 +193,7 @@ public class ImpFreecam : ImpScript
         // Stop update of a quick menu an ImpUI is open with freecam 
         if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen()) return;
 
-        var scrollValue = InputManager.instance.GetScrollY();
+        var scrollValue = Imperium.InputBindings.BaseMap.Scroll.ReadValue<float>();
         Imperium.Settings.Freecam.FreecamMovementSpeed.Set(scrollValue switch
         {
             > 0 => Mathf.Min(Imperium.Settings.Freecam.FreecamMovementSpeed.Value + 1f, 100),
@@ -213,20 +215,20 @@ public class ImpFreecam : ImpScript
             );
         }
 
-        FreecamCamera.fieldOfView = Imperium.Settings.Freecam.FreecamFieldOfView.Value;
+        camera.fieldOfView = Imperium.Settings.Freecam.FreecamFieldOfView.Value;
 
         var cameraTransform = transform;
 
-        var rotation = new Vector2(InputManager.instance.GetMouseX(), InputManager.instance.GetMouseY());
-        lookInput.x += rotation.x * 2f;
-        lookInput.y += rotation.y * 2f;
+        var rotation = Imperium.InputBindings.BaseMap.Look.ReadValue<Vector2>();
+        lookInput.x += rotation.x * 0.004f * GameplayManager.instance.aimSensitivity;
+        lookInput.y += rotation.y * 0.004f * GameplayManager.instance.aimSensitivity;
 
         // Clamp the Y rotation to [-90;90] so the camera can't turn on it's head
         lookInput.y = Mathf.Clamp(lookInput.y, -90, 90);
 
         cameraTransform.rotation = Quaternion.Euler(-lookInput.y, lookInput.x, 0);
 
-        var movement = InputManager.instance.GetMovementAction().ReadValue<Vector2>();
+        var movement = Imperium.InputBindings.BaseMap.Movement.ReadValue<Vector2>();
         var movementY = Imperium.InputBindings.BaseMap.FlyAscend.IsPressed() ? 1 :
             Imperium.InputBindings.BaseMap.FlyDescend.IsPressed() ? -1 : 0;
         var deltaMove = new Vector3(movement.x, movementY, movement.y)

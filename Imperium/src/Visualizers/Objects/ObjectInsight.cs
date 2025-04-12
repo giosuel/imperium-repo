@@ -153,12 +153,10 @@ public class ObjectInsight : MonoBehaviour
             return;
         }
 
-        var camera = Imperium.Freecam.IsFreecamEnabled.Value
-            ? Imperium.Freecam.FreecamCamera
-            : PlayerAvatar.instance.localCamera;
-        var activeCameraTexture = camera?.activeTexture;
+        var camera = Imperium.ActiveCamera.Value;
+        var cameraTexture = camera?.activeTexture;
 
-        if (!InsightDefinition.VisibilityBinding.Value || !activeCameraTexture)
+        if (!InsightDefinition.VisibilityBinding.Value || !cameraTexture)
         {
             insightPanelObject.SetActive(false);
             return;
@@ -175,11 +173,7 @@ public class ObjectInsight : MonoBehaviour
         }
 
         // Disable rendering if player doesn't have LOS and LOS is required
-        var playerHasLOS = !Physics.Linecast(
-            camera.transform.position, worldPosition
-            // StartOfRound.Instance.collidersAndRoomMaskAndDefault
-        );
-
+        var playerHasLOS = !Physics.Linecast(camera.transform.position, worldPosition);
         if (!playerHasLOS && !Imperium.Settings.Visualization.SSAlwaysOnTop.Value || screenPosition.z < 0)
         {
             insightPanelObject.SetActive(false);
@@ -190,8 +184,8 @@ public class ObjectInsight : MonoBehaviour
         if (overlayUpdateTimer.Tick()) UpdateInsightOverlay();
 
         // Insight overlay panel placement
-        var scaleFactorX = activeCameraTexture.width / insightPanelCanvasRect.sizeDelta.x;
-        var scaleFactorY = activeCameraTexture.height / insightPanelCanvasRect.sizeDelta.y;
+        var scaleFactorX = cameraTexture.width / insightPanelCanvasRect.sizeDelta.x;
+        var scaleFactorY = cameraTexture.height / insightPanelCanvasRect.sizeDelta.y;
 
         var positionX = screenPosition.x / scaleFactorX;
         var positionY = screenPosition.y / scaleFactorY;

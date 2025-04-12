@@ -18,12 +18,14 @@ using Imperium.Patches.Systems;
 using Imperium.Util;
 using Librarium.Binding;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 #endregion
 
 namespace Imperium;
 
 [BepInDependency("com.rune580.reposteamnetworking")]
+[BepInDependency("REPOLib")]
 [BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
 public class Imperium : BaseUnityPlugin
 {
@@ -94,7 +96,11 @@ public class Imperium : BaseUnityPlugin
     /// </summary>
     internal static ImpBinaryBinding IsSceneLoaded { get; private set; }
 
+    internal static ImpEvent SceneLoaded { get; private set; } = new();
+
     internal static GameObject GameObject { get; private set; }
+
+    internal static ImpBinding<Camera> ActiveCamera;
 
     /// <summary>
     /// Imperium initialization (Stage 1)
@@ -116,52 +122,13 @@ public class Imperium : BaseUnityPlugin
         StartupManager = new StartupManager();
         Networking = new ImpNetworking();
 
-        // InputBindings = new ImpInputBindings();
-        // InputBindings.BaseMap.Disable();
-        // InputBindings.StaticMap.Disable();
-        // InputBindings.FreecamMap.Disable();
-        // InputBindings.InterfaceMap.Disable();
-
         if (!ImpAssets.Load()) return;
 
         Harmony = new Harmony(PLUGIN_GUID);
         PreLaunchPatches();
 
-        IO.LogInfo("[INIT] Imperium has been successfully initialized \\o/");
-
         IsImperiumInitialized = true;
-    }
-
-    internal static void DisableImperium()
-    {
-        IsImperiumEnabled = false;
-
-        Interface.Destroy();
-        PlayerManager.IsFlying.SetFalse();
-        Freecam.IsFreecamEnabled.SetFalse();
-
-        InputBindings.BaseMap.Disable();
-        InputBindings.StaticMap.Disable();
-        InputBindings.FreecamMap.Disable();
-        InputBindings.InterfaceMap.Disable();
-    }
-
-    internal static void EnableImperium()
-    {
-        if (!IsImperiumLaunched) return;
-
-        InputBindings.BaseMap.Enable();
-        InputBindings.StaticMap.Enable();
-        InputBindings.FreecamMap.Enable();
-        InputBindings.InterfaceMap.Enable();
-
-        IsImperiumEnabled = true;
-
-        Settings.LoadAll();
-        RegisterInterfaces();
-        PlayerManager.UpdateCameras();
-
-        Interface.Open<ImperiumUI>();
+        IO.LogInfo("[INIT] Imperium has been successfully initialized \\o/");
     }
 
     /// <summary>
@@ -171,10 +138,17 @@ public class Imperium : BaseUnityPlugin
     /// </summary>
     internal static void Launch()
     {
-        // if (!IsImperiumInitialized) return;
+        if (!IsImperiumInitialized || IsImperiumLaunched) return;
 
         GameObject = new GameObject("Imperium");
         DontDestroyOnLoad(GameObject);
+
+        // Register scene loaded binding
+        SceneManager.sceneLoaded += (_, _) => SceneLoaded.Trigger();
+
+        // Register camera update when scene is loaded
+        ActiveCamera = new ImpBinding<Camera>(PlayerAvatar.instance.localCamera);
+        SceneLoaded.onTrigger += () => ActiveCamera.Set(PlayerAvatar.instance.localCamera);
 
         InputBlocker = new InputBlocker();
         InputBindings = new ImpInputBindings();
@@ -187,7 +161,6 @@ public class Imperium : BaseUnityPlugin
         IsSceneLoaded = new ImpBinaryBinding(false);
 
         Interface = ImpInterfaceManager.Create(Settings.Preferences.Theme, GameObject.transform);
-
         EventLog = new ImpEventLog();
 
         GameManager = ImpLifecycleObject.Create<Core.Lifecycle.GameManager>(
@@ -245,6 +218,37 @@ public class Imperium : BaseUnityPlugin
         {
             DisableImperium();
         }
+    }
+
+    internal static void DisableImperium()
+    {
+        if (!IsImperiumEnabled) return;
+        IsImperiumEnabled = false;
+
+        Interface.Destroy();
+        PlayerManager.IsFlying.SetFalse();
+        Freecam.IsFreecamEnabled.SetFalse();
+
+        InputBindings.BaseMap.Disable();
+        InputBindings.StaticMap.Disable();
+        InputBindings.FreecamMap.Disable();
+        InputBindings.InterfaceMap.Disable();
+    }
+
+    internal static void EnableImperium()
+    {
+        if (!IsImperiumLaunched) return;
+        IsImperiumEnabled = true;
+
+        Settings.LoadAll();
+
+        RegisterInterfaces();
+        PlayerManager.UpdateCameras();
+
+        InputBindings.BaseMap.Enable();
+        InputBindings.StaticMap.Enable();
+        InputBindings.FreecamMap.Enable();
+        InputBindings.InterfaceMap.Enable();
     }
 
     internal static void Unload()
@@ -308,11 +312,6 @@ public class Imperium : BaseUnityPlugin
 
     private static void PreLaunchPatches()
     {
-        Harmony.PatchAll(typeof(LevelGeneratorPatch));
         Harmony.PatchAll(typeof(PlayerAvatarPatch));
-        // Harmony.PatchAll(typeof(TerminalPatch.PreloadPatches));
-        //
-        // Harmony.PatchAll(typeof(PreInitPatches.PreInitSceneScriptPatch));
-        // Harmony.PatchAll(typeof(PreInitPatches.MenuManagerPatch));
     }
 }
