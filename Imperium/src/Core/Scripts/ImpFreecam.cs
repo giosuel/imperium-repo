@@ -60,12 +60,12 @@ public class ImpFreecam : ImpScript
         Imperium.InputBindings.BaseMap.MinicamFullscreen.performed += OnMinicamFullscreenToggle;
         Imperium.InputBindings.BaseMap.Reset.performed += OnFreecamReset;
         Imperium.InputBindings.FreecamMap.LayerSelector.performed += OnToggleLayerSelector;
-        Imperium.Settings.Freecam.FreecamLayerMask.onPrimaryUpdate += value => camera.cullingMask = value;
+        Imperium.Settings.Freecam.FreecamLayerMask.onUpdate += value => camera.cullingMask = value;
 
         // Disable freecam whenever the scene is reloaded
-        Imperium.IsArenaLoaded.onPrimaryTrigger += IsFreecamEnabled.SetFalse;
+        Imperium.IsArenaLoaded.onTrigger += IsFreecamEnabled.SetFalse;
 
-        Imperium.Settings.Rendering.AvatarInFreecam.onPrimaryUpdate += value =>
+        Imperium.Settings.Rendering.AvatarInFreecam.onUpdate += value =>
         {
             if (!IsFreecamEnabled.Value) return;
             PlayerManager.ToggleLocalAvatar(value);

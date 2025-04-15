@@ -74,7 +74,7 @@ public abstract class ImpInput
                 }
             });
 
-            valueBinding.onPrimaryUpdate += value =>
+            valueBinding.onUpdate += value =>
             {
                 if (value < 0 && negativeIsEmpty)
                 {
@@ -92,13 +92,13 @@ public abstract class ImpInput
             ToggleInteractable(input, interactableBindings.All(entry => entry.Value), interactableInvert);
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.onPrimaryUpdate += value => ToggleInteractable(input, value, interactableInvert);
+                interactableBinding.onUpdate += value => ToggleInteractable(input, value, interactableInvert);
             }
         }
 
         if (theme != null)
         {
-            theme.onPrimaryUpdate += value => OnThemeUpdate(value, inputObject);
+            theme.onUpdate += value => OnThemeUpdate(value, inputObject);
         }
 
         return input;
@@ -152,7 +152,7 @@ public abstract class ImpInput
                 }
             });
 
-            valueBinding.onPrimaryUpdate += value =>
+            valueBinding.onUpdate += value =>
             {
                 if (value < 0 && negativeIsEmpty)
                 {
@@ -170,13 +170,13 @@ public abstract class ImpInput
             ToggleInteractable(input, interactableBindings.All(entry => entry.Value), interactableInvert);
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.onPrimaryUpdate += value => ToggleInteractable(input, value, interactableInvert);
+                interactableBinding.onUpdate += value => ToggleInteractable(input, value, interactableInvert);
             }
         }
 
         if (theme != null)
         {
-            theme.onPrimaryUpdate += value => OnThemeUpdate(value, inputObject);
+            theme.onUpdate += value => OnThemeUpdate(value, inputObject);
             OnThemeUpdate(theme.Value, inputObject);
         }
 
@@ -214,7 +214,7 @@ public abstract class ImpInput
             // Set binding to default value if input value is empty
             input.onSubmit.AddListener(value => valueBinding.Set(value));
 
-            valueBinding.onPrimaryUpdate += value => input.text = value.ToString();
+            valueBinding.onUpdate += value => input.text = value.ToString();
         }
 
         if (interactableBindings.Length > 0)
@@ -222,13 +222,13 @@ public abstract class ImpInput
             ToggleInteractable(input, interactableBindings.All(entry => entry.Value), interactableInvert);
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.onPrimaryUpdate += value => ToggleInteractable(input, value, interactableInvert);
+                interactableBinding.onUpdate += value => ToggleInteractable(input, value, interactableInvert);
             }
         }
 
         if (theme != null)
         {
-            theme.onPrimaryUpdate += value => OnThemeUpdate(value, inputObject);
+            theme.onUpdate += value => OnThemeUpdate(value, inputObject);
         }
 
         return input;
@@ -257,7 +257,7 @@ public abstract class ImpInput
 
         if (theme != null)
         {
-            theme.onPrimaryUpdate += value => OnThemeUpdate(value, inputObject);
+            theme.onUpdate += value => OnThemeUpdate(value, inputObject);
             OnThemeUpdate(theme.Value, inputObject);
         }
     }

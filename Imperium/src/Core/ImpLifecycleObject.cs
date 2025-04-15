@@ -23,7 +23,7 @@ public abstract class ImpLifecycleObject : MonoBehaviour
         sceneLoaded.onTrue += OnSceneLoad;
         sceneLoaded.onFalse += OnSceneUnload;
 
-        playersConnected.onPrimaryUpdate += OnPlayersUpdate;
+        playersConnected.onUpdate += OnPlayersUpdate;
 
         Init();
     }

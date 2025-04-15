@@ -99,7 +99,7 @@ internal class Visualization
         NoiseIndicators = ImpScript.Create<NoiseIndicators>(parent);
 
         ObjectInsights = new ObjectInsights(visualizerParent.transform, config);
-        Imperium.IsArenaLoaded.onPrimaryTrigger += ObjectInsights.Refresh;
+        Imperium.IsArenaLoaded.onTrigger += ObjectInsights.Refresh;
         Imperium.ObjectManager.CurrentLevelObjectsChanged += ObjectInsights.Refresh;
         Imperium.ObjectManager.CurrentLevelObjectsChanged += RefreshOverlays;
     }

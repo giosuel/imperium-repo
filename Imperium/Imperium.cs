@@ -154,7 +154,7 @@ public class Imperium : BaseUnityPlugin
         // Re-instantiate settings to get rid of existing bindings
         IsArenaLoaded = new ImpBinaryBinding(false);
         Settings = new ImpSettings(configFile, IsArenaLoaded, IsImperiumEnabled);
-        IsArenaLoaded.onPrimaryUpdate += isLoaded =>
+        IsArenaLoaded.onUpdate += isLoaded =>
         {
             Imperium.IO.LogInfo("Loading all settings");
             if (isLoaded) Settings.LoadAll();
@@ -272,7 +272,7 @@ public class Imperium : BaseUnityPlugin
 
     private static void RegisterInterfaces()
     {
-        Interface.OpenInterface.onPrimaryUpdate += openInterface =>
+        Interface.OpenInterface.onUpdate += openInterface =>
         {
             if (openInterface) ImpPositionIndicator.Deactivate();
         };

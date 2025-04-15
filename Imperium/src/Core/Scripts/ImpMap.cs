@@ -44,17 +44,17 @@ public class ImpMap : ImpScript
         Camera = mapCamera.GetComponent<Camera>();
 
         Camera.cullingMask = Imperium.Settings.Map.CameraLayerMask.Value;
-        Imperium.Settings.Map.CameraLayerMask.onPrimaryUpdate += value => Camera.cullingMask = value;
+        Imperium.Settings.Map.CameraLayerMask.onUpdate += value => Camera.cullingMask = value;
 
         Camera.orthographicSize = Imperium.Settings.Map.CameraZoom.Value;
-        Imperium.Settings.Map.CameraZoom.onPrimaryUpdate += value => Camera.orthographicSize = value;
+        Imperium.Settings.Map.CameraZoom.onUpdate += value => Camera.orthographicSize = value;
 
         // We need to make sure that the far clip isn't smaller than the near clip and vice versa
         Camera.farClipPlane = Mathf.Max(CameraFarClip.Value, CameraNearClip.Value);
-        CameraFarClip.onPrimaryUpdate += value => Camera.farClipPlane = Mathf.Max(CameraNearClip.Value + 1, value);
+        CameraFarClip.onUpdate += value => Camera.farClipPlane = Mathf.Max(CameraNearClip.Value + 1, value);
 
         Camera.nearClipPlane = Mathf.Min(CameraFarClip.Value, CameraNearClip.Value);
-        CameraNearClip.onPrimaryUpdate += value => Camera.nearClipPlane = Mathf.Min(CameraFarClip.Value - 1, value);
+        CameraNearClip.onUpdate += value => Camera.nearClipPlane = Mathf.Min(CameraFarClip.Value - 1, value);
 
         Imperium.InputBindings.BaseMap.Scroll.performed += OnMouseScroll;
 

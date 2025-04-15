@@ -202,7 +202,7 @@ public abstract class ImpUtils
             var arrow = parent.Find("Dropdown/Arrow")?.GetComponent<Image>();
             if (arrow) ToggleImageActive(arrow, inverted ? !binding.Value : binding.Value);
 
-            binding.onPrimaryUpdate += isActive =>
+            binding.onUpdate += isActive =>
             {
                 dropdown.interactable = inverted ? !isActive : isActive;
 
@@ -226,7 +226,7 @@ public abstract class ImpUtils
             var text = parent.Find("Input/Text Area/Text")?.GetComponent<TMP_Text>();
             if (text) ToggleTextActive(text, inverted ? !binding.Value : binding.Value);
 
-            binding.onPrimaryUpdate += isActive =>
+            binding.onUpdate += isActive =>
             {
                 input.interactable = inverted ? !isActive : isActive;
 

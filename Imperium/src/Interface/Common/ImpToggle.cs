@@ -66,7 +66,7 @@ public abstract class ImpToggle
             if (!toggle.interactable) return;
             valueBinding.Set(!valueBinding.Value);
         };
-        valueBinding.onPrimaryUpdate += value => toggle.isOn = value;
+        valueBinding.onUpdate += value => toggle.isOn = value;
 
         // Only play the click sound when the update was invoked by the local client
         valueBinding.onUpdateSecondary += _ =>
@@ -84,7 +84,7 @@ public abstract class ImpToggle
 
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.onPrimaryUpdate += value => ToggleInteractable(checkmark, text, toggle, value);
+                interactableBinding.onUpdate += value => ToggleInteractable(checkmark, text, toggle, value);
             }
         }
 
@@ -109,7 +109,7 @@ public abstract class ImpToggle
 
         if (theme != null)
         {
-            theme.onPrimaryUpdate += value => OnThemeUpdate(value, toggleObject);
+            theme.onUpdate += value => OnThemeUpdate(value, toggleObject);
             OnThemeUpdate(theme.Value, toggleObject);
         }
 

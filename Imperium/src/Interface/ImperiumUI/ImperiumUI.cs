@@ -186,7 +186,7 @@ public class ImperiumUI : BaseUI
 
         var buttonImage = button.GetComponent<Image>();
         buttonImage.enabled = buttonBinding.Value;
-        buttonBinding.onPrimaryUpdate += isOn =>
+        buttonBinding.onUpdate += isOn =>
         {
             if (!buttonImage)
             {

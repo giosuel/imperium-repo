@@ -68,7 +68,7 @@ internal class PlayerManager : ImpLifecycleObject
             revivePlayerMessage.OnServerReceive += OnRevivePlayerServer;
         }
 
-        Imperium.Settings.Player.Invisibility.onPrimaryUpdate += isInvisible =>
+        Imperium.Settings.Player.Invisibility.onUpdate += isInvisible =>
         {
             // ImpUtils.Bindings.ToggleSet(invisiblePlayers, PlayerAvatar.instance.actualClientId, isInvisible);
         };

@@ -107,7 +107,7 @@ public class ImpSlider : MonoBehaviour
 
             impSlider.indicatorText.text = $"{options.Value[(int)valueBinding.Value]}{indicatorUnit}";
 
-            options.onPrimaryUpdate += newOptions =>
+            options.onUpdate += newOptions =>
             {
                 impSlider.Slider.minValue = 0;
                 impSlider.Slider.maxValue = newOptions.Count - 1;
@@ -154,7 +154,7 @@ public class ImpSlider : MonoBehaviour
             }
         };
 
-        valueBinding.onPrimaryUpdate += newValue =>
+        valueBinding.onUpdate += newValue =>
         {
             var updatedValue = useLogarithmicScale ? (float)Math.Log10(newValue) : newValue;
             if (negativeIsDefault && updatedValue < 0)
@@ -202,7 +202,7 @@ public class ImpSlider : MonoBehaviour
                 theme
             );
 
-            overrideBinding.onPrimaryUpdate += isOverridden =>
+            overrideBinding.onUpdate += isOverridden =>
             {
                 valueBinding.Set(isOverridden ? impSlider.Slider.value : -1);
                 ToggleInteractable(impSlider.Slider, sliderArea, isOverridden, interactableInvert);
@@ -250,7 +250,7 @@ public class ImpSlider : MonoBehaviour
             );
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.onPrimaryUpdate += value =>
+                interactableBinding.onUpdate += value =>
                 {
                     ToggleInteractable(impSlider.Slider, sliderArea, value, interactableInvert);
                 };
@@ -259,7 +259,7 @@ public class ImpSlider : MonoBehaviour
 
         if (theme != null)
         {
-            theme.onPrimaryUpdate += value => OnThemeUpdate(value, sliderObject);
+            theme.onUpdate += value => OnThemeUpdate(value, sliderObject);
             OnThemeUpdate(theme.Value, sliderObject);
         }
 

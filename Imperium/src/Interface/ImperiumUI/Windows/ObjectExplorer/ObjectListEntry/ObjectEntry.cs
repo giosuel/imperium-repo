@@ -50,7 +50,7 @@ internal class ObjectEntry : MonoBehaviour
         rect = gameObject.GetComponent<RectTransform>();
 
         IsObjectActive = new ImpBinding<bool>(true);
-        Imperium.ObjectManager.DisabledObjects.onPrimaryUpdate += disabledObjects =>
+        Imperium.ObjectManager.DisabledObjects.onUpdate += disabledObjects =>
         {
             if (!ObjectEntryGenerator.CanToggle(this)) return;
             ObjectEntryGenerator.ToggleObject(this, !disabledObjects.Contains(View.ViewID));

@@ -47,7 +47,7 @@ internal class MinimapOverlay : BaseUI
         textureFrame = container.Find("Texture").GetComponent<RawImage>();
 
         var baseCanvasScale = canvas.scaleFactor;
-        Imperium.Settings.Map.MinimapScale.onPrimaryUpdate += value => InitMapScale(baseCanvasScale * value);
+        Imperium.Settings.Map.MinimapScale.onUpdate += value => InitMapScale(baseCanvasScale * value);
 
         // InitMapScale(baseCanvasScale * Imperium.Settings.Map.MinimapScale.Value);
         InitCompass();
@@ -117,7 +117,7 @@ internal class MinimapOverlay : BaseUI
     {
         compass = container.Find("MapBorder/Compass").gameObject;
         compass.SetActive(Imperium.Settings.Map.CompassEnabled.Value);
-        Imperium.Settings.Map.CompassEnabled.onPrimaryUpdate += compass.SetActive;
+        Imperium.Settings.Map.CompassEnabled.onUpdate += compass.SetActive;
 
         compassNorth = compass.transform.Find("North");
         compassEast = compass.transform.Find("East");
@@ -131,9 +131,9 @@ internal class MinimapOverlay : BaseUI
         if (!Imperium.Settings.Map.MinimapEnabled.Value
             || Imperium.Interface.IsOpen()
             || Imperium.Freecam.IsFreecamEnabled.Value
-            || !Imperium.IsImperiumEnabled
+            || !Imperium.IsImperiumEnabled.Value
             || Imperium.GameManager.IsGameLoading
-            || !Imperium.IsArenaLoaded
+            || !Imperium.IsArenaLoaded.Value
            )
         {
             if (IsOpen) Close();

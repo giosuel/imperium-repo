@@ -119,8 +119,8 @@ internal class ObjectManager : ImpLifecycleObject
 
         RefreshLevelObjects();
 
-        Imperium.IsArenaLoaded.onPrimaryTrigger += RefreshLevelObjects;
-        Imperium.IsArenaLoaded.onPrimaryTrigger += FetchPlayers;
+        Imperium.IsArenaLoaded.onTrigger += RefreshLevelObjects;
+        Imperium.IsArenaLoaded.onTrigger += FetchPlayers;
 
         objectsChangedEvent.OnClientRecive += RefreshLevelObjects;
         objectTeleportationRequest.OnClientRecive += OnObjectTeleportRequestClient;

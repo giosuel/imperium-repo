@@ -123,7 +123,7 @@ public class ImpNetworking
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            allowClientsBinding.onPrimaryUpdate += ToggleImperiumAccess;
+            allowClientsBinding.onUpdate += ToggleImperiumAccess;
         }
     }
 

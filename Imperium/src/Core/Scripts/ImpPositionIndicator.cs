@@ -32,7 +32,7 @@ public class ImpPositionIndicator : ImpScript
         Deactivate();
 
         // Deactivate position indicator whenever the scene is reloaded
-        Imperium.IsArenaLoaded.onPrimaryTrigger += Deactivate;
+        Imperium.IsArenaLoaded.onTrigger += Deactivate;
     }
 
     internal void Activate(Action<Vector3> callback, Transform originTransform = null, bool castGround = true)

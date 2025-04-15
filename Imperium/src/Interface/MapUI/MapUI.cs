@@ -58,7 +58,7 @@ internal class MapUI : BaseUI
         layerSelector.InitUI(theme);
         layerSelector.Bind(new ImpBinding<bool>(true), Imperium.Settings.Map.CameraLayerMask);
 
-        Imperium.Settings.Map.RotationLock.onPrimaryTrigger += OnRotationLockChange;
+        Imperium.Settings.Map.RotationLock.onTrigger += OnRotationLockChange;
 
         // selectedPlayer.Set(Imperium.Player);
     }
@@ -176,7 +176,7 @@ internal class MapUI : BaseUI
         compass = container.Find("Compass").gameObject;
         compass.SetActive(Imperium.Settings.Map.CompassEnabled.Value);
         compass.gameObject.AddComponent<ImpInteractable>().onClick += OnMapReset;
-        Imperium.Settings.Map.CompassEnabled.onPrimaryUpdate += compass.SetActive;
+        Imperium.Settings.Map.CompassEnabled.onUpdate += compass.SetActive;
 
         compassNorth = compass.transform.Find("North");
         compassEast = compass.transform.Find("East");
@@ -208,7 +208,7 @@ internal class MapUI : BaseUI
             theme: theme
         );
         farClipSlider.gameObject.SetActive(!Imperium.Settings.Map.AutoClipping.Value);
-        Imperium.Settings.Map.AutoClipping.onPrimaryUpdate += value => farClipSlider.gameObject.SetActive(!value);
+        Imperium.Settings.Map.AutoClipping.onUpdate += value => farClipSlider.gameObject.SetActive(!value);
 
         nearClipSlider = ImpSlider.Bind(
             path: "FarClip",
@@ -219,7 +219,7 @@ internal class MapUI : BaseUI
             theme: theme
         );
         nearClipSlider.gameObject.SetActive(!Imperium.Settings.Map.AutoClipping.Value);
-        Imperium.Settings.Map.AutoClipping.onPrimaryUpdate += value => nearClipSlider.gameObject.SetActive(!value);
+        Imperium.Settings.Map.AutoClipping.onUpdate += value => nearClipSlider.gameObject.SetActive(!value);
     }
 
     private void InitMapSettings()
@@ -259,7 +259,7 @@ internal class MapUI : BaseUI
 
     private void InitTargetSelection()
     {
-        selectedPlayer.onPrimaryUpdate += player =>
+        selectedPlayer.onUpdate += player =>
         {
             if (!player) return;
 
@@ -269,7 +269,7 @@ internal class MapUI : BaseUI
             MoveCameraToTarget(player.localCamera.transform);
         };
 
-        selectedEntity.onPrimaryUpdate += entity =>
+        selectedEntity.onUpdate += entity =>
         {
             if (!entity) return;
 

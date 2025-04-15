@@ -55,7 +55,7 @@ internal class ImpInterfaceManager : MonoBehaviour
         ).AddComponent<ImperiumDock>();
         interfaceManager.imperiumDock.InitUI(interfaceManager.Theme, interfaceManager.tooltip);
 
-        Imperium.IsArenaLoaded.onPrimaryTrigger += interfaceManager.InvokeOnOpen;
+        Imperium.IsArenaLoaded.onTrigger += interfaceManager.InvokeOnOpen;
 
         return interfaceManager;
     }

@@ -54,7 +54,7 @@ public class ObjectInsight : MonoBehaviour
         panelEntryTemplate = insightPanel.Find("Template").gameObject;
         panelEntryTemplate.SetActive(false);
 
-        InsightDefinition.Insights.onPrimaryUpdate += OnInsightsPrimaryUpdate;
+        InsightDefinition.Insights.onUpdate += OnInsightsPrimaryUpdate;
         OnInsightsPrimaryUpdate(InsightDefinition.Insights.Value);
 
         UpdateInsightOverlay();
@@ -66,10 +66,10 @@ public class ObjectInsight : MonoBehaviour
     /// <param name="definition">New insight definition</param>
     internal void UpdateInsightDefinition(InsightDefinition<Component> definition)
     {
-        InsightDefinition.Insights.onPrimaryUpdate -= OnInsightsPrimaryUpdate;
+        InsightDefinition.Insights.onUpdate -= OnInsightsPrimaryUpdate;
 
         InsightDefinition = definition;
-        InsightDefinition.Insights.onPrimaryUpdate += OnInsightsPrimaryUpdate;
+        InsightDefinition.Insights.onUpdate += OnInsightsPrimaryUpdate;
     }
 
     private void OnInsightsPrimaryUpdate(Dictionary<string, Func<Component, string>> insights)

@@ -6,7 +6,7 @@
         <Title>Imperium REPO</Title>
         <PackageId>Imperium</PackageId>
         <Version>0.0.1</Version>
-        <AssemblyName>giosuel.ImperiumRepo</AssemblyName>
+        <AssemblyName>giosuel.Imperium</AssemblyName>
         <Description>All-in-one debugging mod for REPO.</Description>
         <RootNamespace>Imperium</RootNamespace>
         <PackageIcon>imperium_logo_alpha.png</PackageIcon>

@@ -63,12 +63,12 @@ public class ImpTapeMeasure : ImpScript
         startMarker = ImpGeometry.CreatePrimitive(PrimitiveType.Sphere, transform, color: new Color(1, 1, 1), 0.1f);
         endMarker = ImpGeometry.CreatePrimitive(PrimitiveType.Sphere, transform, color: new Color(1, 1, 1), 0.1f);
 
-        Imperium.Freecam.IsFreecamEnabled.onPrimaryUpdate += OnFreecamToggle;
+        Imperium.Freecam.IsFreecamEnabled.onUpdate += OnFreecamToggle;
         OnFreecamToggle(Imperium.Freecam.IsFreecamEnabled.Value);
         OnExitAction();
 
         // Deactivate tape measure whenever the scene is reloaded
-        Imperium.IsArenaLoaded.onPrimaryTrigger += Deactivate;
+        Imperium.IsArenaLoaded.onTrigger += Deactivate;
     }
 
     private void Activate()

@@ -73,7 +73,7 @@ public abstract class BaseUI : MonoBehaviour
         theme = themeBinding;
         if (theme != null)
         {
-            theme.onPrimaryUpdate += OnThemePrimaryUpdate;
+            theme.onUpdate += OnThemePrimaryUpdate;
             ImpThemeManager.Style(
                 theme.Value,
                 container,

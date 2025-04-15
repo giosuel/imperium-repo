@@ -152,7 +152,7 @@ public static class ImpThemeManager
             themeConfig.Set("Imperium");
         }
 
-        themeConfig.onPrimaryUpdate += value => themeBinding.Set(Themes[value]);
+        themeConfig.onUpdate += value => themeBinding.Set(Themes[value]);
     }
 
     private static Color HEXToRGB(string hexColor)

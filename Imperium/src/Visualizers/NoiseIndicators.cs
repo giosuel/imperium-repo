@@ -41,7 +41,7 @@ internal class NoiseIndicators : ImpScript
             );
         }
 
-        Imperium.Settings.Visualization.NoiseIndicators.onPrimaryUpdate += value =>
+        Imperium.Settings.Visualization.NoiseIndicators.onUpdate += value =>
         {
             if (!value)
             {

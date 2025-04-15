@@ -73,8 +73,8 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
             fadeAnimation = StartCoroutine(hideAnimation());
         };
 
-        theme.onPrimaryUpdate += OnThemePrimaryUpdate;
-        theme.onPrimaryUpdate += value =>
+        theme.onUpdate += OnThemePrimaryUpdate;
+        theme.onUpdate += value =>
         {
             ImpThemeManager.Style(
                 value,
