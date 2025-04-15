@@ -13,12 +13,14 @@ using Imperium.Integration;
 using Imperium.Interface.ImperiumUI;
 using Imperium.Interface.MapUI;
 using Imperium.Interface.SpawningUI;
-using Imperium.Netcode;
+using Imperium.Networking;
+using Imperium.Patches;
 using Imperium.Patches.Systems;
 using Imperium.Util;
 using Librarium.Binding;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using ImpSettings = Imperium.Core.ImpSettings;
 
 #endregion
 
@@ -31,7 +33,7 @@ public class Imperium : BaseUnityPlugin
 {
     public const string PLUGIN_GUID = "giosuel.Imperium";
     public const string PLUGIN_NAME = "Imperium";
-    public const string PLUGIN_VERSION = "0.0.1";
+    public const string PLUGIN_VERSION = "0.3.0";
 
     private static Harmony Harmony;
     private static ManualLogSource Log;
@@ -58,7 +60,6 @@ public class Imperium : BaseUnityPlugin
     internal static Core.Lifecycle.GameManager GameManager { get; private set; }
     internal static ObjectManager ObjectManager { get; private set; }
     internal static PlayerManager PlayerManager { get; private set; }
-    internal static MoonManager MoonManager { get; private set; }
     internal static ArenaManager ArenaManager { get; private set; }
     internal static Visualization Visualization { get; private set; }
     internal static ImpEventLog EventLog { get; private set; }
@@ -89,14 +90,12 @@ public class Imperium : BaseUnityPlugin
     /// <summary>
     ///     Set to true, when Imperium is launched and imperium access is currently granted.
     /// </summary>
-    internal static bool IsImperiumEnabled { get; private set; }
+    internal static ImpBinaryBinding IsImperiumEnabled { get; private set; }
 
     /// <summary>
-    ///     Binding that updates whenever the scene ship lands and takes off.
+    ///     Binding that indicates whether the game is currently in the main menu / lobby or in an arena level.
     /// </summary>
-    internal static ImpBinaryBinding IsSceneLoaded { get; private set; }
-
-    internal static ImpEvent SceneLoaded { get; private set; } = new();
+    internal static ImpBinaryBinding IsArenaLoaded { get; private set; }
 
     internal static GameObject GameObject { get; private set; }
 
@@ -112,11 +111,14 @@ public class Imperium : BaseUnityPlugin
         configFile = Config;
         Log = Logger;
 
+        IsArenaLoaded = new ImpBinaryBinding(false);
+        IsImperiumEnabled = new ImpBinaryBinding(false);
+
         /*
          * Temporary settings instance for startup functionality.
          * This object will be re-instantiated once Imperium launches, meaning all listeners will be removed!
          */
-        Settings = new ImpSettings(Config);
+        Settings = new ImpSettings(Config, IsArenaLoaded, IsImperiumEnabled);
 
         IO = new ImpOutput(Log);
         StartupManager = new StartupManager();
@@ -143,43 +145,42 @@ public class Imperium : BaseUnityPlugin
         GameObject = new GameObject("Imperium");
         DontDestroyOnLoad(GameObject);
 
-        // Register scene loaded binding
-        SceneManager.sceneLoaded += (_, _) => SceneLoaded.Trigger();
-
         // Register camera update when scene is loaded
-        ActiveCamera = new ImpBinding<Camera>(PlayerAvatar.instance.localCamera);
-        SceneLoaded.onTrigger += () => ActiveCamera.Set(PlayerAvatar.instance.localCamera);
+        ActiveCamera = new ImpExternalBinding<Camera, bool>(() => PlayerAvatar.instance.localCamera, IsArenaLoaded);
 
         InputBlocker = new InputBlocker();
         InputBindings = new ImpInputBindings();
 
         // Re-instantiate settings to get rid of existing bindings
-        Settings = new ImpSettings(configFile);
+        IsArenaLoaded = new ImpBinaryBinding(false);
+        Settings = new ImpSettings(configFile, IsArenaLoaded, IsImperiumEnabled);
+        IsArenaLoaded.onPrimaryUpdate += isLoaded =>
+        {
+            Imperium.IO.LogInfo("Loading all settings");
+            if (isLoaded) Settings.LoadAll();
+            Imperium.IO.LogInfo("Loading all settings; done");
+        };
+
         IO.BindNotificationSettings(Settings);
         Networking.BindAllowClients(Settings.Preferences.AllowClients);
-
-        IsSceneLoaded = new ImpBinaryBinding(false);
 
         Interface = ImpInterfaceManager.Create(Settings.Preferences.Theme, GameObject.transform);
         EventLog = new ImpEventLog();
 
         GameManager = ImpLifecycleObject.Create<Core.Lifecycle.GameManager>(
-            GameObject.transform, IsSceneLoaded, ImpNetworking.ConnectedPlayers
-        );
-        MoonManager = ImpLifecycleObject.Create<MoonManager>(
-            GameObject.transform, IsSceneLoaded, ImpNetworking.ConnectedPlayers
+            GameObject.transform, IsArenaLoaded, ImpNetworking.ConnectedPlayers
         );
         ArenaManager = ImpLifecycleObject.Create<ArenaManager>(
-            GameObject.transform, IsSceneLoaded, ImpNetworking.ConnectedPlayers
+            GameObject.transform, IsArenaLoaded, ImpNetworking.ConnectedPlayers
         );
         ObjectManager = ImpLifecycleObject.Create<ObjectManager>(
-            GameObject.transform, IsSceneLoaded, ImpNetworking.ConnectedPlayers
+            GameObject.transform, IsArenaLoaded, ImpNetworking.ConnectedPlayers
         );
         PlayerManager = ImpLifecycleObject.Create<PlayerManager>(
-            GameObject.transform, IsSceneLoaded, ImpNetworking.ConnectedPlayers
+            GameObject.transform, IsArenaLoaded, ImpNetworking.ConnectedPlayers
         );
         WaypointManager = ImpLifecycleObject.Create<WaypointManager>(
-            GameObject.transform, IsSceneLoaded, ImpNetworking.ConnectedPlayers
+            GameObject.transform, IsArenaLoaded, ImpNetworking.ConnectedPlayers
         );
 
         Visualization = new Visualization(GameObject.transform, ObjectManager, configFile);
@@ -206,13 +207,8 @@ public class Imperium : BaseUnityPlugin
         {
             EnableImperium();
 
-            // #if DEBUG
-            // This needs to be here as it depends on the UI
-            // ImpLevelEditor = ImpLevelEditor.Create();
-            // #endif
-
             // Send scene update to ensure consistency in the UIs
-            IsSceneLoaded.SetFalse();
+            IsArenaLoaded.SetFalse();
         }
         else
         {
@@ -222,12 +218,14 @@ public class Imperium : BaseUnityPlugin
 
     internal static void DisableImperium()
     {
-        if (!IsImperiumEnabled) return;
-        IsImperiumEnabled = false;
+        if (!IsImperiumEnabled.Value) return;
+        IsImperiumEnabled.SetFalse();
 
-        Interface.Destroy();
+        Interface.Close();
         PlayerManager.IsFlying.SetFalse();
         Freecam.IsFreecamEnabled.SetFalse();
+        ImpPositionIndicator.Deactivate();
+        ImpTapeMeasure.Deactivate();
 
         InputBindings.BaseMap.Disable();
         InputBindings.StaticMap.Disable();
@@ -237,8 +235,8 @@ public class Imperium : BaseUnityPlugin
 
     internal static void EnableImperium()
     {
-        if (!IsImperiumLaunched) return;
-        IsImperiumEnabled = true;
+        if (!IsImperiumLaunched || IsImperiumEnabled.Value) return;
+        IsImperiumEnabled.SetTrue();
 
         Settings.LoadAll();
 
@@ -256,14 +254,12 @@ public class Imperium : BaseUnityPlugin
         if (!IsImperiumLaunched) return;
 
         Harmony.UnpatchSelf();
+        Networking.Reset();
 
         DisableImperium();
-
-        Networking.Unsubscribe();
+        PreLaunchPatches();
 
         IsImperiumLaunched = false;
-
-        PreLaunchPatches();
     }
 
     internal static void Reload()
@@ -276,7 +272,7 @@ public class Imperium : BaseUnityPlugin
 
     private static void RegisterInterfaces()
     {
-        Interface.OpenInterface.onUpdate += openInterface =>
+        Interface.OpenInterface.onPrimaryUpdate += openInterface =>
         {
             if (openInterface) ImpPositionIndicator.Deactivate();
         };
@@ -293,25 +289,23 @@ public class Imperium : BaseUnityPlugin
             "SpawningUI",
             "Spawning",
             "Allows you to spawn objects\nsuch as Scrap or Entities.",
-            InputBindings.InterfaceMap.SpawningUI
+            InputBindings.InterfaceMap.SpawningUI,
+            IsArenaLoaded
         );
         Interface.RegisterInterface<MapUI>(
             ImpAssets.MapUIObject,
             "MapUI",
             "Map",
             "Imperium's built-in map.",
-            InputBindings.InterfaceMap.MapUI
+            InputBindings.InterfaceMap.MapUI,
+            IsArenaLoaded
         );
         Interface.RegisterInterface<MinimapSettings>(ImpAssets.MinimapSettingsObject);
-        // Interface.RegisterInterface<ComponentManager>(ImpAssets.ComponentManagerObject);
 
         Interface.RefreshTheme();
 
         IO.LogInfo("[SYS] Imperium interfaces have been registered! \\o/");
     }
 
-    private static void PreLaunchPatches()
-    {
-        Harmony.PatchAll(typeof(PlayerAvatarPatch));
-    }
+    private static void PreLaunchPatches() => Harmony.PatchAll(typeof(PreInitPatches));
 }

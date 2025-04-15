@@ -20,7 +20,7 @@ public class LevelGeneration : ImpWidget
     protected override void InitWidget()
     {
         var disabledBinding = ImpBinaryBinding.CreateOr([
-            (Imperium.IsSceneLoaded, false),
+            (Imperium.IsArenaLoaded, false),
             (new ImpBinding<bool>(!PhotonNetwork.IsMasterClient), false)
         ]);
 

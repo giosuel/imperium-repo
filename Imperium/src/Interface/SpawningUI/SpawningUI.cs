@@ -402,7 +402,7 @@ internal class SpawningUI : BaseUI
         input.ActivateInputField();
     }
 
-    protected override void OnThemeUpdate(ImpTheme themeUpdate)
+    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,

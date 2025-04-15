@@ -39,7 +39,7 @@ public abstract class BaseUI : MonoBehaviour
 
     /// <summary>
     ///     The binding that controls the theme of the UI component.
-    ///     UIs can implement the function <see cref="OnThemeUpdate" /> to style components.
+    ///     UIs can implement the function <see cref="OnThemePrimaryUpdate" /> to style components.
     ///     It is called every time the theme binding updates.
     /// </summary>
     protected ImpBinding<ImpTheme> theme;
@@ -73,7 +73,7 @@ public abstract class BaseUI : MonoBehaviour
         theme = themeBinding;
         if (theme != null)
         {
-            theme.onUpdate += OnThemeUpdate;
+            theme.onPrimaryUpdate += OnThemePrimaryUpdate;
             ImpThemeManager.Style(
                 theme.Value,
                 container,
@@ -98,7 +98,7 @@ public abstract class BaseUI : MonoBehaviour
         InitUI();
 
         // Style UI with the current theme
-        OnThemeUpdate(themeBinding.Value);
+        OnThemePrimaryUpdate(themeBinding.Value);
 
         if (container) container.gameObject.SetActive(false);
         Imperium.IO.LogInfo($"[OK] Successfully loaded {GetType()} !");
@@ -180,7 +180,7 @@ public abstract class BaseUI : MonoBehaviour
     ///     Called every time the theme binding updates.
     /// </summary>
     /// <param name="themeUpdate">The updated theme</param>
-    protected virtual void OnThemeUpdate(ImpTheme themeUpdate)
+    protected virtual void OnThemePrimaryUpdate(ImpTheme themeUpdate)
     {
     }
 

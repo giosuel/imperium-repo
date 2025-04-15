@@ -1,6 +1,6 @@
 #region
 
-using Imperium.Netcode;
+using Imperium.Networking;
 using Imperium.Util;
 using Photon.Pun;
 
@@ -40,6 +40,8 @@ internal class GameManager : ImpLifecycleObject
         Imperium.Networking,
         onUpdateClient: value => RoundDirector.instance.debugLowHaul = value
     );
+
+    internal bool IsGameLoading { get; set; } = true;
 
     [ImpAttributes.HostOnly]
     private static void FulfillQuota(ulong clientId)

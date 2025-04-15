@@ -101,7 +101,7 @@ internal class LayerSelector : BaseUI
         }
     }
 
-    protected override void OnThemeUpdate(ImpTheme themeUpdate)
+    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,

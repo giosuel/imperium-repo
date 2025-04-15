@@ -14,25 +14,20 @@ internal static class ObjectEntryGenerator
 {
     internal static bool CanDestroy(ObjectEntry entry) => entry.Type switch
     {
-        // ObjectType.Cruiser when entry.component is VehicleController
-        // {
-        //     currentPassenger: not null,
-        //     currentDriver: not null
-        // } => false,
         ObjectType.Player => false,
+        ObjectType.ExtractionPoint => false,
         _ => true
     };
 
     internal static bool CanRespawn(ObjectEntry entry) => entry.Type switch
     {
-        ObjectType.Valuable => false,
-        ObjectType.Item => false,
-        ObjectType.Player => false,
-        _ => true
+        ObjectType.Entity => true,
+        _ => false
     };
 
-    internal static bool CanDrop(ObjectEntry entry) => entry.Type switch
+    internal static bool CanComplete(ObjectEntry entry) => entry.Type switch
     {
+        ObjectType.ExtractionPoint => true,
         _ => false
     };
 
@@ -93,20 +88,15 @@ internal static class ObjectEntryGenerator
         }
     }
 
-    internal static void DropObject(ObjectEntry entry)
+    internal static void CompleteObject(ObjectEntry entry)
     {
         switch (entry.Type)
         {
-            // case ObjectType.Item when entry.component is GrabbableObject item:
-            //     if (!item.isHeld || item.playerHeldBy is null) return;
-            //
-            //     Imperium.PlayerManager.DropItem(new DropItemRequest
-            //     {
-            //         PlayerId = item.playerHeldBy.playerClientId,
-            //         ItemIndex = PlayerManager.GetItemHolderSlot(item)
-            //     });
-            //     break;
-            case ObjectType.Item:
+            case ObjectType.ExtractionPoint:
+                Imperium.ObjectManager.CompleteExtraction(new ExtractionCompleteRequest
+                {
+                    ViewId = ((ExtractionPoint)entry.component).photonView.ViewID
+                });
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -170,6 +160,7 @@ internal static class ObjectEntryGenerator
                 }, Imperium.Freecam.IsFreecamEnabled.Value ? Imperium.Freecam.transform : null, castGround: true);
                 Imperium.Interface.Close();
                 break;
+            case ObjectType.ExtractionPoint:
             case ObjectType.Entity:
             case ObjectType.Item:
             case ObjectType.Valuable:
@@ -191,18 +182,8 @@ internal static class ObjectEntryGenerator
     {
         switch (entry.Type)
         {
-            case ObjectType.Item:
-                // var item = (GrabbableObject)entry.component;
-                // var isHeld = item.isHeld || item.heldByPlayerOnServer;
-                // entry.dropButton.interactable = isHeld;
-                // entry.teleportHereButton.interactable = !isHeld;
-                break;
-            case ObjectType.Entity:
-            case ObjectType.Player:
-            case ObjectType.Valuable:
-                break;
             default:
-                throw new ArgumentOutOfRangeException();
+                break;
         }
     }
 
@@ -210,23 +191,19 @@ internal static class ObjectEntryGenerator
     {
         switch (entry.Type)
         {
-            case ObjectType.Entity:
-            case ObjectType.Valuable:
-            case ObjectType.Player:
-            case ObjectType.Item:
-                break;
             default:
-                throw new ArgumentOutOfRangeException();
+                break;
         }
     }
 
     internal static string GetObjectName(ObjectEntry entry) => entry.Type switch
     {
         ObjectType.Player => GetPlayerName((PlayerAvatar)entry.component),
+        ObjectType.ExtractionPoint => ((ExtractionPoint)entry.component).name,
         ObjectType.Entity => ((EnemyParent)entry.component).enemyName,
         ObjectType.Item => ((ItemAttributes)entry.component).itemName,
         ObjectType.Valuable => GetValuableName((ValuableObject)entry.component),
-        _ => throw new ArgumentOutOfRangeException()
+        _ => entry.component.name
     };
 
     internal static Vector3 GetTeleportPosition(ObjectEntry entry) => entry.Type switch

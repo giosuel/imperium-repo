@@ -65,7 +65,7 @@ public class Teleportation : ImpWidget
 
         Imperium.InputBindings.BaseMap.Teleport.performed += OnInteractiveTeleport;
 
-        Imperium.IsSceneLoaded.onTrigger += OnOpen;
+        Imperium.IsArenaLoaded.onPrimaryTrigger += OnOpen;
 
         InitExtractionPoints();
     }
@@ -74,9 +74,9 @@ public class Teleportation : ImpWidget
     {
         tpShip.interactable = Imperium.PlayerManager.ShipTPAnchor.Value != null;
         tpMainEntrance.interactable = Imperium.PlayerManager.MainEntranceTPAnchor.Value != null
-                                      && Imperium.IsSceneLoaded.Value;
+                                      && Imperium.IsArenaLoaded.Value;
         tpApparatus.interactable = Imperium.PlayerManager.ApparatusTPAnchor.Value != null
-                                   && Imperium.IsSceneLoaded.Value;
+                                   && Imperium.IsArenaLoaded.Value;
 
         var position = PlayerAvatar.instance.transform.position;
         coordinateX.Set(MathF.Round(position.x, 2), invokeSecondary: false);
@@ -128,7 +128,7 @@ public class Teleportation : ImpWidget
         extractionPointTemplate = extractionPointContainer.Find("Template").gameObject;
         extractionPointTemplate.gameObject.SetActive(false);
 
-        Imperium.IsSceneLoaded.onTrigger += SetExtractionPoints;
+        Imperium.IsArenaLoaded.onPrimaryTrigger += SetExtractionPoints;
         SetExtractionPoints();
     }
 

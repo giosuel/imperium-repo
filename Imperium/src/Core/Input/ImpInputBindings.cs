@@ -47,7 +47,7 @@ public class ImpInputBindings
     private static void OnToggleFlight(InputAction.CallbackContext _)
     {
         if (Imperium.Settings.Player.EnableFlying.Value
-            && Imperium.IsImperiumEnabled
+            && Imperium.IsImperiumEnabled.Value
             && MenuManager.instance.currentMenuState != (int)MenuManager.MenuState.Open
             && !Imperium.Freecam.IsFreecamEnabled.Value
             && !Imperium.PlayerManager.FlyIsAscending

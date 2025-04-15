@@ -3,7 +3,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Imperium.API.Types.Networking;
 using Imperium.Extensions;
 using Imperium.Util;
@@ -16,7 +15,7 @@ using UnityEngine;
 
 #endregion
 
-namespace Imperium.Netcode;
+namespace Imperium.Networking;
 
 public class ImpNetworking
 {
@@ -52,7 +51,7 @@ public class ImpNetworking
         ImperiumUsers = new ImpNetworkBinding<HashSet<ulong>>(
             "ImperiumUsers",
             this,
-            currentValue: []
+            currentValue: [0]
         );
         authenticateEvent.OnServerReceive += OnAuthenticateRequest;
         clientRequestValues.OnServerReceive += OnClientRequestValues;
@@ -124,7 +123,7 @@ public class ImpNetworking
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            allowClientsBinding.onUpdate += ToggleImperiumAccess;
+            allowClientsBinding.onPrimaryUpdate += ToggleImperiumAccess;
         }
     }
 
@@ -257,8 +256,10 @@ public class ImpNetworking
         }
     }
 
-    public void Unsubscribe()
+    public void Reset()
     {
+        // WasImperiumAccessGranted = false;
+
         foreach (var subscriber in RegisteredNetworkSubscribers) subscriber.Clear();
         RegisteredNetworkSubscribers.Clear();
     }

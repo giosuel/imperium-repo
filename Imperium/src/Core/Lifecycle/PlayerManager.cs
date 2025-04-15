@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Imperium.API.Types.Networking;
-using Imperium.Netcode;
+using Imperium.Networking;
 using Imperium.Util;
 using Librarium.Binding;
 using Photon.Pun;
@@ -50,7 +50,7 @@ internal class PlayerManager : ImpLifecycleObject
         () => GameObject.Find("LungApparatus(Clone)")?.transform.position
     );
 
-    internal bool AllowPlayerDeathOverride;
+
     internal bool FlyIsAscending;
     internal bool FlyIsDescending;
 
@@ -68,7 +68,7 @@ internal class PlayerManager : ImpLifecycleObject
             revivePlayerMessage.OnServerReceive += OnRevivePlayerServer;
         }
 
-        Imperium.Settings.Player.Invisibility.onUpdate += isInvisible =>
+        Imperium.Settings.Player.Invisibility.onPrimaryUpdate += isInvisible =>
         {
             // ImpUtils.Bindings.ToggleSet(invisiblePlayers, PlayerAvatar.instance.actualClientId, isInvisible);
         };
@@ -139,6 +139,14 @@ internal class PlayerManager : ImpLifecycleObject
     //     player.bleedingHeavily = false;
     //     player.criticallyInjured = false;
     // }
+
+    internal static void ToggleLocalAvatar(bool isShown)
+    {
+        if (!Imperium.IsArenaLoaded) return;
+
+        PlayerAvatar.instance.playerAvatarVisuals.animator.enabled = isShown;
+        PlayerAvatar.instance.playerAvatarVisuals.meshParent.SetActive(value: isShown);
+    }
 
     internal static void UpdateCameras(bool _) => UpdateCameras();
 

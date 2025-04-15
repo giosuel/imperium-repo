@@ -15,14 +15,14 @@ internal static class APIHelpers
 
     internal static void AssertShipLanded()
     {
-        if (Imperium.IsSceneLoaded.Value) return;
+        if (Imperium.IsArenaLoaded) return;
 
         throw new ImperiumAPIException("Ship is not currently in orbit.");
     }
 
     internal static void AssertShipInOrbit()
     {
-        if (!Imperium.IsSceneLoaded.Value) return;
+        if (!Imperium.IsArenaLoaded) return;
 
         throw new ImperiumAPIException("Ship is not currently in orbit.");
     }

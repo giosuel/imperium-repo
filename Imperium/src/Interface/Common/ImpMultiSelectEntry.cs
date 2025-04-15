@@ -61,19 +61,19 @@ internal abstract class ImpMultiSelectEntry : MonoBehaviour
             if (Imperium.Settings.Preferences.PlaySounds.Value && playClickSound) GameUtils.PlayClip(ImpAssets.ButtonClick);
         };
 
-        selectionBinding.onUpdate += selectedValue =>
+        selectionBinding.onPrimaryUpdate += selectedValue =>
         {
             if (selectedOverlay) selectedOverlay.SetActive(EqualityComparer<T>.Default.Equals(value, selectedValue));
         };
 
-        hoverBinding.onUpdate += hoveredValue =>
+        hoverBinding.onPrimaryUpdate += hoveredValue =>
         {
             if (hoverOverlay) hoverOverlay.SetActive(EqualityComparer<T>.Default.Equals(value, hoveredValue));
         };
 
         if (theme != null)
         {
-            theme.onUpdate += updatedTheme =>
+            theme.onPrimaryUpdate += updatedTheme =>
             {
                 if (!entryObj) return;
                 OnThemeUpdate(updatedTheme, entryObj.transform);

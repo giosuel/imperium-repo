@@ -60,10 +60,16 @@ public class ImpFreecam : ImpScript
         Imperium.InputBindings.BaseMap.MinicamFullscreen.performed += OnMinicamFullscreenToggle;
         Imperium.InputBindings.BaseMap.Reset.performed += OnFreecamReset;
         Imperium.InputBindings.FreecamMap.LayerSelector.performed += OnToggleLayerSelector;
-        Imperium.Settings.Freecam.FreecamLayerMask.onUpdate += value => camera.cullingMask = value;
+        Imperium.Settings.Freecam.FreecamLayerMask.onPrimaryUpdate += value => camera.cullingMask = value;
 
         // Disable freecam whenever the scene is reloaded
-        Imperium.SceneLoaded.onTrigger += IsFreecamEnabled.SetFalse;
+        Imperium.IsArenaLoaded.onPrimaryTrigger += IsFreecamEnabled.SetFalse;
+
+        Imperium.Settings.Rendering.AvatarInFreecam.onPrimaryUpdate += value =>
+        {
+            if (!IsFreecamEnabled.Value) return;
+            PlayerManager.ToggleLocalAvatar(value);
+        };
     }
 
     private void OnDestroy()
@@ -126,7 +132,7 @@ public class ImpFreecam : ImpScript
 
     private void OnFreecamEnable()
     {
-        if (!camera) return;
+        if (!Imperium.IsArenaLoaded || !Imperium.IsImperiumEnabled) return;
 
         Imperium.Interface.Close();
 
@@ -145,6 +151,8 @@ public class ImpFreecam : ImpScript
 
         Imperium.ActiveCamera.Set(camera);
         Imperium.InputBlocker.Block(this);
+
+        PlayerManager.ToggleLocalAvatar(Imperium.Settings.Rendering.AvatarInFreecam.Value);
     }
 
     private void OnFreecamDisable()
@@ -162,6 +170,8 @@ public class ImpFreecam : ImpScript
 
         Imperium.ActiveCamera.Set(PlayerAvatar.instance.localCamera);
         Imperium.InputBlocker.Unblock(this);
+
+        PlayerManager.ToggleLocalAvatar(Imperium.Settings.Rendering.AvatarInMain.Value);
     }
 
     private void OnFreecamReset(InputAction.CallbackContext callbackContext)

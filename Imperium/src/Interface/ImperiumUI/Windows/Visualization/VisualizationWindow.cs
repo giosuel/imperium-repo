@@ -16,7 +16,7 @@ internal class VisualizationWindow : ImperiumWindow
         RegisterWidget<ObjectVisualizers>(transform, "Objects");
     }
 
-    protected override void OnThemeUpdate(ImpTheme themeUpdated)
+    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdated)
     {
         ImpThemeManager.Style(
             themeUpdated,

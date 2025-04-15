@@ -3,6 +3,7 @@
 using Imperium.Core;
 using Imperium.Interface.Common;
 using Imperium.Types;
+using Imperium.Util;
 using TMPro;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ internal class ControlCenterWindow : ImperiumWindow
         if (Random.Range(0, 100) >= 99) titleBox.Find("Title").GetComponent<TMP_Text>().text = "Emporium Control Panel";
     }
 
-    protected override void OnThemeUpdate(ImpTheme themeUpdate)
+    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,
@@ -154,7 +155,7 @@ internal class ControlCenterWindow : ImperiumWindow
             path: "Right/FieldOfView",
             container: content,
             valueBinding: Imperium.Settings.Player.CustomFieldOfView,
-            indicatorDefaultValue: ImpConstants.DefaultFOV,
+            defaultValueOverride: ImpConstants.DefaultFOV,
             indicatorUnit: "°",
             theme: theme
         );
@@ -164,6 +165,14 @@ internal class ControlCenterWindow : ImperiumWindow
             container: content,
             theme: theme,
             valueBinding: Imperium.Settings.Player.MovementSpeed
+        );
+
+        ImpSlider.Bind(
+            path: "Right/SlideTime",
+            container: content,
+            theme: theme,
+            indicatorFormatter: value => $"{Formatting.FormatFloatToThreeDigits(value)}",
+            valueBinding: Imperium.Settings.Player.SlideTime
         );
 
         ImpSlider.Bind(

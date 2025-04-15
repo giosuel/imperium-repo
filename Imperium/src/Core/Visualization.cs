@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using BepInEx.Configuration;
 using Imperium.Core.Lifecycle;
+using Imperium.Core.Scripts;
 using Imperium.Types;
 using Imperium.Util;
 using Imperium.Visualizers;
@@ -43,6 +44,7 @@ internal class Visualization
     // internal readonly VentTimers VentTimers;
     internal readonly PlayerGizmos PlayerGizmos;
     internal readonly EntityGizmos EntityGizmos;
+    internal readonly NoiseIndicators NoiseIndicators;
     // internal readonly ScrapSpawnIndicators ScrapSpawns;
     // internal readonly MapHazardIndicators HazardSpawns;
     internal readonly NavMeshVisualizer NavMeshVisualizer;
@@ -93,10 +95,11 @@ internal class Visualization
 
         // Player and entity infos are separate as they have their own configs
         PlayerGizmos = new PlayerGizmos(visualizerParent.transform, objectManager.CurrentPlayers, config);
-        // EntityGizmos = new EntityGizmos(visualizerParent.transform, objectManager.CurrentLevelEntities, config);
+        EntityGizmos = new EntityGizmos(visualizerParent.transform, objectManager.CurrentLevelEntities, config);
+        NoiseIndicators = ImpScript.Create<NoiseIndicators>(parent);
 
         ObjectInsights = new ObjectInsights(visualizerParent.transform, config);
-        Imperium.IsSceneLoaded.onTrigger += ObjectInsights.Refresh;
+        Imperium.IsArenaLoaded.onPrimaryTrigger += ObjectInsights.Refresh;
         Imperium.ObjectManager.CurrentLevelObjectsChanged += ObjectInsights.Refresh;
         Imperium.ObjectManager.CurrentLevelObjectsChanged += RefreshOverlays;
     }
@@ -413,7 +416,7 @@ internal class Visualization
     ///     Generates a LOS cone mesh implementation by <see href="https://github.com/AdalynBlack/LC-EnemyDebug" /> :3
     /// </summary>
     /// <param name="angle">Angle of the generated cone</param>
-    private static Mesh GenerateCone(float angle)
+    internal static Mesh GenerateCone(float angle)
     {
         var coneMesh = new Mesh();
 

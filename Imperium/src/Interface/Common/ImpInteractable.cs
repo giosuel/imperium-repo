@@ -42,7 +42,7 @@ internal class ImpInteractable : MonoBehaviour, IPointerEnterHandler, IPointerEx
     internal event Action<Vector2> onOver;
 
     /// <summary>
-    ///     OnPointerUp
+    ///     OnDrag
     /// </summary>
     internal event Action<Vector2, Vector2, Vector2> onDrag;
 

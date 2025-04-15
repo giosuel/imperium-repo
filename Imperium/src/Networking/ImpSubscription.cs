@@ -1,6 +1,6 @@
 using System;
 
-namespace Imperium.Netcode;
+namespace Imperium.Networking;
 
 public record ImpSubscription
 {

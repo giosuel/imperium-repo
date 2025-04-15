@@ -42,6 +42,9 @@ internal class ObjectEntryEngine
         categoryCountsVisible = [];
 
         AddType(Imperium.ObjectManager.CurrentPlayers, ObjectType.Player, ObjectCategory.Players);
+        AddType(
+            Imperium.ObjectManager.CurrentLevelExtractionPoints, ObjectType.ExtractionPoint, ObjectCategory.ExtractionPoints
+        );
         AddType(Imperium.ObjectManager.CurrentLevelEntities, ObjectType.Entity, ObjectCategory.Entities);
         AddType(Imperium.ObjectManager.CurrentLevelItems, ObjectType.Item, ObjectCategory.Items);
         AddType(Imperium.ObjectManager.CurrentLevelValuables, ObjectType.Valuable, ObjectCategory.Valuables);

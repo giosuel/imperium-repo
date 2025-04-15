@@ -5,11 +5,10 @@ using Imperium.Util;
 using Photon.Pun;
 using RepoSteamNetworking.API;
 using RepoSteamNetworking.Networking;
-using RepoSteamNetworking.Networking.Unity;
 
 #endregion
 
-namespace Imperium.Netcode;
+namespace Imperium.Networking;
 
 public class ImpNetMessage<T> : INetworkSubscribable
 {

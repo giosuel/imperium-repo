@@ -15,6 +15,7 @@ namespace Imperium.Integration;
 public static class UnityExplorerIntegration
 {
     private static bool IsEnabled => Chainloader.PluginInfos.ContainsKey("com.sinai.unityexplorer");
+    private static UnityExplorerBlocker blocker = new();
 
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     internal static void CloseUI()
@@ -68,7 +69,29 @@ public static class UnityExplorerIntegration
                 ImpUtils.Interface.ToggleCursorState(active);
             }
 
-            if (active) Imperium.Interface.Close(false);
+            if (active)
+            {
+                Imperium.Interface.Close(false);
+                Imperium.InputBlocker.Block(blocker);
+
+                Imperium.InputBindings.BaseMap.Freecam.Disable();
+                Imperium.InputBindings.BaseMap.Minimap.Disable();
+                Imperium.InputBindings.BaseMap.Minicam.Disable();
+                Imperium.InputBindings.BaseMap.Teleport.Disable();
+                Imperium.InputBindings.BaseMap.TapeMeasure.Disable();
+            }
+            else
+            {
+                Imperium.InputBlocker.Unblock(blocker);
+
+                Imperium.InputBindings.BaseMap.Freecam.Enable();
+                Imperium.InputBindings.BaseMap.Minimap.Enable();
+                Imperium.InputBindings.BaseMap.Minicam.Enable();
+                Imperium.InputBindings.BaseMap.Teleport.Enable();
+                Imperium.InputBindings.BaseMap.TapeMeasure.Enable();
+            }
         }
     }
 }
+
+internal class UnityExplorerBlocker;

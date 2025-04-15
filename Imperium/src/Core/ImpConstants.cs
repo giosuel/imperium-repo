@@ -19,20 +19,17 @@ public struct ImpConstants
     public const int DefaultFOV = 66;
     public const float DefaultGrabStrength = 1f;
     public const float DefaultThrowStrength = 0f;
-    public const float DefaultMovementSpeed = 0.5f;
-    public const float DefaultJumpForce = 13f;
-    public const float DefaultTimeSpeed = 1.4f;
+    public const float DefaultMovementSpeed = 2f;
+    public const float DefaultSlideTime = 0.5f;
+    public const float DefaultJumpForce = 17f;
 
-    internal const int ShotgunCollisionCount = 10;
-    internal const float ShotgunDefaultCooldown = 0.7f;
-
-    internal const float DefaultMapCameraScale = 19.7f;
+    internal const float DefaultMapCameraScale = 20f;
 
     internal const int DefaultMapCameraFarClip = 50;
     internal const int DefaultMapCameraNearClip = 9;
 
     internal const int DefaultMapCameraFarClipFreeLook = 200;
-    internal const int DefaultMapCameraNearClipFreeLook = -20;
+    internal const int DefaultMapCameraNearClipFreeLook = 1;
 
     internal const float DefaultGrabberRange = 4f;
     internal const float DefaultGrabberReleaseDistance = 8f;

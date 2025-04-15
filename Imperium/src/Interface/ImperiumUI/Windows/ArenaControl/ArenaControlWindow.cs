@@ -21,7 +21,7 @@ internal class ArenaControlWindow : ImperiumWindow
         RegisterWidget<ArenaSettings>(transform, "Right");
     }
 
-    protected override void OnThemeUpdate(ImpTheme themeUpdate)
+    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,

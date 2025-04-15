@@ -20,7 +20,7 @@ internal class ObjectEntry : MonoBehaviour
 {
     private TMP_Text objectNameText;
 
-    internal Button dropButton { get; private set; }
+    internal Button completeButton { get; private set; }
     internal Button reviveButton { get; private set; }
     internal Button killButton { get; private set; }
     internal Button destroyButton { get; private set; }
@@ -50,7 +50,7 @@ internal class ObjectEntry : MonoBehaviour
         rect = gameObject.GetComponent<RectTransform>();
 
         IsObjectActive = new ImpBinding<bool>(true);
-        Imperium.ObjectManager.DisabledObjects.onUpdate += disabledObjects =>
+        Imperium.ObjectManager.DisabledObjects.onPrimaryUpdate += disabledObjects =>
         {
             if (!ObjectEntryGenerator.CanToggle(this)) return;
             ObjectEntryGenerator.ToggleObject(this, !disabledObjects.Contains(View.ViewID));
@@ -105,10 +105,10 @@ internal class ObjectEntry : MonoBehaviour
         );
 
         // Drop button
-        dropButton = ImpButton.Bind(
-            "Drop",
+        completeButton = ImpButton.Bind(
+            "Complete",
             transform,
-            () => ObjectEntryGenerator.DropObject(this),
+            () => ObjectEntryGenerator.CompleteObject(this),
             theme,
             isIconButton: true
         );
@@ -133,7 +133,7 @@ internal class ObjectEntry : MonoBehaviour
         destroyButton.gameObject.SetActive(false);
         activeToggle.gameObject.SetActive(false);
         respawnButton.gameObject.SetActive(false);
-        dropButton.gameObject.SetActive(false);
+        completeButton.gameObject.SetActive(false);
         killButton.gameObject.SetActive(false);
         reviveButton.gameObject.SetActive(false);
 
@@ -168,7 +168,7 @@ internal class ObjectEntry : MonoBehaviour
         destroyButton.gameObject.SetActive(ObjectEntryGenerator.CanDestroy(this));
         activeToggle.gameObject.SetActive(ObjectEntryGenerator.CanToggle(this));
         respawnButton.gameObject.SetActive(ObjectEntryGenerator.CanRespawn(this));
-        dropButton.gameObject.SetActive(ObjectEntryGenerator.CanDrop(this));
+        completeButton.gameObject.SetActive(ObjectEntryGenerator.CanComplete(this));
         killButton.gameObject.SetActive(ObjectEntryGenerator.CanKill(this));
         reviveButton.gameObject.SetActive(ObjectEntryGenerator.CanRevive(this));
 

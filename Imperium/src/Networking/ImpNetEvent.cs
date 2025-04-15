@@ -10,7 +10,7 @@ using Steamworks;
 
 #endregion
 
-namespace Imperium.Netcode;
+namespace Imperium.Networking;
 
 public class ImpNetEvent : INetworkSubscribable
 {

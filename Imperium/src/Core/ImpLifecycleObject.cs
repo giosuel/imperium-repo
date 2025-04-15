@@ -11,7 +11,7 @@ public abstract class ImpLifecycleObject : MonoBehaviour
 {
     internal static T Create<T>(Transform parent, ImpBinaryBinding sceneLoaded, IBinding<int> playersConnected) where T : ImpLifecycleObject
     {
-        var lifecycleObj = new GameObject(typeof(T).Name).AddComponent<T>();
+        var lifecycleObj = new GameObject($"Imp_{typeof(T).Name}").AddComponent<T>();
         lifecycleObj.transform.SetParent(parent);
         lifecycleObj.Init(sceneLoaded, playersConnected);
 
@@ -23,7 +23,7 @@ public abstract class ImpLifecycleObject : MonoBehaviour
         sceneLoaded.onTrue += OnSceneLoad;
         sceneLoaded.onFalse += OnSceneUnload;
 
-        playersConnected.onUpdate += OnPlayersUpdate;
+        playersConnected.onPrimaryUpdate += OnPlayersUpdate;
 
         Init();
     }

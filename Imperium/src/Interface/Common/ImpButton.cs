@@ -73,7 +73,7 @@ public abstract class ImpButton
             );
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.onUpdate += _ => ToggleInteractable(
+                interactableBinding.onPrimaryUpdate += _ => ToggleInteractable(
                     button, icon, text,
                     interactableBindings.All(entry => entry.Value),
                     interactableInvert
@@ -95,7 +95,7 @@ public abstract class ImpButton
 
         if (theme != null)
         {
-            theme.onUpdate += value => OnThemeUpdate(value, buttonObject, isIconButton);
+            theme.onPrimaryUpdate += value => OnThemeUpdate(value, buttonObject, isIconButton);
             OnThemeUpdate(theme.Value, buttonObject, isIconButton);
         }
 
@@ -141,7 +141,7 @@ public abstract class ImpButton
             );
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.onTrigger += () => ToggleInteractable(
+                interactableBinding.onPrimaryTrigger += () => ToggleInteractable(
                     button, icon, text,
                     interactableBindings.All(entry => entry.Value),
                     interactableInvert
@@ -151,7 +151,7 @@ public abstract class ImpButton
 
         if (theme != null)
         {
-            theme.onUpdate += value => OnThemeUpdate(value, buttonObject, isIconButton);
+            theme.onPrimaryUpdate += value => OnThemeUpdate(value, buttonObject, isIconButton);
             OnThemeUpdate(theme.Value, buttonObject, isIconButton);
         }
 
@@ -195,7 +195,7 @@ public abstract class ImpButton
 
         if (stateBinding != null && collapseArea)
         {
-            stateBinding.onUpdate += isOn =>
+            stateBinding.onPrimaryUpdate += isOn =>
             {
                 collapseArea.gameObject.SetActive(isOn);
                 button.transform.rotation = Quaternion.Euler(
@@ -211,18 +211,18 @@ public abstract class ImpButton
             ToggleInteractable(button, null, null, interactableBindings.All(entry => entry.Value), interactableInvert);
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.onUpdate += value => ToggleInteractable(button, null, null, value, interactableInvert);
+                interactableBinding.onPrimaryUpdate += value => ToggleInteractable(button, null, null, value, interactableInvert);
             }
         }
 
         if (theme != null)
         {
-            theme.onUpdate += value => OnThemeUpdate(value, buttonObject, true);
+            theme.onPrimaryUpdate += value => OnThemeUpdate(value, buttonObject, true);
             OnThemeUpdate(theme.Value, buttonObject, true);
         }
     }
 
-    private static void ToggleInteractable(
+    internal static void ToggleInteractable(
         Selectable button,
         [CanBeNull] Image icon,
         [CanBeNull] TMP_Text text,

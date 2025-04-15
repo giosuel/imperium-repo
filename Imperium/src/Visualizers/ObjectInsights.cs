@@ -48,9 +48,9 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
         RegisterDefaultInsights();
         Refresh();
 
-        foreach (var (_, binding) in InsightVisibilityBindings.Value) binding.onTrigger += Refresh;
+        foreach (var (_, binding) in InsightVisibilityBindings.Value) binding.onPrimaryTrigger += Refresh;
 
-        registeredInsights.onTrigger += Refresh;
+        registeredInsights.onPrimaryTrigger += Refresh;
     }
 
     internal void Refresh()

@@ -5,5 +5,6 @@ internal enum ObjectCategory
     Players,
     Entities,
     Items,
-    Valuables
+    Valuables,
+    ExtractionPoints
 }

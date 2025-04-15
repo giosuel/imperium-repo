@@ -45,7 +45,8 @@ public class ImpSlider : MonoBehaviour
     /// <param name="theme">The theme the slider will use</param>
     /// <param name="useLogarithmicScale">If the slider uses a logarithmic scale</param>
     /// <param name="indicatorUnit">Slider value unit (e.g. % or degrees)</param>
-    /// <param name="indicatorDefaultValue">Overwrites the default value on the slider</param>
+    /// <param name="defaultValueOverride">Overwrites the default value on the slider</param>
+    /// <param name="defaultValueOverrideFunc">Function that is used to get the default value.</param>
     /// <param name="indicatorFormatter">Formatter for custom indicator text</param>
     /// <param name="debounceTime">Debounce time for slider updates</param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
@@ -53,6 +54,7 @@ public class ImpSlider : MonoBehaviour
     /// <param name="clickAudio">The audio clip that is played when the slider value is changed.</param>
     /// <param name="playClickSound">Whether the click sound playes when the slider value is changed.</param>
     /// <param name="tooltipDefinition">The tooltip definition of the toggle tooltip.</param>
+    /// <param name="negativeIsDefault">When set to true and the binding value is negative, the default value will be displayed instead.</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the slider is interactable</param>
     internal static ImpSlider Bind(
         string path,
@@ -61,7 +63,8 @@ public class ImpSlider : MonoBehaviour
         IBinding<ImpTheme> theme = null,
         bool useLogarithmicScale = false,
         string indicatorUnit = "",
-        float? indicatorDefaultValue = null,
+        float? defaultValueOverride = null,
+        Func<float> defaultValueOverrideFunc = null,
         Func<float, string> indicatorFormatter = null,
         float debounceTime = 0f,
         bool interactableInvert = false,
@@ -69,6 +72,7 @@ public class ImpSlider : MonoBehaviour
         AudioClip clickAudio = null,
         bool playClickSound = true,
         TooltipDefinition tooltipDefinition = null,
+        bool negativeIsDefault = false,
         params IBinding<bool>[] interactableBindings
     )
     {
@@ -89,7 +93,11 @@ public class ImpSlider : MonoBehaviour
         indicatorFormatter ??= value => $"{Mathf.RoundToInt(value)}";
         clickAudio ??= ImpAssets.ButtonClick;
 
+        var sliderArea = sliderObject.Find("Slider/SliderArea").GetComponent<Image>();
+
         var currentValue = useLogarithmicScale ? (float)Math.Log10(valueBinding.Value) : valueBinding.Value;
+
+        if (negativeIsDefault && currentValue < 0) currentValue = GetDefaultValue();
         impSlider.Slider.value = currentValue;
 
         if (options is { Value: not null, Value.Count: > 0 })
@@ -99,7 +107,7 @@ public class ImpSlider : MonoBehaviour
 
             impSlider.indicatorText.text = $"{options.Value[(int)valueBinding.Value]}{indicatorUnit}";
 
-            options.onUpdate += newOptions =>
+            options.onPrimaryUpdate += newOptions =>
             {
                 impSlider.Slider.minValue = 0;
                 impSlider.Slider.maxValue = newOptions.Count - 1;
@@ -146,9 +154,16 @@ public class ImpSlider : MonoBehaviour
             }
         };
 
-        valueBinding.onUpdate += newValue =>
+        valueBinding.onPrimaryUpdate += newValue =>
         {
-            impSlider.Slider.value = useLogarithmicScale ? (float)Math.Log10(newValue) : newValue;
+            var updatedValue = useLogarithmicScale ? (float)Math.Log10(newValue) : newValue;
+            if (negativeIsDefault && updatedValue < 0)
+            {
+                updatedValue = GetDefaultValue();
+                newValue = updatedValue;
+            }
+
+            impSlider.Slider.value = updatedValue;
 
             // Use option label if options are used
             impSlider.indicatorText.text = options is { Value: not null, Value.Count: > 0 }
@@ -156,10 +171,10 @@ public class ImpSlider : MonoBehaviour
                 : $"{indicatorFormatter(newValue)}{indicatorUnit}";
         };
 
-        ImpButton.Bind(
+        var resetButton = ImpButton.Bind(
             "Reset", sliderObject, () =>
             {
-                var defaultValue = indicatorDefaultValue ?? valueBinding.DefaultValue;
+                var defaultValue = GetDefaultValue();
 
                 impSlider.Slider.value = useLogarithmicScale ? (float)Math.Log10(defaultValue) : defaultValue;
 
@@ -175,6 +190,36 @@ public class ImpSlider : MonoBehaviour
             interactableInvert: interactableInvert,
             interactableBindings: interactableBindings
         );
+
+        if (sliderObject.transform.Find("Override"))
+        {
+            var overrideBinding = new ImpBinding<bool>(valueBinding.Value < 0);
+
+            ImpToggle.Bind(
+                "Override",
+                sliderObject,
+                overrideBinding,
+                theme
+            );
+
+            overrideBinding.onPrimaryUpdate += isOverridden =>
+            {
+                valueBinding.Set(isOverridden ? impSlider.Slider.value : -1);
+                ToggleInteractable(impSlider.Slider, sliderArea, isOverridden, interactableInvert);
+
+                // Toggle reset button manually
+                if (resetButton)
+                {
+                    var text = resetButton.transform.Find("Text")?.GetComponent<TMP_Text>() ??
+                               resetButton.transform.Find("Text (TMP)")?.GetComponent<TMP_Text>();
+                    ImpButton.ToggleInteractable(
+                        resetButton, null, text,
+                        isOverridden, false
+                    );
+                }
+            };
+            overrideBinding.Refresh();
+        }
 
         if (tooltipDefinition != null)
         {
@@ -199,15 +244,13 @@ public class ImpSlider : MonoBehaviour
 
         if (interactableBindings.Length > 0)
         {
-            var sliderArea = sliderObject.Find("Slider/SliderArea").GetComponent<Image>();
-
             ToggleInteractable(
                 impSlider.Slider, sliderArea,
                 interactableBindings.All(entry => entry.Value), interactableInvert
             );
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.onUpdate += value =>
+                interactableBinding.onPrimaryUpdate += value =>
                 {
                     ToggleInteractable(impSlider.Slider, sliderArea, value, interactableInvert);
                 };
@@ -216,11 +259,17 @@ public class ImpSlider : MonoBehaviour
 
         if (theme != null)
         {
-            theme.onUpdate += value => OnThemeUpdate(value, sliderObject);
+            theme.onPrimaryUpdate += value => OnThemeUpdate(value, sliderObject);
             OnThemeUpdate(theme.Value, sliderObject);
         }
 
         return impSlider;
+
+        float GetDefaultValue()
+        {
+            if (defaultValueOverrideFunc != null) return defaultValueOverrideFunc();
+            return defaultValueOverride ?? valueBinding.DefaultValue;
+        }
     }
 
     private static void OnThemeUpdate(ImpTheme theme, Transform container)
@@ -256,6 +305,6 @@ public class ImpSlider : MonoBehaviour
     private static void ToggleInteractable(Selectable input, Image sliderArea, bool isOn, bool inverted)
     {
         input.interactable = inverted ? !isOn : isOn;
-        ImpUtils.Interface.ToggleImageActive(sliderArea, !isOn);
+        ImpUtils.Interface.ToggleImageActive(sliderArea, isOn);
     }
 }

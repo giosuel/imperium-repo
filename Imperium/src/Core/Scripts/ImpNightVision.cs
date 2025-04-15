@@ -33,7 +33,7 @@ public class ImpNightVision : ImpScript
         // FarLight.enabled = PlayerAvatar.instance.nightVision.enabled;
         // NearLight.enabled = PlayerAvatar.instance.nightVision.enabled;
 
-        NearLight.intensity = Imperium.Settings.Player.NightVision.Value * 100f;
-        FarLight.intensity = Imperium.Settings.Player.NightVision.Value * 1100f;
+        // NearLight.intensity = Imperium.Settings.Player.NightVision.Value * 100f;
+        // FarLight.intensity = Imperium.Settings.Player.NightVision.Value * 1100f;
     }
 }

@@ -4,6 +4,7 @@ using Imperium.Types;
 using Imperium.Util;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 #endregion
 
@@ -12,16 +13,16 @@ namespace Imperium.Interface.MapUI;
 internal class MinimapOverlay : BaseUI
 {
     internal Rect CameraRect { get; private set; }
-    internal Rect MinimapRect { get; }
-    private TMP_Text positionText;
-    private TMP_Text timeText;
-    private TMP_Text envText;
-    private TMP_Text rotationText;
     private TMP_Text locationText;
+    private TMP_Text positionText;
+    private TMP_Text rotationText;
+    private TMP_Text levelText;
+    private TMP_Text extractionText;
     private GameObject infoPanel;
     private GameObject locationPanel;
     private Transform mapBorder;
     private Canvas canvas;
+    private RawImage textureFrame;
 
     private GameObject compass;
     private Transform compassNorth;
@@ -34,46 +35,51 @@ internal class MinimapOverlay : BaseUI
     protected override void InitUI()
     {
         mapBorder = container.Find("MapBorder");
-        timeText = container.Find("MapBorder/Clock/Text").GetComponent<TMP_Text>();
-        envText = container.Find("MapBorder/Clock/Day/Text").GetComponent<TMP_Text>();
-        positionText = container.Find("MapBorder/InfoPanel/Position").GetComponent<TMP_Text>();
-        rotationText = container.Find("MapBorder/InfoPanel/Rotation").GetComponent<TMP_Text>();
-        envText = container.Find("MapBorder/InfoPanel/Location").GetComponent<TMP_Text>();
-        timeText = container.Find("MapBorder/InfoPanel/Time").GetComponent<TMP_Text>();
-        infoPanel = container.Find("MapBorder/InfoPanel").gameObject;
         locationPanel = container.Find("MapBorder/LocationPanel").gameObject;
         locationText = locationPanel.transform.Find("Text").GetComponent<TMP_Text>();
+        infoPanel = container.Find("MapBorder/InfoPanel").gameObject;
+        positionText = container.Find("MapBorder/InfoPanel/Position").GetComponent<TMP_Text>();
+        rotationText = container.Find("MapBorder/InfoPanel/Rotation").GetComponent<TMP_Text>();
+        levelText = container.Find("MapBorder/InfoPanel/Level").GetComponent<TMP_Text>();
+        extractionText = container.Find("MapBorder/InfoPanel/Extraction").GetComponent<TMP_Text>();
 
         canvas = GetComponent<Canvas>();
+        textureFrame = container.Find("Texture").GetComponent<RawImage>();
 
         var baseCanvasScale = canvas.scaleFactor;
-        Imperium.Settings.Map.MinimapScale.onUpdate += value => InitMapScale(baseCanvasScale * value);
+        Imperium.Settings.Map.MinimapScale.onPrimaryUpdate += value => InitMapScale(baseCanvasScale * value);
 
-        InitMapScale(baseCanvasScale * Imperium.Settings.Map.MinimapScale.Value);
+        // InitMapScale(baseCanvasScale * Imperium.Settings.Map.MinimapScale.Value);
         InitCompass();
+
+        var mapToolController = FindObjectOfType<MapToolController>(true);
+        textureFrame.material = mapToolController.DisplayMaterial;
+        textureFrame.texture = mapToolController.DisplayMaterial.mainTexture;
     }
 
+    protected override void OnOpen(bool wasOpen)
+    {
+        textureFrame.texture = Imperium.Map.Camera.targetTexture;
+    }
 
     private void InitMapScale(float scaleFactor)
     {
         canvas.scaleFactor = scaleFactor;
-
-        var mapBorderPosition = mapBorder.gameObject.GetComponent<RectTransform>().position;
-        var mapBorderSize = mapBorder.gameObject.GetComponent<RectTransform>().sizeDelta;
-        var mapContainerWidth = mapBorderSize.x * canvas.scaleFactor - BorderThickness * 2;
-        var mapContainerHeight = mapBorderSize.y * canvas.scaleFactor - BorderThickness * 2;
-
-        CameraRect = new Rect(
-            (mapBorderPosition.x + BorderThickness) / Screen.width,
-            (mapBorderPosition.y + BorderThickness) / Screen.height,
-            mapContainerWidth / Screen.width,
-            mapContainerHeight / Screen.height
-        );
-
-        if (IsOpen) Imperium.Map.Camera.rect = CameraRect;
+        //
+        // var mapBorderPosition = mapBorder.gameObject.GetComponent<RectTransform>().position;
+        // var mapBorderSize = mapBorder.gameObject.GetComponent<RectTransform>().sizeDelta;
+        // var mapContainerWidth = mapBorderSize.x * canvas.scaleFactor - BorderThickness * 2;
+        // var mapContainerHeight = mapBorderSize.y * canvas.scaleFactor - BorderThickness * 2;
+        //
+        // CameraRect = new Rect(
+        //     (mapBorderPosition.x + BorderThickness) / Screen.width,
+        //     (mapBorderPosition.y + BorderThickness) / Screen.height,
+        //     mapContainerWidth / Screen.width,
+        //     mapContainerHeight / Screen.height
+        // );
     }
 
-    protected override void OnThemeUpdate(ImpTheme themeUpdate)
+    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,
@@ -93,15 +99,17 @@ internal class MinimapOverlay : BaseUI
             new StyleOverride("Compass/East", Variant.FOREGROUND),
             new StyleOverride("Compass/South", Variant.FOREGROUND),
             new StyleOverride("Compass/West", Variant.FOREGROUND),
+            new StyleOverride("LocationPanel/Text", Variant.FOREGROUND),
             new StyleOverride("InfoPanel/Position", Variant.FOREGROUND),
             new StyleOverride("InfoPanel/PositionTitle", Variant.FOREGROUND),
             new StyleOverride("InfoPanel/Rotation", Variant.FOREGROUND),
             new StyleOverride("InfoPanel/RotationTitle", Variant.FOREGROUND),
             new StyleOverride("InfoPanel/Location", Variant.FOREGROUND),
             new StyleOverride("InfoPanel/LocationTitle", Variant.FOREGROUND),
-            new StyleOverride("InfoPanel/Time", Variant.FOREGROUND),
-            new StyleOverride("InfoPanel/TimeTitle", Variant.FOREGROUND),
-            new StyleOverride("LocationPanel/Text", Variant.FOREGROUND)
+            new StyleOverride("InfoPanel/Level", Variant.FOREGROUND),
+            new StyleOverride("InfoPanel/LevelTitle", Variant.FOREGROUND),
+            new StyleOverride("InfoPanel/Extraction", Variant.FOREGROUND),
+            new StyleOverride("InfoPanel/ExtractionTitle", Variant.FOREGROUND)
         );
     }
 
@@ -109,7 +117,7 @@ internal class MinimapOverlay : BaseUI
     {
         compass = container.Find("MapBorder/Compass").gameObject;
         compass.SetActive(Imperium.Settings.Map.CompassEnabled.Value);
-        Imperium.Settings.Map.CompassEnabled.onUpdate += compass.SetActive;
+        Imperium.Settings.Map.CompassEnabled.onPrimaryUpdate += compass.SetActive;
 
         compassNorth = compass.transform.Find("North");
         compassEast = compass.transform.Find("East");
@@ -119,10 +127,28 @@ internal class MinimapOverlay : BaseUI
 
     private void Update()
     {
+        // Automatically open this UI when nothing else is open
+        if (!Imperium.Settings.Map.MinimapEnabled.Value
+            || Imperium.Interface.IsOpen()
+            || Imperium.Freecam.IsFreecamEnabled.Value
+            || !Imperium.IsImperiumEnabled
+            || Imperium.GameManager.IsGameLoading
+            || !Imperium.IsArenaLoaded
+           )
+        {
+            if (IsOpen) Close();
+        }
+        else
+        {
+            if (!IsOpen) Open();
+        }
+
+        if (!IsOpen) return;
+
         infoPanel.SetActive(Imperium.Settings.Map.MinimapInfoPanel.Value);
         locationPanel.SetActive(Imperium.Settings.Map.MinimapLocationPanel.Value);
 
-        // locationText.SetText(Imperium.RoundManager.currentLevel.PlanetName);
+        locationText.SetText(LevelGenerator.Instance.Level.NarrativeName);
 
         // Only update the panel when it's activated
         if (Imperium.Settings.Map.MinimapInfoPanel.Value)
@@ -134,11 +160,8 @@ internal class MinimapOverlay : BaseUI
             rotationText.text =
                 $"{Formatting.FormatVector(playerRotation, separator: "/", roundDigits: 0, unit: "\u00b0")}";
 
-            // var time = Formatting.FormatDayTime(Imperium.TimeOfDay.currentDayTime);
-            // var daysSpent = StatsManager..StartOfRound.gameStats.daysSpent;
-            // timeText.text = $"{time} / Day {daysSpent}";
-
-            // envText.text = ImpUtils.GetPlayerLocationText(Imperium.Player);
+            levelText.text = $"{RunManager.instance.levelsCompleted + 1}";
+            extractionText.text = $"{RoundDirector.instance.extractionPointsCompleted}/{RoundDirector.instance.extractionPoints}";
         }
 
         // Only update the compass when it's activated
@@ -152,20 +175,6 @@ internal class MinimapOverlay : BaseUI
             compassEast.localRotation = Quaternion.Euler(new Vector3(0, 0, -rotationY));
             compassSouth.localRotation = Quaternion.Euler(new Vector3(0, 0, -rotationY));
             compassWest.localRotation = Quaternion.Euler(new Vector3(0, 0, -rotationY));
-        }
-
-        // Automatically open this UI when nothing else is open
-        if (/*PlayerAvatar.instance.quickMenuManager.isMenuOpen && */ !Imperium.Interface.IsOpen<MinimapSettings>()
-            || !Imperium.Settings.Map.MinimapEnabled.Value
-            || Imperium.Freecam.IsFreecamEnabled.Value
-            || !Imperium.IsImperiumEnabled
-           )
-        {
-            if (IsOpen) Close();
-        }
-        else
-        {
-            if (!IsOpen) Open();
         }
     }
 }

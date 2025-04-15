@@ -27,7 +27,6 @@ internal class PreferencesWindow : ImperiumWindow
 
         var general = content.Find("Grid/General/General");
         ImpToggle.Bind("LoggingToggle", general, Imperium.Settings.Preferences.GeneralLogging, theme);
-        ImpToggle.Bind("OracleLoggingToggle", general, Imperium.Settings.Preferences.OracleLogging, theme);
         ImpToggle.Bind("LeftHandedToggle", general, Imperium.Settings.Preferences.LeftHandedMode, theme);
         ImpToggle.Bind("CustomWelcome", general, Imperium.Settings.Preferences.CustomWelcome, theme);
         ImpToggle.Bind("TooltipsToggle", general, Imperium.Settings.Preferences.ShowTooltips, theme);
@@ -201,7 +200,7 @@ internal class PreferencesWindow : ImperiumWindow
         }
     }
 
-    protected override void OnThemeUpdate(ImpTheme updatedTheme)
+    protected override void OnThemePrimaryUpdate(ImpTheme updatedTheme)
     {
         ImpThemeManager.Style(
             updatedTheme,

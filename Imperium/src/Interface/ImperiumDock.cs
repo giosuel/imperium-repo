@@ -43,7 +43,7 @@ public class ImperiumDock : BaseUI
 
         var buttonImage = button.GetComponent<Image>();
         buttonImage.enabled = false;
-        dockInterfaceManager.OpenInterface.onUpdate += selectedInterface =>
+        dockInterfaceManager.OpenInterface.onPrimaryUpdate += selectedInterface =>
         {
             if (!buttonImage) return;
 
@@ -57,7 +57,7 @@ public class ImperiumDock : BaseUI
         };
     }
 
-    protected override void OnThemeUpdate(ImpTheme themeUpdate)
+    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,

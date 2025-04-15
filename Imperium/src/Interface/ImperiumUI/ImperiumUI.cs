@@ -48,29 +48,34 @@ public class ImperiumUI : BaseUI
         RegisterImperiumWindow<ObjectExplorerWindow>(
             ImpAssets.ObjectExplorerWindowObject,
             "Left/ObjectExplorer",
-            "Object Explorer"
+            "Object Explorer",
+            canOpenBindings: Imperium.IsArenaLoaded
         );
 
         RegisterImperiumWindow<VisualizationWindow>(
             ImpAssets.VisualizationWindowObject,
             "Center/Visualization",
-            "Visualization"
+            "Visualization",
+            canOpenBindings: Imperium.IsArenaLoaded
         );
         RegisterImperiumWindow<TeleportWindow>(
             ImpAssets.TeleportationWindowObject,
             "Center/Teleportation",
             "Teleportation",
-            keybind: Imperium.InputBindings.InterfaceMap.TeleportWindow
+            keybind: Imperium.InputBindings.InterfaceMap.TeleportWindow,
+            canOpenBindings: Imperium.IsArenaLoaded
         );
         RegisterImperiumWindow<GrabberControlWindow>(
             ImpAssets.GrabberControlWindowObject,
             "Center/GrabberControl",
-            "Grabber Control"
+            "Grabber Control",
+            canOpenBindings: Imperium.IsArenaLoaded
         );
         RegisterImperiumWindow<ArenaControlWindow>(
             ImpAssets.ArenaControlWindowObject,
             "Center/ArenaControl",
-            "Arena Control"
+            "Arena Control",
+            canOpenBindings: Imperium.IsArenaLoaded
         );
 
         RegisterImperiumWindow<RenderingWindow>(
@@ -91,7 +96,8 @@ public class ImperiumUI : BaseUI
         RegisterImperiumWindow<InfoWindow>(
             ImpAssets.InfoWindowObject,
             "Right/Info",
-            "Level Information"
+            "Level Information",
+            canOpenBindings: Imperium.IsArenaLoaded
         );
         RegisterImperiumWindow<PreferencesWindow>(
             ImpAssets.PreferencesWindowObject,
@@ -102,7 +108,7 @@ public class ImperiumUI : BaseUI
         LoadLayout();
     }
 
-    protected override void OnThemeUpdate(ImpTheme themeUpdate)
+    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,
@@ -126,7 +132,8 @@ public class ImperiumUI : BaseUI
         string dockButtonPath,
         string windowName,
         string windowDescription = null,
-        InputAction keybind = null
+        InputAction keybind = null,
+        params IBinding<bool>[] canOpenBindings
     ) where T : ImperiumWindow
     {
         if (windowControllers.ContainsKey(typeof(T))) return;
@@ -169,7 +176,8 @@ public class ImperiumUI : BaseUI
                 Title = windowName,
                 Description = windowDescription,
                 HasAccess = true
-            }
+            },
+            interactableBindings: canOpenBindings
         );
         var buttonBinding = new ImpBinding<bool>(false);
         dockButtonBindings[typeof(T)] = buttonBinding;
@@ -178,7 +186,7 @@ public class ImperiumUI : BaseUI
 
         var buttonImage = button.GetComponent<Image>();
         buttonImage.enabled = buttonBinding.Value;
-        buttonBinding.onUpdate += isOn =>
+        buttonBinding.onPrimaryUpdate += isOn =>
         {
             if (!buttonImage)
             {

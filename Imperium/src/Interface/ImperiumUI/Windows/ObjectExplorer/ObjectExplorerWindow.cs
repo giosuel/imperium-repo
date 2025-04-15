@@ -21,6 +21,9 @@ internal class ObjectExplorerWindow : ImperiumWindow
     private RectTransform playersTitle;
     private TMP_Text playersCount;
 
+    private RectTransform extractionPointsTitle;
+    private TMP_Text extractionPointsCount;
+
     private RectTransform entitiesTitle;
     private TMP_Text entitiesCount;
 
@@ -36,6 +39,7 @@ internal class ObjectExplorerWindow : ImperiumWindow
     private RectTransform contentRect;
 
     private readonly ImpBinding<bool> PlayersCollapsed = new(false);
+    private readonly ImpBinding<bool> ExtractionPointsCollapsed = new(false);
     private readonly ImpBinding<bool> EntitiesCollapsed = new(false);
     private readonly ImpBinding<bool> ItemsCollapsed = new(false);
     private readonly ImpBinding<bool> ValuablesCollapsed = new(false);
@@ -65,6 +69,8 @@ internal class ObjectExplorerWindow : ImperiumWindow
 
         playersTitle = contentRect.Find("PlayerListTitle").GetComponent<RectTransform>();
         playersCount = contentRect.Find("PlayerListTitle/Count").GetComponent<TMP_Text>();
+        extractionPointsTitle = contentRect.Find("ExtractionPointListTitle").GetComponent<RectTransform>();
+        extractionPointsCount = contentRect.Find("ExtractionPointListTitle/Count").GetComponent<TMP_Text>();
         entitiesTitle = contentRect.Find("EntityListTitle").GetComponent<RectTransform>();
         entitiesCount = contentRect.Find("EntityListTitle/Count").GetComponent<TMP_Text>();
         itemsTitle = contentRect.Find("ItemListTitle").GetComponent<RectTransform>();
@@ -73,28 +79,38 @@ internal class ObjectExplorerWindow : ImperiumWindow
         valuablesCount = contentRect.Find("ValuableListTitle/Count").GetComponent<TMP_Text>();
 
         ImpButton.CreateCollapse("PlayerListTitle/Arrow", contentRect, stateBinding: PlayersCollapsed);
+        ImpButton.CreateCollapse("ExtractionPointListTitle/Arrow", contentRect, stateBinding: ExtractionPointsCollapsed);
         ImpButton.CreateCollapse("EntityListTitle/Arrow", contentRect, stateBinding: EntitiesCollapsed);
         ImpButton.CreateCollapse("ItemListTitle/Arrow", contentRect, stateBinding: ItemsCollapsed);
         ImpButton.CreateCollapse("ValuableListTitle/Arrow", contentRect, stateBinding: ValuablesCollapsed);
 
-        PlayersCollapsed.onTrigger += RefreshEntries;
-        EntitiesCollapsed.onTrigger += RefreshEntries;
-        ItemsCollapsed.onTrigger += RefreshEntries;
-        ValuablesCollapsed.onTrigger += RefreshEntries;
+        PlayersCollapsed.onPrimaryTrigger += RefreshEntries;
+        ExtractionPointsCollapsed.onPrimaryTrigger += RefreshEntries;
+        EntitiesCollapsed.onPrimaryTrigger += RefreshEntries;
+        ItemsCollapsed.onPrimaryTrigger += RefreshEntries;
+        ValuablesCollapsed.onPrimaryTrigger += RefreshEntries;
 
         Imperium.ObjectManager.CurrentLevelObjectsChanged += RefreshEntries;
 
         objectCategories = new Dictionary<ObjectCategory, CategoryDefinition>
         {
             { ObjectCategory.Players, new CategoryDefinition { TitleRect = playersTitle, Binding = PlayersCollapsed } },
+            {
+                ObjectCategory.ExtractionPoints,
+                new CategoryDefinition { TitleRect = extractionPointsTitle, Binding = ExtractionPointsCollapsed }
+            },
             { ObjectCategory.Entities, new CategoryDefinition { TitleRect = entitiesTitle, Binding = EntitiesCollapsed } },
-            { ObjectCategory.Valuables, new CategoryDefinition { TitleRect = valuablesTitle, Binding = ValuablesCollapsed } },
+            {
+                ObjectCategory.Valuables,
+                new CategoryDefinition { TitleRect = valuablesTitle, Binding = ValuablesCollapsed }
+            },
             { ObjectCategory.Items, new CategoryDefinition { TitleRect = itemsTitle, Binding = ItemsCollapsed } },
         };
 
         categoryOrder =
         [
             ObjectCategory.Players,
+            ObjectCategory.ExtractionPoints,
             ObjectCategory.Entities,
             ObjectCategory.Valuables,
             ObjectCategory.Items,
@@ -103,12 +119,13 @@ internal class ObjectExplorerWindow : ImperiumWindow
         InitEntryEngine();
     }
 
-    protected override void OnThemeUpdate(ImpTheme themeUpdate)
+    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,
             contentRect,
             new StyleOverride("PlayerListTitle", Variant.DARKER),
+            new StyleOverride("ExtractionPointListTitle", Variant.DARKER),
             new StyleOverride("EntityListTitle", Variant.DARKER),
             new StyleOverride("ItemListTitle", Variant.DARKER),
             new StyleOverride("ValuableListTitle", Variant.DARKER)
@@ -125,6 +142,7 @@ internal class ObjectExplorerWindow : ImperiumWindow
             themeUpdate,
             contentRect,
             new StyleOverride("PlayerListTitle/Count", Variant.FADED_TEXT),
+            new StyleOverride("ExtractionPointListTitle/Count", Variant.FADED_TEXT),
             new StyleOverride("EntityListTitle/Count", Variant.FADED_TEXT),
             new StyleOverride("ItemListTitle/Count", Variant.FADED_TEXT),
             new StyleOverride("ValuableListTitle/Count", Variant.FADED_TEXT)
@@ -230,6 +248,7 @@ internal class ObjectExplorerWindow : ImperiumWindow
         }
 
         playersCount.text = $"({categoryCounts.GetValueOrDefault(ObjectCategory.Players, 0).ToString()})";
+        extractionPointsCount.text = $"({categoryCounts.GetValueOrDefault(ObjectCategory.ExtractionPoints, 0).ToString()})";
         entitiesCount.text = $"({categoryCounts.GetValueOrDefault(ObjectCategory.Entities, 0).ToString()})";
         itemsCount.text = $"({categoryCounts.GetValueOrDefault(ObjectCategory.Items, 0).ToString()})";
         valuablesCount.text = $"({categoryCounts.GetValueOrDefault(ObjectCategory.Valuables, 0).ToString()})";

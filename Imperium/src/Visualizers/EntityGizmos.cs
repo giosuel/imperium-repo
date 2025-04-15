@@ -55,81 +55,28 @@ internal class EntityGizmos : BaseVisualizer<IReadOnlyCollection<EnemyParent>, E
                 entityGizmoObject.transform.SetParent(parent);
 
                 var entityGizmo = entityGizmoObject.AddComponent<EntityGizmo>();
-                entityGizmo.Init(entityConfig, Imperium.Visualization, entity);
+                entityGizmo.Init(entityConfig, Imperium.Visualization, entity, parent);
 
                 visualizerObjects[entity.GetInstanceID()] = entityGizmo;
             }
         }
     }
 
-    internal void NoiseVisualizerUpdate(EnemyParent instance, Vector3 origin)
+    internal void VisionUpdate(EnemyVision vision)
     {
-        if (visualizerObjects.TryGetValue(instance.GetInstanceID(), out var entityGizmo))
+        if (vision?.Enemy == null) return;
+
+        if (visualizerObjects.TryGetValue(vision.Enemy.EnemyParent.GetInstanceID(), out var entityGizmo))
+        {
+            entityGizmo.VisionUpdate();
+        }
+    }
+
+    internal void NoiseVisualizerUpdate(EnemyStateInvestigate instance, Vector3 origin)
+    {
+        if (visualizerObjects.TryGetValue(instance.Enemy.EnemyParent.GetInstanceID(), out var entityGizmo))
         {
             entityGizmo.NoiseVisualizerUpdate(origin);
-        }
-    }
-
-    internal void ConeVisualizerUpdate(
-        EnemyParent instance, Transform eye, float angle, float length, Material material,
-        GizmoType gizmoType = GizmoType.LineOfSight, GizmoDuration gizmoDuration = GizmoDuration.AIInterval,
-        int id = -1,
-        Func<Vector3> relativePositionOverride = null,
-        Func<Transform, Vector3> absolutePositionOverride = null
-    )
-    {
-        if (visualizerObjects.TryGetValue(instance.GetInstanceID(), out var entityGizmo))
-        {
-            entityGizmo.ConeVisualizerUpdate(
-                eye ?? instance.transform,
-                angle, length, material,
-                visConfig => gizmoType == GizmoType.LineOfSight ? visConfig.LineOfSight : visConfig.Custom,
-                gizmoDuration,
-                id,
-                relativePositionOverride,
-                absolutePositionOverride
-            );
-        }
-    }
-
-    internal void SphereVisualizerUpdate(
-        EnemyParent instance, Transform eye, float radius, Material material,
-        GizmoType gizmoType = GizmoType.LineOfSight, GizmoDuration gizmoDuration = GizmoDuration.AIInterval,
-        int id = -1,
-        Func<Vector3> relativePositionOverride = null,
-        Func<Transform, Vector3> absolutePositionOverride = null
-    )
-    {
-        if (visualizerObjects.TryGetValue(instance.GetInstanceID(), out var entityGizmo))
-        {
-            entityGizmo.SphereVisualizerUpdate(
-                eye ?? instance.transform,
-                radius, material,
-                visConfig => gizmoType == GizmoType.LineOfSight ? visConfig.LineOfSight : visConfig.Custom,
-                gizmoDuration,
-                id,
-                relativePositionOverride,
-                absolutePositionOverride
-            );
-        }
-    }
-
-    internal void StaticSphereVisualizerUpdate(
-        EnemyParent instance, Vector3 position, Material material,
-        float radius = 2f,
-        GizmoType gizmoType = GizmoType.LineOfSight, GizmoDuration gizmoDuration = GizmoDuration.Indefinite,
-        int id = -1
-    )
-    {
-        if (visualizerObjects.TryGetValue(instance.GetInstanceID(), out var entityGizmo))
-        {
-            entityGizmo.StaticSphereVisualizerUpdate(
-                instance.gameObject,
-                position, radius, material,
-                visConfig => gizmoType == GizmoType.LineOfSight ? visConfig.LineOfSight : visConfig.Custom,
-                gizmoDuration,
-                id
-            );
         }
     }
 }

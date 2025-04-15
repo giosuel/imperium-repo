@@ -19,7 +19,6 @@ public class SpawningObjectEntry : MonoBehaviour
     private GameObject selectedCover;
 
     internal SpawnObjectType SpawnType { get; private set; }
-    private string displayName;
     private string spawnObjectName;
 
     private string displayNameNormalized;
@@ -37,33 +36,7 @@ public class SpawningObjectEntry : MonoBehaviour
         SpawnType = type;
         spawnObjectName = objectName;
 
-        var overrideName = Imperium.ObjectManager.GetOverrideDisplayName(objectName);
-
-        /*
-         * Primary name is the user defined display name from the display name dictionary
-         * Secondary name is the raw object name from the game, if they are equal, only the primary name is displayed.
-         *
-         * If an override name is defined, the override name will be used as primary name and the secondary name
-         * will be ignored.
-         *
-         * Normalized primary and secondary names will be used for indexing.
-         */
-        string primaryName;
-        var secondaryName = "";
-
-        if (overrideName != null)
-        {
-            displayName = overrideName;
-            primaryName = overrideName;
-        }
-        else
-        {
-            displayName = Imperium.ObjectManager.GetDisplayName(objectName);
-            primaryName = displayName;
-            if (displayName != objectName) secondaryName = $"({objectName})";
-        }
-
-        displayNameNormalized = NormalizeName(displayName);
+        displayNameNormalized = NormalizeName(objectName);
         objectNameNormalized = NormalizeName(objectName);
 
         ImpButton.Bind("", transform, () => onClick?.Invoke(), themeBinding);
@@ -71,15 +44,15 @@ public class SpawningObjectEntry : MonoBehaviour
         selectedCover = transform.Find("Selected").gameObject;
         selectedCover.SetActive(false);
 
-        transform.Find("Name/Primary").GetComponent<TMP_Text>().text = primaryName;
-        transform.Find("Name/Secondary").GetComponent<TMP_Text>().text = secondaryName;
+        transform.Find("Name/Primary").GetComponent<TMP_Text>().text = objectName;
+        transform.Find("Name/Secondary").GetComponent<TMP_Text>().text = objectName;
         transform.Find("Type").GetComponent<TMP_Text>().text = typeDisplayNameMap.GetValueOrDefault(type, "");
 
         gameObject.AddComponent<ImpInteractable>().onOver += onHover;
-        themeBinding.onUpdate += OnThemeUpdate;
+        themeBinding.onPrimaryUpdate += OnThemePrimaryUpdate;
     }
 
-    private void OnThemeUpdate(ImpTheme themeUpdate)
+    private void OnThemePrimaryUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,

@@ -42,7 +42,7 @@ internal class SaveEditorWindow : ImperiumWindow
         // }
     }
 
-    protected override void OnThemeUpdate(ImpTheme themeUpdate)
+    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,
@@ -154,7 +154,7 @@ internal class SaveEditorWindow : ImperiumWindow
         element.Find("Title").GetComponent<TMP_Text>().text = settingName;
 
         var binding = new ImpBinding<string>(ES3.Load(settingName, fileName).ToString());
-        binding.onUpdate += value => ES3.Save(settingName, value, fileName);
+        binding.onPrimaryUpdate += value => ES3.Save(settingName, value, fileName);
 
         ImpInput.Bind("Input", element, binding, theme);
         element.Find("Input").GetComponent<TMP_InputField>().contentType = contentType;
@@ -171,7 +171,7 @@ internal class SaveEditorWindow : ImperiumWindow
         var binding = new ImpBinaryBinding(
             ES3.KeyExists(settingName, fileName) && (bool)ES3.Load(settingName, fileName)
         );
-        binding.onUpdate += value => ES3.Save(settingName, value, fileName);
+        binding.onPrimaryUpdate += value => ES3.Save(settingName, value, fileName);
         ImpToggle.Bind("", element, binding, theme);
     }
 }

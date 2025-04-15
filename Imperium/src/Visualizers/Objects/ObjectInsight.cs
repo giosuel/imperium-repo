@@ -54,8 +54,8 @@ public class ObjectInsight : MonoBehaviour
         panelEntryTemplate = insightPanel.Find("Template").gameObject;
         panelEntryTemplate.SetActive(false);
 
-        InsightDefinition.Insights.onUpdate += OnInsightsUpdate;
-        OnInsightsUpdate(InsightDefinition.Insights.Value);
+        InsightDefinition.Insights.onPrimaryUpdate += OnInsightsPrimaryUpdate;
+        OnInsightsPrimaryUpdate(InsightDefinition.Insights.Value);
 
         UpdateInsightOverlay();
     }
@@ -66,13 +66,13 @@ public class ObjectInsight : MonoBehaviour
     /// <param name="definition">New insight definition</param>
     internal void UpdateInsightDefinition(InsightDefinition<Component> definition)
     {
-        InsightDefinition.Insights.onUpdate -= OnInsightsUpdate;
+        InsightDefinition.Insights.onPrimaryUpdate -= OnInsightsPrimaryUpdate;
 
         InsightDefinition = definition;
-        InsightDefinition.Insights.onUpdate += OnInsightsUpdate;
+        InsightDefinition.Insights.onPrimaryUpdate += OnInsightsPrimaryUpdate;
     }
 
-    private void OnInsightsUpdate(Dictionary<string, Func<Component, string>> insights)
+    private void OnInsightsPrimaryUpdate(Dictionary<string, Func<Component, string>> insights)
     {
         foreach (var (insightName, insightGenerator) in insights)
         {
@@ -164,13 +164,6 @@ public class ObjectInsight : MonoBehaviour
 
         var worldPosition = InsightDefinition.PositionOverride?.Invoke(targetObject) ?? targetObject.transform.position;
         var screenPosition = camera.WorldToScreenPoint(worldPosition);
-
-        // Disable rendering if panel is outside of camera view
-        if (Imperium.Map.Minimap.CameraRect.Contains(screenPosition))
-        {
-            insightPanelObject.SetActive(false);
-            return;
-        }
 
         // Disable rendering if player doesn't have LOS and LOS is required
         var playerHasLOS = !Physics.Linecast(camera.transform.position, worldPosition);

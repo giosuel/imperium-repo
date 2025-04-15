@@ -134,8 +134,11 @@ internal class ObjectVisualizers : ImpWidget
             }
         );
 
-        Imperium.Visualization.ObjectInsights.InsightVisibilityBindings.onTrigger += Refresh;
-        Imperium.ObjectManager.CurrentPlayers.onTrigger += Refresh;
+        Refresh();
+
+        Imperium.ObjectManager.LoadedEntities.onPrimaryTrigger += Refresh;
+        Imperium.ObjectManager.CurrentPlayers.onPrimaryTrigger += Refresh;
+        Imperium.Visualization.ObjectInsights.InsightVisibilityBindings.onPrimaryTrigger += Refresh;
     }
 
     protected override void OnThemeUpdate(ImpTheme themeUpdate)
@@ -209,18 +212,18 @@ internal class ObjectVisualizers : ImpWidget
         //     playerEntries[player.GetInstanceID()] = playerEntry;
         // }
 
-        // foreach (var entity in Resources.FindObjectsOfTypeAll<EnemyType>().OrderBy(enemy => enemy.enemyName))
-        // {
-        //     if (entityEntries.ContainsKey(entity.GetInstanceID())) continue;
-        //
-        //     var entityEntryObject = Instantiate(entityTemplate, entityList);
-        //     entityEntryObject.SetActive(true);
-        //
-        //     var entityEntry = entityEntryObject.AddComponent<ObjectVisualizerEntityEntry>();
-        //     entityEntry.Init(Imperium.Visualization.EntityGizmos.EntityInfoConfigs[entity], theme);
-        //
-        //     entityEntries[entity.GetInstanceID()] = entityEntry;
-        // }
+        foreach (var enemy in Imperium.ObjectManager.LoadedEntities.Value.OrderBy(enemy => enemy.EnemyName))
+        {
+            if (entityEntries.ContainsKey(enemy.Enemy.GetInstanceID())) continue;
+
+            var entityEntryObject = Instantiate(entityTemplate, entityList);
+            entityEntryObject.SetActive(true);
+
+            var entityEntry = entityEntryObject.AddComponent<ObjectVisualizerEntityEntry>();
+            entityEntry.Init(Imperium.Visualization.EntityGizmos.EntityInfoConfigs[enemy.EnemyName], theme);
+
+            entityEntries[enemy.Enemy.GetInstanceID()] = entityEntry;
+        }
 
         foreach (var (objectType, objectConfig) in Imperium.Visualization.ObjectInsights.InsightVisibilityBindings.Value)
         {

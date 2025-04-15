@@ -69,15 +69,15 @@ internal class EventLogWindow : ImperiumWindow
         ImpToggle.Bind("Footer/Game", transform, Imperium.Settings.EventLog.GameLogs, theme: theme);
         ImpToggle.Bind("Footer/Custom", transform, Imperium.Settings.EventLog.CustomLogs, theme: theme);
 
-        Imperium.Settings.EventLog.EntityLogs.onTrigger += OnTypeToggle;
-        Imperium.Settings.EventLog.PlayerLogs.onTrigger += OnTypeToggle;
-        Imperium.Settings.EventLog.GameLogs.onTrigger += OnTypeToggle;
-        Imperium.Settings.EventLog.CustomLogs.onTrigger += OnTypeToggle;
+        Imperium.Settings.EventLog.EntityLogs.onPrimaryTrigger += OnTypeToggle;
+        Imperium.Settings.EventLog.PlayerLogs.onPrimaryTrigger += OnTypeToggle;
+        Imperium.Settings.EventLog.GameLogs.onPrimaryTrigger += OnTypeToggle;
+        Imperium.Settings.EventLog.CustomLogs.onPrimaryTrigger += OnTypeToggle;
 
-        Imperium.EventLog.Log.onUpdate += OnLogUpdate;
+        Imperium.EventLog.Log.onPrimaryUpdate += OnLogPrimaryUpdate;
     }
 
-    protected override void OnThemeUpdate(ImpTheme themeUpdated)
+    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdated)
     {
         ImpThemeManager.Style(
             themeUpdated,
@@ -171,7 +171,7 @@ internal class EventLogWindow : ImperiumWindow
         UpdateList();
     }
 
-    public void OnLogUpdate(List<EventLogMessage> log)
+    public void OnLogPrimaryUpdate(List<EventLogMessage> log)
     {
         visibleMessages = log.Where(message => IsMessageVisible(message.Type)).Reverse().ToList();
         UpdateList(pauseScrolling: true);

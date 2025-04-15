@@ -1,7 +1,7 @@
 using RepoSteamNetworking.API;
 using RepoSteamNetworking.Networking.Serialization;
 
-namespace Imperium.Netcode;
+namespace Imperium.Networking;
 
 public class ImpPacket : NetworkPacket<ImpPacket>
 {

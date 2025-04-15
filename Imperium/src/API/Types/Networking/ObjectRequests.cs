@@ -15,17 +15,6 @@ public readonly struct EntitySpawnRequest()
     [SerializeField] public int Amount { get; init; } = 1;
     [SerializeField] public int Health { get; init; } = -1;
     [SerializeField] public bool SendNotification { get; init; } = false;
-
-    /*
-     * Masked specific parameters
-     */
-    [SerializeField] public long MaskedPlayerId { get; init; } = -1;
-    [SerializeField] public string MaskedName { get; init; } = null;
-}
-
-public readonly struct ObjectDespawnRequest
-{
-    [SerializeField] public int ViewId { get; init; }
 }
 
 public readonly struct ItemSpawnRequest()
@@ -45,57 +34,20 @@ public readonly struct ValuableSpawnRequest()
     [SerializeField] public bool SendNotification { get; init; } = false;
 }
 
-public readonly struct MapHazardSpawnRequest()
+public readonly struct ObjectDespawnRequest
 {
-    [SerializeField] public string Name { get; init; }
-    [SerializeField] public Vector3 SpawnPosition { get; init; } = default;
-    [SerializeField] public int Amount { get; init; } = 1;
-    [SerializeField] public bool SendNotification { get; init; } = false;
+    [SerializeField] public int ViewId { get; init; }
 }
 
-public readonly struct StaticPrefabSpawnRequest()
+public readonly struct ExtractionCompleteRequest
 {
-    [SerializeField] public string Name { get; init; }
-    [SerializeField] public Vector3 SpawnPosition { get; init; } = default;
-    [SerializeField] public int Amount { get; init; } = 1;
-    [SerializeField] public bool SendNotification { get; init; } = false;
-}
-
-public readonly struct CompanyCruiserSpawnRequest()
-{
-    [SerializeField] public Vector3 SpawnPosition { get; init; } = default;
-    [SerializeField] public bool SendNotification { get; init; } = false;
+    [SerializeField] public int ViewId { get; init; }
 }
 
 public readonly struct ObjectTeleportRequest()
 {
-    // This can be either the network ID or the imperium unique identifier assigned when spawning.
     [SerializeField] public int ViewId { get; init; } = 0;
     [SerializeField] public Vector3 Destination { get; init; }
-}
-
-public readonly struct LocalObjectDespawnRequest
-{
-    [SerializeField] public LocalObjectType Type { get; init; }
-    [SerializeField] public Vector3 Position { get; init; }
-}
-
-public readonly struct LocalObjectTeleportRequest
-{
-    [SerializeField] public LocalObjectType Type { get; init; }
-    [SerializeField] public Vector3 Position { get; init; }
-    [SerializeField] public Vector3 Destination { get; init; }
-}
-
-public readonly struct VentToggleRequest
-{
-    [SerializeField] public int NetworkId { get; init; }
-    [SerializeField] public bool IsEnabled { get; init; }
-}
-
-public enum LocalObjectType
-{
-    OutsideObject
 }
 
 public enum ObjectType
@@ -103,5 +55,6 @@ public enum ObjectType
     Player,
     Entity,
     Item,
-    Valuable
+    Valuable,
+    ExtractionPoint
 }

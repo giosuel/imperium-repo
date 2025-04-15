@@ -10,16 +10,12 @@ internal class InputBlocker
     {
         if (inputBlockers.Count == 0) DisableActions();
         inputBlockers.Add(blocker);
-
-        Imperium.IO.LogInfo($"Block - Input blockers: {inputBlockers.Count}");
     }
 
     internal void Unblock(object blocker)
     {
         inputBlockers.Remove(blocker);
         if (inputBlockers.Count == 0) EnableActions();
-
-        Imperium.IO.LogInfo($"Unblock - Input blockers: {inputBlockers.Count}");
     }
 
     private static void DisableActions()

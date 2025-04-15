@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Logging;
 using Imperium.API.Types.Networking;
-using Imperium.Core;
 using Librarium.Binding;
 using UnityEngine;
+using ImpSettings = Imperium.Core.ImpSettings;
 using LogLevel = BepInEx.Logging.LogLevel;
 
 #endregion
