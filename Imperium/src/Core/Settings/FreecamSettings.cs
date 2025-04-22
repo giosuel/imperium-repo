@@ -19,7 +19,8 @@ internal class FreecamSettings(ConfigFile config, IBinding<bool> isSceneLoaded, 
         config,
         "Preferences.Freecam",
         "LayerMask",
-        ~LayerMask.GetMask("HelmetVisor")
+        // Layer mask includes everything except UI and the dirt finder map
+        -4129
     );
 
     internal readonly ImpConfig<float> FreecamMovementSpeed = new(

@@ -60,7 +60,7 @@ internal class MapUI : BaseUI
 
         Imperium.Settings.Map.RotationLock.onTrigger += OnRotationLockChange;
 
-        // selectedPlayer.Set(Imperium.Player);
+        selectedPlayer.Set(Imperium.Player);
     }
 
     private void OnDrag(Vector3 delta)
@@ -301,7 +301,7 @@ internal class MapUI : BaseUI
 
     private void MoveCameraToTarget(Transform newTarget)
     {
-        if (!target) return;
+        if (!newTarget) return;
 
         target = newTarget;
 

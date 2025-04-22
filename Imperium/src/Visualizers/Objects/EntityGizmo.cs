@@ -25,13 +25,10 @@ public class EntityGizmo : MonoBehaviour
     private EnemyParent enemyParent;
 
     private EntityGizmoConfig entityConfig;
-    private Visualization visualization;
 
     private LineRenderer lastHeardNoiseLine;
 
     private GameObject lastHeardNoiseDot;
-    // private LineRenderer targetLookLine;
-    // private LineRenderer targetPlayerLine;
 
     private const int pathSegmentCount = 20;
 
@@ -39,35 +36,23 @@ public class EntityGizmo : MonoBehaviour
     private readonly GameObject[] pathDots = new GameObject[pathSegmentCount];
 
     private EnemyVision enemyVision;
-    private Transform staticParent;
 
     private GameObject coneStanding;
     private GameObject coneCrouching;
     private GameObject coneCrawling;
 
-    private GameObject instantSphereStanding;
-    private GameObject instantSphereCrouching;
+    private GameObject proximitySphereStanding;
+    private GameObject proximitySphereCrouching;
 
     private float lastUpdateTime;
 
-    private bool initializedVision;
+    private bool hasInitializedVision;
 
-    internal void NoiseVisualizerUpdate(Vector3 origin)
-    {
-        ImpGeometry.SetLinePositions(lastHeardNoiseLine, enemyParent.transform.position, origin);
-        lastHeardNoiseLine.gameObject.SetActive(entityConfig.Hearing.Value);
-
-        lastHeardNoiseDot.gameObject.SetActive(entityConfig.Hearing.Value);
-        lastHeardNoiseDot.gameObject.transform.position = origin;
-    }
-
-    internal void Init(EntityGizmoConfig config, Visualization visualizer, EnemyParent entity, Transform parent)
+    internal void Init(EntityGizmoConfig config, EnemyParent entity)
     {
         entityConfig = config;
-        visualization = visualizer;
         enemyParent = entity;
         enemyVision = entity.Enemy.Vision;
-        staticParent = parent;
 
         pathLine = ImpGeometry.CreateLine(
             transform, 0.1f, true,
@@ -106,10 +91,10 @@ public class EntityGizmo : MonoBehaviour
         coneCrouching = CreateCone("crouching", vision.VisionDotCrouch, vision.VisionDistance, ImpAssets.WireframeGreen);
         coneCrawling = CreateCone("crawl", vision.VisionDotCrawl, vision.VisionDistance, ImpAssets.WireframeRed);
 
-        instantSphereStanding = CreateSphere("standing", vision.VisionDistanceClose, ImpAssets.WireframeCyan);
-        instantSphereCrouching = CreateSphere("crouching", vision.VisionDistanceCloseCrouch, ImpAssets.WireframeRed);
+        proximitySphereStanding = CreateSphere("standing", vision.VisionDistanceClose, ImpAssets.WireframeCyan);
+        proximitySphereCrouching = CreateSphere("crouching", vision.VisionDistanceCloseCrouch, ImpAssets.WireframeRed);
 
-        initializedVision = true;
+        hasInitializedVision = true;
     }
 
     private (GameObject, GameObject) SelectActiveVisionObjects()
@@ -120,38 +105,38 @@ public class EntityGizmo : MonoBehaviour
         if (enemyVision.Enemy.CurrentState == EnemyState.LookUnder)
         {
             activeCone = coneStanding;
-            activeSphere = instantSphereStanding;
+            activeSphere = proximitySphereStanding;
 
             coneCrouching.SetActive(false);
             coneCrawling.SetActive(false);
-            instantSphereCrouching.SetActive(false);
+            proximitySphereCrouching.SetActive(false);
         }
         else if (PlayerAvatar.instance.isCrawling && !PlayerAvatar.instance.isTumbling)
         {
             activeCone = coneCrawling;
-            activeSphere = instantSphereCrouching;
+            activeSphere = proximitySphereCrouching;
 
             coneStanding.SetActive(false);
             coneCrouching.SetActive(false);
-            instantSphereStanding.SetActive(false);
+            proximitySphereStanding.SetActive(false);
         }
         else if (PlayerAvatar.instance.isCrouching || PlayerAvatar.instance.isTumbling)
         {
             activeCone = coneCrouching;
-            activeSphere = instantSphereCrouching;
+            activeSphere = proximitySphereCrouching;
 
             coneStanding.SetActive(false);
             coneCrawling.SetActive(false);
-            instantSphereStanding.SetActive(false);
+            proximitySphereStanding.SetActive(false);
         }
         else
         {
-            activeSphere = instantSphereStanding;
+            activeSphere = proximitySphereStanding;
 
             activeCone = coneStanding;
             coneCrouching.SetActive(false);
             coneCrawling.SetActive(false);
-            instantSphereCrouching.SetActive(false);
+            proximitySphereCrouching.SetActive(false);
         }
 
         activeCone.SetActive(true);
@@ -160,9 +145,11 @@ public class EntityGizmo : MonoBehaviour
         return (activeCone, activeSphere);
     }
 
-    private static GameObject CreateCone(string identifier, float dot, float distance, Material material)
+    private GameObject CreateCone(string identifier, float dot, float distance, Material material)
     {
         var obj = new GameObject($"ImpVis_LoS_{identifier}");
+        obj.transform.SetParent(transform);
+
         obj.AddComponent<MeshRenderer>().material = material;
         obj.AddComponent<MeshFilter>().mesh = Visualization.GenerateCone(
             Mathf.Acos(dot) * (180.0f / Mathf.PI)
@@ -172,11 +159,11 @@ public class EntityGizmo : MonoBehaviour
         return obj;
     }
 
-    private static GameObject CreateSphere(string identifier, float radius, Material material)
+    private GameObject CreateSphere(string identifier, float radius, Material material)
     {
         var obj = ImpGeometry.CreatePrimitive(
             PrimitiveType.Sphere,
-            parent: null,
+            parent: transform,
             material: material,
             size: radius * 2,
             name: $"ImpVis_Instant_{identifier}"
@@ -185,27 +172,44 @@ public class EntityGizmo : MonoBehaviour
         return obj;
     }
 
+    internal void NoiseUpdate(Vector3 origin)
+    {
+        lastHeardNoiseLine.gameObject.SetActive(entityConfig.Hearing.Value);
+        lastHeardNoiseDot.gameObject.SetActive(entityConfig.Hearing.Value);
+
+        if (entityConfig.Hearing.Value)
+        {
+            ImpGeometry.SetLinePositions(lastHeardNoiseLine, enemyParent.transform.position, origin);
+            lastHeardNoiseDot.gameObject.transform.position = origin;
+        }
+    }
+
     internal void VisionUpdate()
     {
-        if (!initializedVision || !entityConfig.LineOfSight.Value) return;
+        if (!hasInitializedVision || !entityConfig.Vision.Value && !entityConfig.Proximity.Value) return;
 
         lastUpdateTime = Time.realtimeSinceStartup;
 
         var (activeCone, activeSphere) = SelectActiveVisionObjects();
 
-        // Parent object to entity vision so it moves with entity if smooth animations are enabled
-        activeCone.transform.SetParent(
-            Imperium.Settings.Visualization.SmoothAnimations.Value ? enemyVision.VisionTransform : staticParent.transform
-        );
-        activeSphere.transform.SetParent(
-            Imperium.Settings.Visualization.SmoothAnimations.Value ? enemyVision.VisionTransform : staticParent.transform
-        );
+        if (entityConfig.Vision.Value)
+        {
+            activeCone.transform.SetParent(
+                Imperium.Settings.Visualization.SmoothAnimations.Value ? enemyVision.VisionTransform : transform
+            );
+            activeCone.transform.position = enemyVision.VisionTransform.position;
+            activeCone.transform.rotation = Quaternion.LookRotation(enemyVision.VisionTransform.forward);
+        }
 
-        activeCone.transform.position = enemyVision.VisionTransform.position;
-        activeCone.transform.rotation = Quaternion.LookRotation(enemyVision.VisionTransform.forward);
+        if (entityConfig.Proximity.Value)
+        {
+            activeSphere.transform.SetParent(
+                Imperium.Settings.Visualization.SmoothAnimations.Value ? enemyVision.VisionTransform : transform
+            );
 
-        activeSphere.transform.position = enemyVision.VisionTransform.position;
-        activeSphere.transform.rotation = Quaternion.LookRotation(enemyVision.VisionTransform.forward);
+            activeSphere.transform.position = enemyVision.VisionTransform.position;
+            activeSphere.transform.rotation = Quaternion.LookRotation(enemyVision.VisionTransform.forward);
+        }
     }
 
     private void Update()
@@ -216,16 +220,22 @@ public class EntityGizmo : MonoBehaviour
             return;
         }
 
-        if (initializedVision)
+        if (hasInitializedVision)
         {
-            if (Time.realtimeSinceStartup - lastUpdateTime > visualizerTimeout || !entityConfig.LineOfSight.Value)
+            if (Time.realtimeSinceStartup - lastUpdateTime > visualizerTimeout || !entityConfig.Vision.Value)
             {
                 coneStanding.SetActive(false);
                 coneCrouching.SetActive(false);
                 coneCrawling.SetActive(false);
 
-                instantSphereStanding.SetActive(false);
-                instantSphereCrouching.SetActive(false);
+                proximitySphereStanding.SetActive(false);
+                proximitySphereCrouching.SetActive(false);
+            }
+
+            if (Time.realtimeSinceStartup - lastUpdateTime > visualizerTimeout || !entityConfig.Proximity.Value)
+            {
+                proximitySphereStanding.SetActive(false);
+                proximitySphereCrouching.SetActive(false);
             }
         }
 
@@ -233,7 +243,7 @@ public class EntityGizmo : MonoBehaviour
         DrawNoiseLine(entityConfig.Hearing.Value && enemyParent.enabled);
 
         // Vision object is sometimes not set right away so we just do it as soon as possible.
-        if (!initializedVision && enemyParent.Enemy.Vision) InitVisionObjects(enemyParent.Enemy.Vision);
+        if (!hasInitializedVision && enemyParent.Enemy.Vision) InitVisionObjects(enemyParent.Enemy.Vision);
     }
 
     private void DrawNoiseLine(bool isShown)
@@ -242,6 +252,7 @@ public class EntityGizmo : MonoBehaviour
         if (!isShown || enemyParent.Enemy.CurrentState != EnemyState.Investigate)
         {
             lastHeardNoiseLine.gameObject.SetActive(false);
+            lastHeardNoiseDot.gameObject.SetActive(false);
         }
     }
 
@@ -289,13 +300,13 @@ public class EntityGizmo : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (initializedVision)
+        if (hasInitializedVision)
         {
             Destroy(coneStanding);
             Destroy(coneCrouching);
             Destroy(coneCrawling);
-            Destroy(instantSphereStanding);
-            Destroy(instantSphereCrouching);
+            Destroy(proximitySphereStanding);
+            Destroy(proximitySphereCrouching);
         }
     }
 }
@@ -306,8 +317,8 @@ internal class EntityGizmoConfig
 
     internal readonly ImpConfig<bool> Info;
     internal readonly ImpConfig<bool> Pathfinding;
-    internal readonly ImpConfig<bool> Targeting;
-    internal readonly ImpConfig<bool> LineOfSight;
+    internal readonly ImpConfig<bool> Proximity;
+    internal readonly ImpConfig<bool> Vision;
     internal readonly ImpConfig<bool> Hearing;
     internal readonly ImpConfig<bool> Custom;
 
@@ -326,8 +337,8 @@ internal class EntityGizmoConfig
 
         Info = new ImpConfig<bool>(config, "Visualization.EntityGizmos.Info", escapedEntityName, false);
         Pathfinding = new ImpConfig<bool>(config, "Visualization.EntityGizmos.Pathfinding", escapedEntityName, false);
-        Targeting = new ImpConfig<bool>(config, "Visualization.EntityGizmos.Targeting", escapedEntityName, false);
-        LineOfSight = new ImpConfig<bool>(config, "Visualization.EntityGizmos.LineOfSight", escapedEntityName, false);
+        Proximity = new ImpConfig<bool>(config, "Visualization.EntityGizmos.Proximity", escapedEntityName, false);
+        Vision = new ImpConfig<bool>(config, "Visualization.EntityGizmos.Vision", escapedEntityName, false);
         Hearing = new ImpConfig<bool>(config, "Visualization.EntityGizmos.Hearing", escapedEntityName, false);
         Custom = new ImpConfig<bool>(config, "Visualization.EntityGizmos.Custom", escapedEntityName, false);
     }

@@ -1,0 +1,65 @@
+site_name: Imperium Wiki
+site_author: giosuel
+site_url: https://giosuel.github.io/imperium-repo
+site_description: The official Imperium wiki. A powerful and highly performant all-in-one debugging tool to test and explore game mechanics and functionality in R.E.P.O.
+
+repo_name: giosuel/imperium-repo
+repo_url: https://github.com/giosuel/imperium-repo
+
+nav:
+ - Home: 'index.md'
+ - Quick Start: 'quick-start.md'
+ - Imperium API:
+    - 'api/index.md'
+    - Insights: 'api/insights.md'
+    - Visualizers: 'api/visualizers.md'
+ - Issues: 'https://github.com/giosuel/imperium-repo/issues/'
+
+theme:
+  name: material
+  custom_dir: docs/overrides
+
+  features:
+    - navigation.top
+    - navigation.tabs
+    - search.suggest
+    - content.code.annotate
+    - content.code.copy
+    - content.action.edit
+    - toc.follow
+    - content.tooltips
+    - navigation.indexes
+    - content.footnote.tooltips
+
+  language: en
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: white
+      accent: cyan
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: cyan
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/file-edit-outline
+  logo: images/icon_256x256.png
+  favicon: images/icon_256x256.png
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
+plugins:
+  - offline
+
+extra_css:
+  - stylesheets/extra.css

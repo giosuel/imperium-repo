@@ -117,6 +117,8 @@ public class ObjectInsight : MonoBehaviour
     /// </summary>
     private void UpdateInsightOverlay()
     {
+        Imperium.IO.LogInfo("OBJECT INSIGHT TICK");
+
         // Insight panel type name
         panelObjectName.text = InsightDefinition.NameGenerator != null
             ? InsightDefinition.NameGenerator(targetObject)
@@ -154,7 +156,7 @@ public class ObjectInsight : MonoBehaviour
         }
 
         var camera = Imperium.ActiveCamera.Value;
-        var cameraTexture = camera?.activeTexture;
+        var cameraTexture = camera.activeTexture;
 
         if (!InsightDefinition.VisibilityBinding.Value || !cameraTexture)
         {
@@ -174,7 +176,10 @@ public class ObjectInsight : MonoBehaviour
         }
 
         // Update insight overlay values if timer is up
-        if (overlayUpdateTimer.Tick()) UpdateInsightOverlay();
+        if (overlayUpdateTimer.Tick())
+        {
+            UpdateInsightOverlay();
+        }
 
         // Insight overlay panel placement
         var scaleFactorX = cameraTexture.width / insightPanelCanvasRect.sizeDelta.x;

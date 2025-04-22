@@ -60,6 +60,7 @@ internal class MinimapOverlay : BaseUI
     protected override void OnOpen(bool wasOpen)
     {
         textureFrame.texture = Imperium.Map.Camera.targetTexture;
+        Imperium.Map.Camera.enabled = true;
     }
 
     private void InitMapScale(float scaleFactor)

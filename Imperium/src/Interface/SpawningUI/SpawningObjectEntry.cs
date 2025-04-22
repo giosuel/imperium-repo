@@ -18,34 +18,31 @@ public class SpawningObjectEntry : MonoBehaviour
 {
     private GameObject selectedCover;
 
-    internal SpawnObjectType SpawnType { get; private set; }
-    private string spawnObjectName;
+    private SpawnObjectType spawnType { get; set; }
 
-    private string displayNameNormalized;
+    private string objectName;
     private string objectNameNormalized;
 
     internal void Init(
         SpawnObjectType type,
-        string objectName,
+        string spawnObjectName,
         Action onClick,
         Action<Vector2> onHover,
         Dictionary<SpawnObjectType, string> typeDisplayNameMap,
         ImpBinding<ImpTheme> themeBinding
     )
     {
-        SpawnType = type;
-        spawnObjectName = objectName;
+        spawnType = type;
+        objectName = spawnObjectName;
 
-        displayNameNormalized = NormalizeName(objectName);
-        objectNameNormalized = NormalizeName(objectName);
+        objectNameNormalized = NormalizeName(spawnObjectName);
 
         ImpButton.Bind("", transform, () => onClick?.Invoke(), themeBinding);
 
         selectedCover = transform.Find("Selected").gameObject;
         selectedCover.SetActive(false);
 
-        transform.Find("Name/Primary").GetComponent<TMP_Text>().text = objectName;
-        transform.Find("Name/Secondary").GetComponent<TMP_Text>().text = objectName;
+        transform.Find("Name").GetComponent<TMP_Text>().text = spawnObjectName;
         transform.Find("Type").GetComponent<TMP_Text>().text = typeDisplayNameMap.GetValueOrDefault(type, "");
 
         gameObject.AddComponent<ImpInteractable>().onOver += onHover;
@@ -64,12 +61,12 @@ public class SpawningObjectEntry : MonoBehaviour
 
     internal void Spawn(Vector3 position, int amount, int value, bool spawnInInventory)
     {
-        switch (SpawnType)
+        switch (spawnType)
         {
             case SpawnObjectType.Entity:
                 Imperium.ObjectManager.SpawnEntity(new EntitySpawnRequest
                 {
-                    Name = spawnObjectName,
+                    Name = objectName,
                     SpawnPosition = position,
                     Amount = amount,
                     Health = value,
@@ -79,7 +76,7 @@ public class SpawningObjectEntry : MonoBehaviour
             case SpawnObjectType.Item:
                 Imperium.ObjectManager.SpawnItem(new ItemSpawnRequest
                 {
-                    Name = spawnObjectName,
+                    Name = objectName,
                     SpawnPosition = position,
                     Amount = amount,
                     SendNotification = true
@@ -88,7 +85,7 @@ public class SpawningObjectEntry : MonoBehaviour
             case SpawnObjectType.Valuable:
                 Imperium.ObjectManager.SpawnValuable(new ValuableSpawnRequest
                 {
-                    Name = spawnObjectName,
+                    Name = objectName,
                     SpawnPosition = position,
                     Amount = amount,
                     Value = value,
@@ -115,9 +112,7 @@ public class SpawningObjectEntry : MonoBehaviour
     {
         inputText = NormalizeName(inputText);
 
-        var isShown = !string.IsNullOrEmpty(inputText) && (
-            objectNameNormalized.Contains(inputText) || displayNameNormalized.Contains(inputText)
-        );
+        var isShown = !string.IsNullOrEmpty(inputText) && objectNameNormalized.Contains(inputText);
 
         gameObject.SetActive(isShown);
         if (!isShown) SetSelected(false);

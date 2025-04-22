@@ -55,7 +55,7 @@ internal class EntityGizmos : BaseVisualizer<IReadOnlyCollection<EnemyParent>, E
                 entityGizmoObject.transform.SetParent(parent);
 
                 var entityGizmo = entityGizmoObject.AddComponent<EntityGizmo>();
-                entityGizmo.Init(entityConfig, Imperium.Visualization, entity, parent);
+                entityGizmo.Init(entityConfig, entity);
 
                 visualizerObjects[entity.GetInstanceID()] = entityGizmo;
             }
@@ -76,7 +76,7 @@ internal class EntityGizmos : BaseVisualizer<IReadOnlyCollection<EnemyParent>, E
     {
         if (visualizerObjects.TryGetValue(instance.Enemy.EnemyParent.GetInstanceID(), out var entityGizmo))
         {
-            entityGizmo.NoiseVisualizerUpdate(origin);
+            entityGizmo.NoiseUpdate(origin);
         }
     }
 }

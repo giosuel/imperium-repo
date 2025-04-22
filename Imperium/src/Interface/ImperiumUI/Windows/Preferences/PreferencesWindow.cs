@@ -188,11 +188,10 @@ internal class PreferencesWindow : ImperiumWindow
 
         for (var i = 0; i < themeContainer.childCount; i++)
         {
-            var themeObject = themeContainer.GetChild(i);
-            var themeName = themeObject.Find("Text").GetComponent<TMP_Text>().text;
+            var themePanel = themeContainer.GetChild(i);
 
             ImpMultiSelectEntry.Bind(
-                themeName,
+                themePanel.name,
                 themeContainer.GetChild(i).gameObject,
                 Imperium.Settings.Preferences.Theme,
                 hoveredTheme

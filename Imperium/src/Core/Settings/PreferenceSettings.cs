@@ -31,7 +31,7 @@ internal class PreferenceSettings(ConfigFile config, IBinding<bool> isSceneLoade
         config,
         "Preferences.Appearance",
         "Theme",
-        "R.E.P.O."
+        "Repo"
     );
 
     internal readonly ImpConfig<bool> AllowClients = new(

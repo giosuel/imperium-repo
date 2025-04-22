@@ -54,21 +54,6 @@ internal class ObjectVisualizers : ImpWidget
         entityTemplate.SetActive(false);
 
         ImpButton.Bind(
-            "PlayersHeader/Icons/NoiseRange",
-            transform,
-            () => TogglePlayerConfigs(config => config.NoiseRange),
-            theme: theme,
-            isIconButton: true,
-            tooltipDefinition: new TooltipDefinition
-            {
-                Tooltip = tooltip,
-                Title = "Noise Visualization",
-                Description = "Currently not implemented",
-                HasAccess = true
-            }
-        );
-
-        ImpButton.Bind(
             "EntitiesHeader/Icons/Pathfinding",
             transform,
             () => ToggleEntityConfigs(config => config.Pathfinding),
@@ -82,22 +67,23 @@ internal class ObjectVisualizers : ImpWidget
             }
         );
         ImpButton.Bind(
-            "EntitiesHeader/Icons/Targeting",
+            "EntitiesHeader/Icons/Proximity",
             transform,
-            () => ToggleEntityConfigs(config => config.Targeting),
+            () => ToggleEntityConfigs(config => config.Proximity),
             theme: theme,
             isIconButton: true,
             tooltipDefinition: new TooltipDefinition
             {
                 Tooltip = tooltip,
-                Title = "Targeting",
+                Title = "Proximity",
+                Description = "The range at which enemies can detect you",
                 HasAccess = true
             }
         );
         ImpButton.Bind(
-            "EntitiesHeader/Icons/LineOfSight",
+            "EntitiesHeader/Icons/Vision",
             transform,
-            () => ToggleEntityConfigs(config => config.LineOfSight),
+            () => ToggleEntityConfigs(config => config.Vision),
             theme: theme,
             isIconButton: true,
             tooltipDefinition: new TooltipDefinition

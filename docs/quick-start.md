@@ -1,0 +1,44 @@
+---
+hide:
+  - navigation
+---
+
+# Quick Start
+
+## UI Layout
+
+Imperium currently consists of three main UIs.
+
+* **Imperium UI**  
+    The main Imperium interface that provides access to the windows that contain the majority of Imperium's features.
+* **Spawning UI**  
+    A console that allows you to spawn enemies, valuables or items into the game.
+* **Fullscreen Map**  
+    Imperium's map with the layer and target selection. Also includes minimap preferences.
+
+## Global Keybinds
+
+| Keybind         | Description                                              |
+| --------------- | -------------------------------------------------------- |
+| `Keyboard / F1` | Toggles the main Imperium UI.                            |
+| `Keyboard / F2` | Toggles the Spawning UI.                                 |
+| `Keyboard / F3` | Toggles the teleportation window within the Imperium UI. |
+| `Keyboard / F8` | Toggles the full-screen map.                             |
+| `Keyboard / M`  | Toggles Imperium's minimap.                              |
+| `Keyboard / F`  | Toggles Imperium's freecam.                              |
+| `Keyboard / G`  | Shows the teleportation indicator.                       |
+| `Keyboard / O`  | Enables the tape measure tool.                           |
+
+## Freecam Keybinds
+
+| Keybind          | Description                                        |
+| ---------------- | -------------------------------------------------- |
+| `Keyboard / R`   | Resets the freecam's position to the local player. |
+| `Keyboard / G`   | Opens the teleportation indicator.                 |
+| `Keyboard / L`   | Toggles the freecam's layer selector and UI.       |
+| `Mouse / Scroll` | Changes the freecam's flight speed.                |
+| `Keyboard / ←`   | Decreases the freecam's field of view.             |
+| `Keyboard / →`   | Increases the freecam's field of view.             |
+
+!!! info "Customizable Keybinds"
+    Currently, no keybind rebinding mod exists for REPO. Due to this, all keybinds in Imperium are hard-coded and can't be changed as of right now.

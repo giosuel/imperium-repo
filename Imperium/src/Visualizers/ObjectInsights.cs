@@ -80,9 +80,7 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
                     if (!visualizerObjects.TryGetValue(component.GetInstanceID(), out var objectInsight))
                     {
                         var objectInsightObject = new GameObject($"Imp_ObjectInsight_{obj.GetInstanceID()}");
-                        objectInsightObject.transform.SetParent(parent);
-
-                        objectInsightObject.transform.SetParent(obj.transform, true);
+                        objectInsightObject.transform.SetParent(obj.transform);
                         insightVisualizerObjects.Add(objectInsightObject.GetInstanceID());
 
                         objectInsight = objectInsightObject.AddComponent<ObjectInsight>();
@@ -136,134 +134,23 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
 
     private void RegisterDefaultInsights()
     {
-        /*
-         * Players
-         */
-        // InsightsFor<PlayerControllerB>()
-        //     .RegisterInsight("Fall Value", player => $"{player.fallValue}")
-        //     .RegisterInsight("Fall Value Uncapped", player => $"{player.fallValueUncapped}")
-        //     .RegisterInsight("Slope", player => $"{player.slopeModifier}")
-        //     .SetConfigKey("Players");
-        //
-        // /*
-        //  * Items
-        //  */
-        // InsightsFor<GrabbableObject>()
-        //     .SetNameGenerator(item => item.itemProperties.itemName)
-        //     .RegisterInsight("Value", item => $"{item.scrapValue}$")
-        //     .RegisterInsight("Used Up", item => item.itemUsedUp ? "Yes" : "No")
-        //     .RegisterInsight("Held By", ImpUtils.GetItemHeldByText)
-        //     .RegisterInsight("Cooldown", item => $"{item.currentUseCooldown:0.0}s")
-        //     .RegisterInsight("Location", ImpUtils.GetItemLocationText)
-        //     .SetPositionOverride(DefaultPositionOverride)
-        //     .SetConfigKey("Items");
-        //
-        // /*
-        //  * Entities
-        //  */
-        // InsightsFor<EnemyAI>()
-        //     .SetNameGenerator(entity => entity.enemyType.enemyName)
-        //     .SetPersonalNameGenerator(Imperium.ObjectManager.GetEntityName)
-        //     .SetIsDeadGenerator(entity => entity.isEnemyDead)
-        //     .RegisterInsight("Health", entity => $"{entity.enemyHP} HP")
-        //     .RegisterInsight("Behaviour State", entity => entity.currentBehaviourStateIndex.ToString())
-        //     .RegisterInsight("Movement Speed", entity => entity.agent ? $"{entity.agent.speed:0.0}" : "0")
-        //     .RegisterInsight("Stun Timer", entity => $"{Math.Max(0, entity.stunNormalizedTimer):0.0}s")
-        //     .RegisterInsight("Target", entity => entity.targetPlayer ? entity.targetPlayer.playerUsername : "-")
-        //     .RegisterInsight("Location", ImpUtils.GetEntityLocationText)
-        //     .SetPositionOverride(DefaultPositionOverride)
-        //     .SetConfigKey("Entities");
-        //
-        // InsightsFor<ClaySurgeonAI>()
-        //     .RegisterInsight("Is Master", barber => barber.isMaster ? "Yes" : "No")
-        //     .RegisterInsight("Beat Timer", barber => $"{barber.beatTimer:0.0}s")
-        //     .RegisterInsight("Jump Timer", barber => $"{barber.jumpTimer:0.0}s")
-        //     .RegisterInsight("Current Interval", barber => $"{barber.currentInterval:0.0}s");
-        //
-        // InsightsFor<FlowermanAI>()
-        //     .RegisterInsight("Anger Meter", flowerman => $"{flowerman.angerMeter:0.0}")
-        //     .RegisterInsight("Anger Check Timer", flowerman => $"{flowerman.angerCheckInterval:0.0}s")
-        //     .RegisterInsight("Times Threatened", flowerman => $"{flowerman.timesThreatened}x")
-        //     .RegisterInsight("Times Found", flowerman => $"{flowerman.timesFoundSneaking}x");
-        //
-        // InsightsFor<SandSpiderAI>()
-        //     .RegisterInsight("On Wall", spider => spider.onWall ? "Yes" : "No")
-        //     .RegisterInsight("Web Count", spider => $"({spider.webTraps.Count}/{spider.maxWebTrapsToPlace})")
-        //     .RegisterInsight("Chase Timer", spider => $"{spider.chaseTimer:0.0}s")
-        //     .RegisterInsight("Wall Timer", spider => $"{spider.waitOnWallTimer:0.0}s");
-        //
-        // InsightsFor<JesterAI>()
-        //     .RegisterInsight("Idle Timer", jester => $"{jester.beginCrankingTimer:0.0}s")
-        //     .RegisterInsight("Crank Timer", jester => $"{jester.popUpTimer:0.0}s")
-        //     .RegisterInsight("No Targets Timer", jester => $"{jester.noPlayersToChaseTimer:0.0}s");
-        //
-        // InsightsFor<NutcrackerEnemyAI>()
-        //     .SetPositionOverride(entity => DefaultPositionOverride(entity) + Vector3.down * 7f);
-        //
-        // InsightsFor<CaveDwellerAI>()
-        //     .RegisterInsight("Search Width", maneater => $"{maneater.currentSearchWidth:0.#}u");
-        //
-        // InsightsFor<MaskedPlayerEnemy>()
-        //     .RegisterInsight("Ship Interest", masked => $"{masked.interestInShipCooldown:0.0}")
-        //     .RegisterInsight("Stop and Stare", masked => $"{masked.stopAndStareTimer:0.0}s")
-        //     .RegisterInsight("Stamina", masked => $"{masked.staminaTimer:0.0}")
-        //     .RegisterInsight("Random Tick Timer", masked => $"{masked.randomLookTimer:0.0}");
-        //
-        // /*
-        //  * Map Hazards
-        //  */
-        // InsightsFor<Turret>()
-        //     .SetNameGenerator(turret => $"Turret #{turret.GetInstanceID()}")
-        //     .SetIsDeadGenerator(turret => !turret.turretActive)
-        //     .RegisterInsight("Is Active", turret => turret.turretActive ? "Yes" : "No")
-        //     .RegisterInsight("Turret Mode", turret => turret.turretMode.ToString())
-        //     .RegisterInsight("Rotation Speed", turret => turret.rotationSpeed.ToString(CultureInfo.InvariantCulture))
-        //     .SetPositionOverride(DefaultPositionOverride)
-        //     .SetConfigKey("Turrets");
-        //
-        // InsightsFor<Landmine>()
-        //     .SetNameGenerator(landmine => $"Landmine #{landmine.GetInstanceID()}")
-        //     .SetIsDeadGenerator(landmine => landmine.hasExploded)
-        //     .RegisterInsight("Has Exploded", landmine => landmine.hasExploded ? "Yes" : "No")
-        //     .SetPositionOverride(DefaultPositionOverride)
-        //     .SetConfigKey("Landmines");
-        //
-        // InsightsFor<SteamValveHazard>()
-        //     .SetNameGenerator(steamValve => $"Steam Valve #{steamValve.GetInstanceID()}")
-        //     .RegisterInsight("Cracked", steamValve => steamValve.valveHasCracked ? "Yes" : "No")
-        //     .RegisterInsight("Burst", steamValve => steamValve.valveHasBurst ? "Yes" : "No")
-        //     .RegisterInsight("Repaired", steamValve => steamValve.valveHasBeenRepaired ? "Yes" : "No")
-        //     .RegisterInsight("Crack Timer", steamValve => $"{steamValve.valveCrackTime:0.0}s")
-        //     .RegisterInsight("Burst Timer", steamValve => $"{steamValve.valveCrackTime:0.0}s")
-        //     .SetPositionOverride(DefaultPositionOverride)
-        //     .SetConfigKey("SteamValves");
-        //
-        // /*
-        //  * Company cruiser
-        //  */
-        // InsightsFor<VehicleController>()
-        //     .SetNameGenerator(_ => "Company Cruiser")
-        //     .SetIsDeadGenerator(cruiser => cruiser.carDestroyed)
-        //     .RegisterInsight("Cruiser HP", cruiser => $"{cruiser.carHP} HP")
-        //     .RegisterInsight("Ignition Started", cruiser => cruiser.ignitionStarted ? "Yes" : "No")
-        //     .RegisterInsight("Movement", cruiser => Formatting.FormatVector(cruiser.moveInputVector, 1))
-        //     .RegisterInsight("Steering", cruiser => $"{cruiser.steeringInput:0.0}")
-        //     .RegisterInsight("Turbulence", cruiser => $"{cruiser.turbulenceAmount:0.0}")
-        //     .RegisterInsight("Stress", cruiser => $"{cruiser.carStress:0.0}")
-        //     .SetPositionOverride(DefaultPositionOverride)
-        //     .SetConfigKey("CompanyCruiser");
-        //
-        // /*
-        //  * Misc objects
-        //  */
-        // InsightsFor<BridgeTrigger>()
-        //     .SetNameGenerator(bridge => $"Bridge #{bridge.GetInstanceID()}")
-        //     .SetIsDeadGenerator(bridge => bridge.hasBridgeFallen)
-        //     .RegisterInsight("Durability", trigger => $"{trigger.bridgeDurability}")
-        //     .RegisterInsight("Has Fallen", bridge => bridge.hasBridgeFallen ? "Yes" : "No")
-        //     .RegisterInsight("Giant On Bridge", bridge => bridge.giantOnBridge ? "Yes" : "No")
-        //     .SetPositionOverride(DefaultPositionOverride)
-        //     .SetConfigKey("Bridges");
+        InsightsFor<Enemy>()
+            .SetNameGenerator(entity => entity.EnemyParent.enemyName)
+            .SetIsDeadGenerator(entity => entity.EnemyParent.Spawned)
+            .RegisterInsight("Health", entity => $"{entity.Health.health} HP")
+            .RegisterInsight("Current State", entity => entity.CurrentState.ToString())
+            .RegisterInsight("Spawn Timer", entity => $"{entity.EnemyParent.SpawnedTimer:0}s")
+            .RegisterInsight("Despawn Timer", entity => $"{entity.EnemyParent.DespawnedTimer:0}s")
+            .SetPositionOverride(DefaultPositionOverride)
+            .SetConfigKey("Entities");
+
+        InsightsFor<ExtractionPoint>()
+            .SetNameGenerator(_ => "Extraction Point")
+            .RegisterInsight("Current State", point => point.currentState.ToString())
+            .RegisterInsight("State Timer", point => $"{point.stateTimer:0}s")
+            .RegisterInsight("Start Room", point => $"{point.inStartRoom}")
+            .SetPositionOverride(DefaultPositionOverride)
+            .SetConfigKey("Extraction Points");
     }
 
     /*

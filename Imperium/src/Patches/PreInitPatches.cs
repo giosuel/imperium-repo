@@ -4,11 +4,16 @@ namespace Imperium.Patches;
 
 internal static class PreInitPatches
 {
+    private static bool hasAddedVersion;
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildManager), "Awake")]
     private static void AwakePatch(BuildManager __instance)
     {
+        if (hasAddedVersion) return;
+
         __instance.version.title += $" ({Imperium.PLUGIN_NAME} v{Imperium.PLUGIN_VERSION})";
+        hasAddedVersion = true;
     }
 
     [HarmonyPostfix]

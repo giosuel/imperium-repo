@@ -51,14 +51,8 @@ public struct ImpConstants
      */
     internal static readonly Dictionary<string, string> ClassNameMap = new()
     {
-        // { nameof(PlayerControllerB), "Players" },
-        // { nameof(EnemyAI), "Enemies" },
-        // { nameof(GrabbableObject), "Items" },
-        // { nameof(Turret), "Turrets" },
-        // { nameof(Landmine), "Landmines" },
-        // { nameof(SteamValveHazard), "Steam Valves" },
-        // { nameof(BridgeTrigger), "Bridges" },
-        // { nameof(VehicleController), "Company Cruiser" }
+        { nameof(EnemyParent), "Enemies" },
+        { nameof(ExtractionPoint), "Extraction Points" },
     };
 
     // Items that have no spawn prefab

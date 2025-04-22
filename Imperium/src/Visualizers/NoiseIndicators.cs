@@ -13,32 +13,29 @@ namespace Imperium.Visualizers;
 internal class NoiseIndicators : ImpScript
 {
     private const int noiseIndicatorCount = 20;
+    private const int noiseIndicatorDisplayTime = 10;
 
-    private readonly GameObject[] noiseSpheres = new GameObject[noiseIndicatorCount];
     private readonly NoiseIndicator[] noiseIndicators = new NoiseIndicator[noiseIndicatorCount];
     private int noiseIndex;
 
     private void Awake()
     {
-        var canvas = Instantiate(ImpAssets.NoiseOverlay, transform);
-        var template = canvas.transform.Find("Indicator");
+        var noiseOverlayObj = Instantiate(ImpAssets.NoiseOverlay, transform);
+        var noiseOverlayCanvas = noiseOverlayObj.GetComponent<Canvas>();
+        noiseOverlayCanvas.sortingOrder = 12;
+
+        var template = noiseOverlayObj.transform.Find("Indicator").gameObject;
         template.gameObject.SetActive(false);
 
         for (var i = 0; i < noiseIndicatorCount; i++)
         {
-            var noiseIndicatorObj = Instantiate(template, canvas.transform);
-            var noiseIndicator = noiseIndicatorObj.gameObject.AddComponent<NoiseIndicator>();
-            noiseIndicator.Init(canvas.GetComponent<Canvas>());
-            noiseIndicators[i] = noiseIndicator;
-        }
+            var noiseIndicatorObj = Instantiate(template, noiseOverlayCanvas.transform);
+            noiseIndicatorObj.transform.SetParent(noiseOverlayCanvas.transform);
 
-        for (var i = 0; i < noiseIndicatorCount; i++)
-        {
-            noiseSpheres[i] = ImpGeometry.CreatePrimitive(
-                PrimitiveType.Sphere,
-                transform,
-                ImpAssets.FresnelGreen
-            );
+            var noiseIndicator = noiseIndicatorObj.AddComponent<NoiseIndicator>();
+            noiseIndicator.Init(noiseOverlayCanvas, transform);
+
+            noiseIndicators[i] = noiseIndicator;
         }
 
         Imperium.Settings.Visualization.NoiseIndicators.onUpdate += value =>
@@ -47,23 +44,22 @@ internal class NoiseIndicators : ImpScript
             {
                 for (var i = 0; i < noiseIndicatorCount; i++)
                 {
-                    noiseSpheres[i].SetActive(false);
                     noiseIndicators[i].Deactivate();
                 }
             }
         };
     }
 
-
+    internal void ToggleSpheres(bool isShown)
+    {
+        foreach (var indicator in noiseIndicators) indicator.ToggleSphere(isShown);
+    }
+    
     internal void AddNoise(Vector3 position, float radius)
     {
         if (!Imperium.Settings.Visualization.NoiseIndicators.Value) return;
 
-        noiseIndicators[noiseIndex].Activate(position);
+        noiseIndicators[noiseIndex].Activate(position, radius, noiseIndicatorDisplayTime);
         noiseIndex = (noiseIndex + 1) % noiseIndicators.Length;
-
-        noiseSpheres[noiseIndex].transform.position = position;
-        noiseSpheres[noiseIndex].transform.localScale = Vector3.one * radius;
-        noiseSpheres[noiseIndex].SetActive(true);
     }
 }

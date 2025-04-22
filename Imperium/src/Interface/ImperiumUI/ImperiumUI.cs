@@ -215,7 +215,14 @@ public class ImperiumUI : BaseUI
 
         foreach (var windowDefinition in controllerStack.Where(controller => controller.IsOpen))
         {
-            windowDefinition.Controller.InvokeOnOpen();
+            if (windowDefinition.IsOpen)
+            {
+                windowDefinition.Controller.InvokeOnOpen();
+            }
+            else
+            {
+                windowDefinition.Controller.Close();
+            }
         }
     }
 

@@ -38,9 +38,7 @@ internal class ImpInterfaceManager : MonoBehaviour
     {
         var interfaceManager = new GameObject("Imp_Interface").AddComponent<ImpInterfaceManager>();
         interfaceManager.transform.SetParent(parent);
-        interfaceManager.Theme = new ImpBinding<ImpTheme>(ImpThemeManager.DefaultTheme);
-
-        ImpThemeManager.BindTheme(themeConfig, interfaceManager.Theme);
+        interfaceManager.Theme = ImpThemeManager.BindTheme(themeConfig);
 
         // Instantiate Imperium Tooltip
         interfaceManager.tooltip = Instantiate(

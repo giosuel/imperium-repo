@@ -190,6 +190,8 @@ public class Teleportation : ImpWidget
 
     private static void OnInteractiveTeleport(InputAction.CallbackContext callbackContext)
     {
+        if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
+
         // Set origin of indicator to freecam if freecam is enabled
         var origin = Imperium.Freecam.IsFreecamEnabled.Value ? Imperium.Freecam.transform : null;
 

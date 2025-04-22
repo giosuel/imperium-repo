@@ -139,20 +139,24 @@ public static class ImpThemeManager
         };
     }
 
-    public static void BindTheme(ImpBinding<string> themeConfig, ImpBinding<ImpTheme> themeBinding)
+    public static ImpBinding<ImpTheme> BindTheme(ImpBinding<string> themeConfig)
     {
+        ImpBinding<ImpTheme> themeBinding;
+
         if (Themes.TryGetValue(themeConfig.Value, out var theme))
         {
-            themeBinding.Set(theme);
+            themeBinding = new ImpBinding<ImpTheme>(theme);
         }
         else
         {
             // Reset theme to default if config was invalid
-            themeBinding.Set(DefaultTheme);
-            themeConfig.Set("Imperium");
+            themeConfig.Reset();
+            themeBinding = new ImpBinding<ImpTheme>(Themes[themeConfig.DefaultValue]);
         }
 
         themeConfig.onUpdate += value => themeBinding.Set(Themes[value]);
+
+        return themeBinding;
     }
 
     private static Color HEXToRGB(string hexColor)
@@ -161,12 +165,10 @@ public static class ImpThemeManager
         return rgbColor;
     }
 
-    public static ImpTheme DefaultTheme => Themes["Imperium"];
-
     private static readonly Dictionary<string, ImpTheme> Themes = new()
     {
         {
-            "R.E.P.O", new ImpTheme
+            "Repo", new ImpTheme
             {
                 backgroundColor = HEXToRGB("#090B1CFB"),
                 primaryColor = HEXToRGB("#3088BE"),
@@ -178,6 +180,14 @@ public static class ImpThemeManager
             {
                 backgroundColor = HEXToRGB("#4F0505FA"),
                 primaryColor = HEXToRGB("#D63300"),
+                textColor = HEXToRGB("#FFFFFF")
+            }
+        },
+        {
+            "Shade", new ImpTheme
+            {
+                backgroundColor = HEXToRGB("#111621"),
+                primaryColor = HEXToRGB("#464e6b"),
                 textColor = HEXToRGB("#FFFFFF")
             }
         },
@@ -194,14 +204,6 @@ public static class ImpThemeManager
             {
                 backgroundColor = HEXToRGB("#0D170CFB"),
                 primaryColor = HEXToRGB("#2A9130"),
-                textColor = HEXToRGB("#FFFFFF")
-            }
-        },
-        {
-            "Dunes", new ImpTheme
-            {
-                backgroundColor = HEXToRGB("#2A241EFB"),
-                primaryColor = HEXToRGB("#DE8735"),
                 textColor = HEXToRGB("#FFFFFF")
             }
         },

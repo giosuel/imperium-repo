@@ -33,8 +33,12 @@ public class ObjectInsightEntry : MonoBehaviour
         /*
          * We only want to execute the insight generator function every so often to save frames.
          *
-         * This is because this function is defined by the insight provider and could possibly be inefficient.
+         * This is because this function is defined by the insight developer and could possibly be inefficient.
          */
-        if (entryUpdateTimer.Tick()) insightValueText.text = insightGenerator(targetComponent);
+        if (entryUpdateTimer.Tick())
+        {
+            insightValueText.text = insightGenerator(targetComponent);
+            Imperium.IO.LogInfo("UPdating insight entry");
+        }
     }
 }
