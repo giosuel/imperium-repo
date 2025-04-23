@@ -156,9 +156,7 @@ public class Imperium : BaseUnityPlugin
         Settings = new ImpSettings(configFile, IsArenaLoaded, IsImperiumEnabled);
         IsArenaLoaded.onUpdate += isLoaded =>
         {
-            Imperium.IO.LogInfo("Loading all settings");
             if (isLoaded) Settings.LoadAll();
-            Imperium.IO.LogInfo("Loading all settings; done");
         };
 
         IO.BindNotificationSettings(Settings);

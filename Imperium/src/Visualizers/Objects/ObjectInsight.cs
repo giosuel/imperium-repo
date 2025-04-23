@@ -117,8 +117,6 @@ public class ObjectInsight : MonoBehaviour
     /// </summary>
     private void UpdateInsightOverlay()
     {
-        Imperium.IO.LogInfo("OBJECT INSIGHT TICK");
-
         // Insight panel type name
         panelObjectName.text = InsightDefinition.NameGenerator != null
             ? InsightDefinition.NameGenerator(targetObject)
@@ -158,7 +156,7 @@ public class ObjectInsight : MonoBehaviour
         var camera = Imperium.ActiveCamera.Value;
         var cameraTexture = camera.activeTexture;
 
-        if (!InsightDefinition.VisibilityBinding.Value || !cameraTexture)
+        if (!InsightDefinition.VisibilityBinding.Value || !cameraTexture || !Imperium.IsArenaLoaded.Value || Imperium.GameManager.IsGameLoading)
         {
             insightPanelObject.SetActive(false);
             return;

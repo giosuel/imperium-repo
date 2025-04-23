@@ -29,21 +29,21 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
 
     internal readonly ImpBinding<Dictionary<Type, ImpBinding<bool>>> InsightVisibilityBindings = new([]);
 
-    internal readonly ImpConfig<bool> CustomInsights;
+    // internal readonly ImpConfig<bool> CustomInsights;
 
     // Holds all the logical insights, per-type
     private readonly ImpBinding<Dictionary<Type, InsightDefinition<Component>>> registeredInsights = new([]);
 
     private readonly HashSet<int> insightVisualizerObjects = [];
 
-    internal ObjectInsights(Transform parent, ConfigFile config): base(parent)
+    internal ObjectInsights(Transform parent, ConfigFile config) : base(parent)
     {
         this.config = config;
 
-        CustomInsights = new ImpConfig<bool>(
-            config,
-            "Visualization.Insights", "Custom", false
-        );
+        // CustomInsights = new ImpConfig<bool>(
+        //     config,
+        //     "Visualization.Insights", "Custom", false
+        // );
 
         RegisterDefaultInsights();
         Refresh();
@@ -103,19 +103,6 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
         Imperium.IO.LogInfo($" - SPENT IN INSIGHTS: {stopwatch.ElapsedMilliseconds}");
     }
 
-    /// <summary>
-    ///     Finds the most matching registered object insight definition for a given type.
-    /// </summary>
-    private InsightDefinition<Component> FindMostMatchingInsightDefinition(Type inputType)
-    {
-        foreach (var type in Debugging.GetParentTypes(inputType))
-        {
-            if (registeredInsights.Value.TryGetValue(type, out var typeInsight)) return typeInsight;
-        }
-
-        return null;
-    }
-
     internal InsightDefinition<T> InsightsFor<T>() where T : Component
     {
         if (registeredInsights.Value.TryGetValue(typeof(T), out var insightsDefinition))
@@ -132,23 +119,41 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
         return newInsightDefinition;
     }
 
+    /// <summary>
+    ///     Finds the most matching registered object insight definition for a given type.
+    /// </summary>
+    private InsightDefinition<Component> FindMostMatchingInsightDefinition(Type inputType)
+    {
+        foreach (var type in Debugging.GetParentTypes(inputType))
+        {
+            if (registeredInsights.Value.TryGetValue(type, out var typeInsight)) return typeInsight;
+        }
+
+        return null;
+    }
+
     private void RegisterDefaultInsights()
     {
-        InsightsFor<Enemy>()
-            .SetNameGenerator(entity => entity.EnemyParent.enemyName)
-            .SetIsDeadGenerator(entity => entity.EnemyParent.Spawned)
-            .RegisterInsight("Health", entity => $"{entity.Health.health} HP")
-            .RegisterInsight("Current State", entity => entity.CurrentState.ToString())
-            .RegisterInsight("Spawn Timer", entity => $"{entity.EnemyParent.SpawnedTimer:0}s")
-            .RegisterInsight("Despawn Timer", entity => $"{entity.EnemyParent.DespawnedTimer:0}s")
-            .SetPositionOverride(DefaultPositionOverride)
-            .SetConfigKey("Entities");
+        InsightsFor<EnemyParent>()
+            .SetNameGenerator(enemy => enemy.enemyName)
+            .SetIsDeadGenerator(enemy => !enemy.Spawned)
+            .RegisterInsight("Health", enemy => $"{enemy.Enemy.Health.health} HP")
+            .RegisterInsight("Current State", enemy => enemy.Enemy.CurrentState.ToString())
+            .RegisterInsight("Spawn Timer", enemy => Formatting.FormatSecondsMinutes(enemy.SpawnedTimer))
+            .RegisterInsight("Spawn Paused", enemy => Formatting.FormatSecondsMinutes(enemy.spawnedTimerPauseTimer))
+            .RegisterInsight("Despawn Timer", enemy => Formatting.FormatSecondsMinutes(enemy.DespawnedTimer))
+            .RegisterInsight("Valuable Timer", enemy => Formatting.FormatSecondsMinutes(enemy.valuableSpawnTimer))
+            .RegisterInsight("Player Close", enemy => enemy.playerClose.ToString())
+            .RegisterInsight("Player Very Close", enemy => enemy.playerVeryClose.ToString())
+            .SetPositionOverride(enemy => enemy.Enemy.transform.position)
+            .SetConfigKey("Enemies");
 
         InsightsFor<ExtractionPoint>()
             .SetNameGenerator(_ => "Extraction Point")
             .RegisterInsight("Current State", point => point.currentState.ToString())
-            .RegisterInsight("State Timer", point => $"{point.stateTimer:0}s")
-            .RegisterInsight("Start Room", point => $"{point.inStartRoom}")
+            .RegisterInsight("Haul Goal", point => $"${SemiFunc.DollarGetString(point.haulGoal)}")
+            .RegisterInsight("Haul Current", point => $"${SemiFunc.DollarGetString(point.haulCurrent)}")
+            .RegisterInsight("In Start Room", point => $"{point.inStartRoom}")
             .SetPositionOverride(DefaultPositionOverride)
             .SetConfigKey("Extraction Points");
     }

@@ -9,6 +9,9 @@ namespace Imperium.Core.Input;
 
 internal sealed class ImpInputFreecamMap : LcInputActions
 {
+    [InputAction("<Keyboard>/v", Name = "Toggle Freehand Mode")]
+    internal InputAction FreehandMode { get; set; }
+
     [InputAction("<Keyboard>/l", Name = "Toggle Layer Selector")]
     internal InputAction LayerSelector { get; set; }
 

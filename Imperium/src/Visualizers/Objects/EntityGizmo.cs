@@ -44,6 +44,9 @@ public class EntityGizmo : MonoBehaviour
     private GameObject proximitySphereStanding;
     private GameObject proximitySphereCrouching;
 
+    private GameObject playerCloseSphere;
+    private GameObject playerVeryCloseSphere;
+
     private float lastUpdateTime;
 
     private bool hasInitializedVision;
@@ -54,35 +57,49 @@ public class EntityGizmo : MonoBehaviour
         enemyParent = entity;
         enemyVision = entity.Enemy.Vision;
 
-        pathLine = ImpGeometry.CreateLine(
+        pathLine = Geometry.CreateLine(
             transform, 0.1f, true,
             startColor: new Color(0.58f, 1f, 0.6f),
-            endColor: new Color(0.58f, 1f, 0.6f)
+            endColor: new Color(0.58f, 1f, 0.6f),
+            spawnDisabled: true
         );
-        pathLine.gameObject.SetActive(false);
 
         for (var i = 0; i < pathSegmentCount; i++)
         {
-            pathDots[i] = ImpGeometry.CreatePrimitive(
+            pathDots[i] = Geometry.CreatePrimitive(
                 PrimitiveType.Sphere, transform,
-                color: new Color(1, 1, 1)
+                color: new Color(1, 1, 1),
+                spawnDisabled: true
             );
-            pathDots[i].SetActive(false);
         }
 
-        lastHeardNoiseLine = ImpGeometry.CreateLine(
+        lastHeardNoiseLine = Geometry.CreateLine(
             transform, 0.03f, true,
             startColor: new Color(1f, 0.43f, 0.44f),
-            endColor: new Color(1f, 0.43f, 0.44f)
+            endColor: new Color(1f, 0.43f, 0.44f),
+            spawnDisabled: true
         );
-        lastHeardNoiseLine.gameObject.SetActive(false);
 
-        lastHeardNoiseDot = ImpGeometry.CreatePrimitive(
+        lastHeardNoiseDot = Geometry.CreatePrimitive(
             PrimitiveType.Sphere, transform,
             color: new Color(1, 1, 1),
-            0.2f
+            0.2f,
+            spawnDisabled: true
         );
-        lastHeardNoiseDot.SetActive(false);
+
+        playerCloseSphere = Geometry.CreatePrimitive(
+            PrimitiveType.Sphere, enemyParent.Enemy.transform,
+            material: ImpAssets.WireframeOrange,
+            size: 20f,
+            spawnDisabled: true
+        );
+
+        playerVeryCloseSphere = Geometry.CreatePrimitive(
+            PrimitiveType.Sphere, enemyParent.Enemy.transform,
+            material: ImpAssets.WireframeRed,
+            size: 6f,
+            spawnDisabled: true
+        );
     }
 
     private void InitVisionObjects(EnemyVision vision)
@@ -151,7 +168,7 @@ public class EntityGizmo : MonoBehaviour
         obj.transform.SetParent(transform);
 
         obj.AddComponent<MeshRenderer>().material = material;
-        obj.AddComponent<MeshFilter>().mesh = Visualization.GenerateCone(
+        obj.AddComponent<MeshFilter>().mesh = Geometry.CreateCone(
             Mathf.Acos(dot) * (180.0f / Mathf.PI)
         );
         obj.transform.localScale = Vector3.one * distance;
@@ -161,7 +178,7 @@ public class EntityGizmo : MonoBehaviour
 
     private GameObject CreateSphere(string identifier, float radius, Material material)
     {
-        var obj = ImpGeometry.CreatePrimitive(
+        var obj = Geometry.CreatePrimitive(
             PrimitiveType.Sphere,
             parent: transform,
             material: material,
@@ -179,7 +196,7 @@ public class EntityGizmo : MonoBehaviour
 
         if (entityConfig.Hearing.Value)
         {
-            ImpGeometry.SetLinePositions(lastHeardNoiseLine, enemyParent.transform.position, origin);
+            Geometry.SetLinePositions(lastHeardNoiseLine, enemyParent.transform.position, origin);
             lastHeardNoiseDot.gameObject.transform.position = origin;
         }
     }
@@ -241,6 +258,7 @@ public class EntityGizmo : MonoBehaviour
 
         DrawPathLines(entityConfig.Pathfinding.Value && enemyParent.enabled);
         DrawNoiseLine(entityConfig.Hearing.Value && enemyParent.enabled);
+        DrawPlayerCloseSpheres();
 
         // Vision object is sometimes not set right away so we just do it as soon as possible.
         if (!hasInitializedVision && enemyParent.Enemy.Vision) InitVisionObjects(enemyParent.Enemy.Vision);
@@ -268,7 +286,7 @@ public class EntityGizmo : MonoBehaviour
         pathLine.gameObject.SetActive(isShown);
 
         var corners = enemyParent.Enemy.NavMeshAgent.Agent.path.corners;
-        ImpGeometry.SetLinePositions(
+        Geometry.SetLinePositions(
             pathLine,
             [enemyParent.Enemy.transform.position, ..corners]
         );
@@ -296,6 +314,14 @@ public class EntityGizmo : MonoBehaviour
                 pathDots[i].gameObject.SetActive(false);
             }
         }
+    }
+
+    private void DrawPlayerCloseSpheres()
+    {
+        var isShown = Imperium.Settings.Visualization.PlayerProximity.Value;
+
+        playerCloseSphere.SetActive(isShown);
+        playerVeryCloseSphere.SetActive(isShown);
     }
 
     private void OnDestroy()

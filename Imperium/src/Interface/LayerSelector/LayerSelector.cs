@@ -7,6 +7,7 @@ using Imperium.Interface.Common;
 using Imperium.Interface.MapUI;
 using Imperium.Types;
 using Imperium.Util;
+using Librarium;
 using Librarium.Binding;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -32,8 +33,11 @@ internal class LayerSelector : BaseUI
 
     private Transform fovSlider;
     private Transform movementSpeedSlider;
+    private Transform controlBorder;
 
     private const float toggleHeight = 12f;
+
+    internal ImpFreecam Freecam { get; set; }
 
     protected override void InitUI()
     {
@@ -75,6 +79,7 @@ internal class LayerSelector : BaseUI
 
         fovSlider = transform.Find("FovSlider");
         movementSpeedSlider = transform.Find("MovementSpeedSlider");
+        controlBorder = transform.Find("Border");
 
         if (fovSlider)
         {
@@ -99,6 +104,12 @@ internal class LayerSelector : BaseUI
                 playClickSound: false
             );
         }
+
+        if (controlBorder && Freecam)
+        {
+            Freecam.IsFreehandModeEnabled.onUpdate += isEnabled => controlBorder.gameObject.SetActive(isEnabled);
+            controlBorder.gameObject.SetActive(false);
+        }
     }
 
     protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
@@ -114,6 +125,7 @@ internal class LayerSelector : BaseUI
         ImpThemeManager.Style(
             themeUpdate,
             transform,
+            new StyleOverride("Border", Variant.DARKER),
             new StyleOverride("FovSlider", Variant.BACKGROUND),
             new StyleOverride("FovSlider/Border", Variant.DARKER),
             new StyleOverride("MovementSpeedSlider", Variant.BACKGROUND),
@@ -201,12 +213,14 @@ internal class LayerSelector : BaseUI
 
     protected override void OnClose()
     {
+        if (controlBorder) controlBorder.gameObject.SetActive(false);
         if (fovSlider) fovSlider.gameObject.SetActive(false);
         if (movementSpeedSlider) movementSpeedSlider.gameObject.SetActive(false);
     }
 
     protected override void OnOpen(bool wasOpen)
     {
+        if (controlBorder) controlBorder.gameObject.SetActive(true);
         if (fovSlider) fovSlider.gameObject.SetActive(true);
         if (movementSpeedSlider) movementSpeedSlider.gameObject.SetActive(true);
     }

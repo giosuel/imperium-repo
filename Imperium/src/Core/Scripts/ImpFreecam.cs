@@ -2,10 +2,10 @@
 
 using Imperium.Core.Lifecycle;
 using Imperium.Extensions;
+using Imperium.Integration;
 using Imperium.Interface.LayerSelector;
 using Imperium.Util;
 using Librarium.Binding;
-using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Vector2 = UnityEngine.Vector2;
@@ -23,7 +23,7 @@ public class ImpFreecam : ImpScript
 
     private static Rect minicamRect => new(100f / Screen.width, 1 - 100f / Screen.height - 0.4f, 0.4f, 0.4f);
 
-    private Camera camera;
+    internal Camera camera;
     internal readonly ImpBinaryBinding IsFreecamEnabled = new(false);
 
     private readonly ImpBinaryBinding IsMinicamEnabled = new(false);
@@ -31,11 +31,14 @@ public class ImpFreecam : ImpScript
 
     private bool firstTimeOpen = true;
 
+    internal readonly ImpBinaryBinding IsFreehandModeEnabled = new(false);
+
     private void Awake()
     {
         gameplayCamera = PlayerAvatar.instance.localCamera;
 
         camera = gameObject.AddComponent<Camera>();
+        camera.name = "Imp_Freecam";
         camera.CopyFrom(gameplayCamera);
         camera.cullingMask = Imperium.Settings.Freecam.FreecamLayerMask.Value;
         camera.farClipPlane = 2000f;
@@ -43,6 +46,7 @@ public class ImpFreecam : ImpScript
 
         var layerSelectorObject = Instantiate(ImpAssets.LayerSelectorObject, transform);
         layerSelector = layerSelectorObject.AddComponent<LayerSelector>();
+        layerSelector.Freecam = this;
         layerSelector.InitUI(Imperium.Interface.Theme);
         layerSelector.Bind(Imperium.Settings.Freecam.LayerSelector, Imperium.Settings.Freecam.FreecamLayerMask);
 
@@ -52,6 +56,9 @@ public class ImpFreecam : ImpScript
         IsMinicamEnabled.onTrue += OnMinicamEnable;
         IsMinicamEnabled.onFalse += OnMinicamDisable;
 
+        IsFreehandModeEnabled.onTrue += OnFreehandModeEnable;
+        IsFreehandModeEnabled.onFalse += OnFreehandModeDisable;
+
         IsMinicamFullscreenEnabled.onTrue += OnMinicamFullscreenEnable;
         IsMinicamFullscreenEnabled.onFalse += OnMinicamFullscreenDisable;
 
@@ -59,6 +66,7 @@ public class ImpFreecam : ImpScript
         Imperium.InputBindings.BaseMap.Minicam.performed += OnMinicamToggle;
         Imperium.InputBindings.BaseMap.MinicamFullscreen.performed += OnMinicamFullscreenToggle;
         Imperium.InputBindings.BaseMap.Reset.performed += OnFreecamReset;
+        Imperium.InputBindings.FreecamMap.FreehandMode.performed += OnToggleFreehandMode;
         Imperium.InputBindings.FreecamMap.LayerSelector.performed += OnToggleLayerSelector;
         Imperium.Settings.Freecam.FreecamLayerMask.onUpdate += value => camera.cullingMask = value;
 
@@ -78,6 +86,7 @@ public class ImpFreecam : ImpScript
         Imperium.InputBindings.BaseMap.Minicam.performed -= OnMinicamToggle;
         Imperium.InputBindings.BaseMap.MinicamFullscreen.performed -= OnMinicamFullscreenToggle;
         Imperium.InputBindings.BaseMap.Reset.performed -= OnFreecamReset;
+        Imperium.InputBindings.FreecamMap.FreehandMode.performed -= OnToggleFreehandMode;
         Imperium.InputBindings.FreecamMap.LayerSelector.performed -= OnToggleLayerSelector;
         Imperium.InputBlocker.Unblock(this);
     }
@@ -133,7 +142,6 @@ public class ImpFreecam : ImpScript
     private void OnFreecamEnable()
     {
         if (!Imperium.IsArenaLoaded || !Imperium.IsImperiumEnabled) return;
-
         Imperium.Interface.Close();
 
         if (IsMinicamEnabled.Value) IsMinicamEnabled.SetFalse();
@@ -153,6 +161,8 @@ public class ImpFreecam : ImpScript
         Imperium.InputBlocker.Block(this);
 
         PlayerManager.ToggleLocalAvatar(Imperium.Settings.Rendering.AvatarInFreecam.Value);
+
+        if (IsFreehandModeEnabled.Value) IsFreehandModeEnabled.Refresh();
     }
 
     private void OnFreecamDisable()
@@ -182,6 +192,22 @@ public class ImpFreecam : ImpScript
         Imperium.Settings.Freecam.FreecamFieldOfView.Set(ImpConstants.DefaultFOV);
     }
 
+    private void OnFreehandModeEnable()
+    {
+        InputManager.instance.inputActions[InputKey.Movement].Enable();
+        InputManager.instance.inputActions[InputKey.MouseDelta].Enable();
+        InputManager.instance.inputActions[InputKey.MouseInput].Enable();
+    }
+
+    private void OnFreehandModeDisable()
+    {
+        InputManager.instance.inputActions[InputKey.Movement].Disable();
+        InputManager.instance.inputActions[InputKey.MouseDelta].Disable();
+        InputManager.instance.inputActions[InputKey.MouseInput].Disable();
+    }
+
+    private void OnToggleFreehandMode(InputAction.CallbackContext callbackContext) => IsFreehandModeEnabled.Toggle();
+
     private void OnToggleLayerSelector(InputAction.CallbackContext callbackContext)
     {
         if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
@@ -201,7 +227,7 @@ public class ImpFreecam : ImpScript
     {
         // The component is only enabled when the freecam is active
         // Stop update of a quick menu an ImpUI is open with freecam 
-        if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen()) return;
+        if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || UnityExplorerIntegration.IsOpen) return;
 
         var scrollValue = Imperium.InputBindings.BaseMap.Scroll.ReadValue<float>();
         Imperium.Settings.Freecam.FreecamMovementSpeed.Set(scrollValue switch
@@ -214,7 +240,7 @@ public class ImpFreecam : ImpScript
         if (Imperium.InputBindings.FreecamMap.IncreaseFOV.IsPressed())
         {
             Imperium.Settings.Freecam.FreecamFieldOfView.Set(
-                Mathf.Min(300, Imperium.Settings.Freecam.FreecamFieldOfView.Value + 1)
+                Mathf.Min(180, Imperium.Settings.Freecam.FreecamFieldOfView.Value + 1)
             );
         }
 
@@ -227,22 +253,25 @@ public class ImpFreecam : ImpScript
 
         camera.fieldOfView = Imperium.Settings.Freecam.FreecamFieldOfView.Value;
 
-        var cameraTransform = transform;
+        if (!IsFreehandModeEnabled.Value)
+        {
+            var cameraTransform = transform;
 
-        var rotation = Imperium.InputBindings.BaseMap.Look.ReadValue<Vector2>();
-        lookInput.x += rotation.x * 0.004f * GameplayManager.instance.aimSensitivity;
-        lookInput.y += rotation.y * 0.004f * GameplayManager.instance.aimSensitivity;
+            var rotation = Imperium.InputBindings.BaseMap.Look.ReadValue<Vector2>();
+            lookInput.x += rotation.x * 0.004f * GameplayManager.instance.aimSensitivity;
+            lookInput.y += rotation.y * 0.004f * GameplayManager.instance.aimSensitivity;
 
-        // Clamp the Y rotation to [-90;90] so the camera can't turn on it's head
-        lookInput.y = Mathf.Clamp(lookInput.y, -90, 90);
+            // Clamp the Y rotation to [-90;90] so the camera can't turn on it's head
+            lookInput.y = Mathf.Clamp(lookInput.y, -90, 90);
 
-        cameraTransform.rotation = Quaternion.Euler(-lookInput.y, lookInput.x, 0);
+            cameraTransform.rotation = Quaternion.Euler(-lookInput.y, lookInput.x, 0);
 
-        var movement = Imperium.InputBindings.BaseMap.Movement.ReadValue<Vector2>();
-        var movementY = Imperium.InputBindings.BaseMap.FlyAscend.IsPressed() ? 1 :
-            Imperium.InputBindings.BaseMap.FlyDescend.IsPressed() ? -1 : 0;
-        var deltaMove = new Vector3(movement.x, movementY, movement.y)
-                        * (Imperium.Settings.Freecam.FreecamMovementSpeed.Value * Time.deltaTime);
-        cameraTransform.Translate(deltaMove);
+            var movement = Imperium.InputBindings.BaseMap.Movement.ReadValue<Vector2>();
+            var movementY = Imperium.InputBindings.BaseMap.FlyAscend.IsPressed() ? 1 :
+                Imperium.InputBindings.BaseMap.FlyDescend.IsPressed() ? -1 : 0;
+            var deltaMove = new Vector3(movement.x, movementY, movement.y)
+                            * (Imperium.Settings.Freecam.FreecamMovementSpeed.Value * Time.deltaTime);
+            cameraTransform.Translate(deltaMove);
+        }
     }
 }

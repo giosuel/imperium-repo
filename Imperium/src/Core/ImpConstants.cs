@@ -16,7 +16,7 @@ public struct ImpConstants
         internal const float ImageDisabled = 0.5f;
     }
 
-    public const int DefaultFOV = 66;
+    public const int DefaultFOV = 70;
     public const float DefaultGrabStrength = 1f;
     public const float DefaultThrowStrength = 0f;
     public const float DefaultMovementSpeed = 2f;

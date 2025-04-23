@@ -113,4 +113,15 @@ public static class Formatting
             >= 10 => MathF.Round(value, 1).ToString(CultureInfo.InvariantCulture),
             _ => MathF.Round(value, 2).ToString(CultureInfo.InvariantCulture)
         };
+
+    /// <summary>
+    /// Formats a second value to minutes and seconds. E.g. 1m 15s or 45s or 5m
+    /// </summary>
+    /// <param name="seconds"></param>
+    /// <returns></returns>
+    public static string FormatSecondsMinutes(float seconds)
+    {
+        if (seconds < 60) return $"{seconds:0}s";
+        return seconds % 60 == 0 ? $"{seconds / 60:0}m" : $"{(int)seconds / 60}m {(int)seconds % 60}s";
+    }
 }

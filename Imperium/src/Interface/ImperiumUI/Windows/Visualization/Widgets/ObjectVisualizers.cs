@@ -224,12 +224,12 @@ internal class ObjectVisualizers : ImpWidget
         }
 
         // Register custom object entry
-        var customInsightEntryObject = Instantiate(insightTemplate, insightsList);
-        customInsightEntryObject.SetActive(true);
-
-        var customInsightEntry = customInsightEntryObject.AddComponent<ObjectVisualizerInsightEntry>();
-        customInsightEntry.Init("Custom", Imperium.Visualization.ObjectInsights.CustomInsights, theme);
-
-        insightEntries["Special.CustomType"] = customInsightEntry;
+        // var customInsightEntryObject = Instantiate(insightTemplate, insightsList);
+        // customInsightEntryObject.SetActive(true);
+        //
+        // var customInsightEntry = customInsightEntryObject.AddComponent<ObjectVisualizerInsightEntry>();
+        // customInsightEntry.Init("Custom", Imperium.Visualization.ObjectInsights.CustomInsights, theme);
+        //
+        // insightEntries["Special.CustomType"] = customInsightEntry;
     }
 }

@@ -2,9 +2,9 @@
 
 using Imperium.API.Types;
 using Imperium.Util;
+using Librarium;
 using Librarium.Binding;
 using UnityEngine;
-using Visualization = Imperium.Core.Visualization;
 
 #endregion
 
@@ -21,15 +21,16 @@ internal class NavMeshVisualizer(
         ClearObjects();
 
         var index = 0;
-        foreach (var navmeshSurface in Visualization.GetNavmeshSurfaces())
+        foreach (var navmeshSurface in Geometry.GetNavmeshSurfaces())
         {
             var navmeshVisualizer = new GameObject($"ImpVis_NavMeshSurface_{index}");
             navmeshVisualizer.transform.SetParent(parent);
 
             var navmeshRenderer = navmeshVisualizer.AddComponent<MeshRenderer>();
-            navmeshRenderer.material = ImpAssets.TriggerMaterial;
+            navmeshRenderer.material = ImpAssets.NavmeshMaterial;
             var navmeshFilter = navmeshVisualizer.AddComponent<MeshFilter>();
             navmeshFilter.mesh = navmeshSurface;
+            navmeshVisualizer.AddComponent<MeshDataBuilder>();
 
             visualizerObjects[navmeshVisualizer.GetInstanceID()] = navmeshRenderer;
 

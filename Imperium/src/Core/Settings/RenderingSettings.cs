@@ -85,6 +85,6 @@ internal class RenderingSettings(ConfigFile config, IBinding<bool> isSceneLoaded
         config,
         "Rendering.PlayerAvatar",
         "Freecam",
-        false
+        true
     );
 }

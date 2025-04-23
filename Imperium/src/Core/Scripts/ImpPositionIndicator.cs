@@ -40,7 +40,7 @@ public class ImpPositionIndicator : ImpScript
         castToGround = castGround;
         registeredCallback = callback;
 
-        origin = originTransform ? originTransform : PlayerController.instance.cameraGameObject.transform;
+        origin = originTransform ?? Imperium.ActiveCamera.Value.transform;
 
         IsActive = true;
         indicator.SetActive(true);

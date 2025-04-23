@@ -35,10 +35,6 @@ public class ObjectInsightEntry : MonoBehaviour
          *
          * This is because this function is defined by the insight developer and could possibly be inefficient.
          */
-        if (entryUpdateTimer.Tick())
-        {
-            insightValueText.text = insightGenerator(targetComponent);
-            Imperium.IO.LogInfo("UPdating insight entry");
-        }
+        if (entryUpdateTimer.Tick()) insightValueText.text = insightGenerator(targetComponent);
     }
 }

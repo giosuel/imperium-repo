@@ -41,6 +41,15 @@ internal class VisualizerSettings : ImpWidget
             container: transform,
             valueBinding: Imperium.Settings.Visualization.SSOverlayScale,
             indicatorFormatter: Formatting.FormatFloatToThreeDigits,
+            theme: theme,
+            interactableBindings: Imperium.Settings.Visualization.SSAutoScale,
+            interactableInvert: true
+        );
+
+        ImpButton.Bind(
+            "ClearObjects",
+            transform,
+            () => Imperium.Visualization.ClearObjects(),
             theme: theme
         );
     }

@@ -50,14 +50,24 @@ internal class NoiseIndicators : ImpScript
         };
     }
 
+    internal void Clear()
+    {
+        foreach (var indicator in noiseIndicators) indicator.Deactivate();
+    }
+
     internal void ToggleSpheres(bool isShown)
     {
         foreach (var indicator in noiseIndicators) indicator.ToggleSphere(isShown);
     }
-    
+
     internal void AddNoise(Vector3 position, float radius)
     {
-        if (!Imperium.Settings.Visualization.NoiseIndicators.Value) return;
+        if (!Imperium.Settings.Visualization.NoiseIndicators.Value
+            || !Imperium.IsArenaLoaded
+            || Imperium.GameManager.IsGameLoading)
+        {
+            return;
+        }
 
         noiseIndicators[noiseIndex].Activate(position, radius, noiseIndicatorDisplayTime);
         noiseIndex = (noiseIndex + 1) % noiseIndicators.Length;

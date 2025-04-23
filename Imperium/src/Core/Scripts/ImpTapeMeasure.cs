@@ -53,15 +53,15 @@ public class ImpTapeMeasure : ImpScript
 
         Imperium.InputBindings.BaseMap.TapeMeasure.performed += OnTapeOpen;
 
-        tapeLine = ImpGeometry.CreateLine(
+        tapeLine = Geometry.CreateLine(
             transform,
             useWorldSpace: true,
             startColor: new Color(1, 1, 1),
             endColor: new Color(1, 1, 1),
             thickness: 0.03f
         );
-        startMarker = ImpGeometry.CreatePrimitive(PrimitiveType.Sphere, transform, color: new Color(1, 1, 1), 0.1f);
-        endMarker = ImpGeometry.CreatePrimitive(PrimitiveType.Sphere, transform, color: new Color(1, 1, 1), 0.1f);
+        startMarker = Geometry.CreatePrimitive(PrimitiveType.Sphere, transform, color: new Color(1, 1, 1), 0.1f);
+        endMarker = Geometry.CreatePrimitive(PrimitiveType.Sphere, transform, color: new Color(1, 1, 1), 0.1f);
 
         Imperium.Freecam.IsFreecamEnabled.onUpdate += OnFreecamToggle;
         OnFreecamToggle(Imperium.Freecam.IsFreecamEnabled.Value);
@@ -267,7 +267,7 @@ public class ImpTapeMeasure : ImpScript
                 tapeLine.gameObject.SetActive(true);
                 distanceText.text = $"{tapeLineVector.magnitude:0.00}u";
 
-                ImpGeometry.SetLinePositions(
+                Geometry.SetLinePositions(
                     tapeLine,
                     startPosition.Value,
                     endPosition ?? currentLookPosition

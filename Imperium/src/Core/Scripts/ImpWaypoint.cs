@@ -61,7 +61,7 @@ public class ImpWaypoint : MonoBehaviour
 
         var lineStart = transform.position with { y = -1000 };
         var lineEnd = transform.position with { y = 1000 };
-        lineRenderer = ImpGeometry.CreateLine(transform, 0.03f, lineName: "Line", positions: [lineStart, lineEnd]);
+        lineRenderer = Geometry.CreateLine(transform, 0.03f, lineName: "Line", positions: [lineStart, lineEnd]);
     }
 
     internal void Init(Waypoint waypointData, Action onHoverCallback)

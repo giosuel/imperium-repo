@@ -18,10 +18,12 @@ public class NoiseIndicator : MonoBehaviour
 {
     private float timer;
     private float totalTime;
+    private float noiseRange;
 
     private Vector3 worldPosition;
     private bool isDone;
     private TMP_Text indicatorDistanceText;
+    private TMP_Text indicatorRangeText;
     private Image indicatorImage;
 
     private Canvas canvas;
@@ -40,11 +42,12 @@ public class NoiseIndicator : MonoBehaviour
         canvasRect = canvas.GetComponent<RectTransform>();
 
         indicatorDistanceText = transform.Find("Text").GetComponent<TMP_Text>();
+        indicatorRangeText = transform.Find("Range").GetComponent<TMP_Text>();
         indicatorImage = transform.Find("Image").GetComponent<Image>();
         indicatorTransform = GetComponent<RectTransform>();
         indicatorArrow = transform.Find("Arrow").GetComponent<RectTransform>();
 
-        sphere = ImpGeometry.CreatePrimitive(
+        sphere = Geometry.CreatePrimitive(
             PrimitiveType.Sphere,
             objectParent,
             ImpAssets.FresnelGreen
@@ -59,6 +62,7 @@ public class NoiseIndicator : MonoBehaviour
         timer = time;
         totalTime = time;
         isDone = false;
+        noiseRange = radius;
 
         worldPosition = position;
         indicatorDistanceText.color = ImpUtils.Interface.ChangeAlpha(indicatorColor, 1);
@@ -82,14 +86,25 @@ public class NoiseIndicator : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!Imperium.IsArenaLoaded.Value || Imperium.GameManager.IsGameLoading) return;
+
         if (timer >= 0)
         {
             var camera = Imperium.ActiveCamera.Value;
+
+            // Hide indicators that are on the same coordinates as the camera to avoid glitchy overlays
+            if (worldPosition with { y = 0 } == camera.transform.position with { y = 0 })
+            {
+                indicatorTransform.gameObject.SetActive(false);
+                return;
+            }
 
             var targetPos = camera.WorldToScreenPoint(worldPosition);
             if (targetPos.z < 0) targetPos *= -1;
 
             var activeTexture = camera.activeTexture;
+            if (!activeTexture) return;
+
             var scaleFactor = activeTexture.width / canvasRect.sizeDelta.x;
 
             var textureX = activeTexture.width / scaleFactor;
@@ -126,9 +141,13 @@ public class NoiseIndicator : MonoBehaviour
             indicatorArrow.rotation = Quaternion.Euler(0, 0, angle + 180);
 
             timer -= Time.deltaTime;
-            indicatorDistanceText.text = $"{Vector3.Distance(playerPosition, worldPosition):0.0}m";
+            indicatorDistanceText.text = $"{Vector3.Distance(playerPosition, worldPosition):0.0}u";
+            indicatorRangeText.text = $"Radius: {noiseRange:0}u";
 
             indicatorDistanceText.color = ImpUtils.Interface.ChangeAlpha(
+                indicatorColor, indicatorImage.color.a - Time.deltaTime / totalTime
+            );
+            indicatorRangeText.color = ImpUtils.Interface.ChangeAlpha(
                 indicatorColor, indicatorImage.color.a - Time.deltaTime / totalTime
             );
             indicatorImage.color = ImpUtils.Interface.ChangeAlpha(

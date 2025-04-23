@@ -22,8 +22,9 @@ public class PlayerGizmo : MonoBehaviour
         playerGizmoConfig = config;
         playerController = player;
 
-        noiseRangeSphere = ImpGeometry.CreatePrimitive(
-            PrimitiveType.Sphere, player.transform, ImpAssets.WireframeRed
+        noiseRangeSphere = Geometry.CreatePrimitive(
+            PrimitiveType.Sphere, player.transform, ImpAssets.WireframeRed,
+            spawnDisabled: true
         );
     }
 

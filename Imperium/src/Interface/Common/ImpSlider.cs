@@ -305,6 +305,6 @@ public class ImpSlider : MonoBehaviour
     private static void ToggleInteractable(Selectable input, Image sliderArea, bool isOn, bool inverted)
     {
         input.interactable = inverted ? !isOn : isOn;
-        ImpUtils.Interface.ToggleImageActive(sliderArea, isOn);
+        ImpUtils.Interface.ToggleImageActive(sliderArea, !isOn);
     }
 }

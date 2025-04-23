@@ -20,11 +20,13 @@ internal class InputBlocker
 
     private static void DisableActions()
     {
+        Imperium.IO.LogInfo("DISABLING ALL ACTIONS");
         foreach (var action in InputManager.instance.inputActions) action.Value.Disable();
     }
 
     private static void EnableActions()
     {
+        Imperium.IO.LogInfo("ENABLING ALL ACTIONS");
         foreach (var action in InputManager.instance.inputActions) action.Value.Enable();
     }
 }

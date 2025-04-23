@@ -42,22 +42,21 @@ internal abstract class ImpAssets
     /*
      * Materials
      */
-    internal static Material HologramOkay;
-    internal static Material HologramOkayDark;
-    internal static Material HologramError;
     internal static Material FresnelWhite;
     internal static Material FresnelBlue;
     internal static Material FresnelYellow;
     internal static Material FresnelGreen;
     internal static Material FresnelRed;
-    internal static Material WireframeNavMesh;
     internal static Material WireframePurple;
+    internal static Material WireframeOrange;
     internal static Material WireframeCyan;
     internal static Material WireframeAmaranth;
     internal static Material WireframeYellow;
     internal static Material WireframeGreen;
     internal static Material WireframeRed;
     internal static Material XRay;
+    internal static Material ShiggyMaterial;
+    internal static Material NavmeshMaterial;
 
     /*
      * Other Prefabs
@@ -73,18 +72,13 @@ internal abstract class ImpAssets
     internal static GameObject ObjectInsightPanel;
     internal static GameObject BuildInfoPanel;
     internal static GameObject WaypointBeacon;
+    internal static GameObject LevelPoint;
 
     /*
      * Audio Clips
      */
     internal static AudioClip ButtonClick;
     internal static AudioClip OpenClick;
-
-    /*
-     * Materials
-     */
-    public static Material ShiggyMaterial;
-    public static Material TriggerMaterial;
 
     /*
      * Other
@@ -164,34 +158,28 @@ internal abstract class ImpAssets
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/insight_panel.prefab", out ObjectInsightPanel),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/prop_info.prefab", out BuildInfoPanel),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/waypoint_beacon.prefab", out WaypointBeacon),
+            LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/level_point.prefab", out LevelPoint),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/spawn_indicator.prefab", out SpawnIndicator),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/noise_overlay.prefab", out NoiseOverlay),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/waypoint_overlay.prefab", out WaypointOverlay),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/xray.mat", out XRay),
-            LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/hologram_okay.mat", out HologramOkay),
-            LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/hologram_okay_dark.mat", out HologramOkayDark),
-            LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/hologram_error.mat", out HologramError),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_white.mat", out FresnelWhite),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_blue.mat", out FresnelBlue),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_red.mat", out FresnelRed),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_green.mat", out FresnelGreen),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_yellow.mat", out FresnelYellow),
-            LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/wireframe_navmesh.mat", out WireframeNavMesh),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/wireframe_purple.mat", out WireframePurple),
+            LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/wireframe_orange.mat", out WireframeOrange),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/wireframe_cyan.mat", out WireframeCyan),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/wireframe_amaranth.mat", out WireframeAmaranth),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/wireframe_yellow.mat", out WireframeYellow),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/wireframe_green.mat", out WireframeGreen),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/wireframe_red.mat", out WireframeRed),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/shig.mat", out ShiggyMaterial),
+            LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/navmesh.mat", out NavmeshMaterial),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Audio/ButtonClick.wav", out ButtonClick),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Audio/OpenClick.ogg", out OpenClick)
         ];
-
-        foreach (var material in Resources.FindObjectsOfTypeAll<Material>())
-        {
-            if (material.name == "testTriggerRed") TriggerMaterial = material;
-        }
 
         Imperium.IO.LogBlock(logBuffer, "Imperium Resource Loader");
 

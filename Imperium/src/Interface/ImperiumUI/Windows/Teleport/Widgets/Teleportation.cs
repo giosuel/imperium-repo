@@ -192,16 +192,13 @@ public class Teleportation : ImpWidget
     {
         if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
 
-        // Set origin of indicator to freecam if freecam is enabled
-        var origin = Imperium.Freecam.IsFreecamEnabled.Value ? Imperium.Freecam.transform : null;
-
         if (Imperium.ImpPositionIndicator.IsActive)
         {
             Imperium.ImpPositionIndicator.Deactivate();
         }
         else
         {
-            Imperium.ImpPositionIndicator.Activate(Imperium.PlayerManager.TeleportLocalPlayer, origin);
+            Imperium.ImpPositionIndicator.Activate(Imperium.PlayerManager.TeleportLocalPlayer);
         }
     }
 }

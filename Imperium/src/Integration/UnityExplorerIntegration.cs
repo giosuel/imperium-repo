@@ -14,8 +14,10 @@ namespace Imperium.Integration;
 
 public static class UnityExplorerIntegration
 {
+    internal static bool IsOpen;
+
     private static bool IsEnabled => Chainloader.PluginInfos.ContainsKey("com.sinai.unityexplorer");
-    private static UnityExplorerBlocker blocker = new();
+    private static readonly UnityExplorerBlocker blocker = new();
 
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     internal static void CloseUI()
@@ -90,6 +92,8 @@ public static class UnityExplorerIntegration
                 Imperium.InputBindings.BaseMap.Teleport.Enable();
                 Imperium.InputBindings.BaseMap.TapeMeasure.Enable();
             }
+
+            IsOpen = active;
         }
     }
 }
