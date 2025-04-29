@@ -80,21 +80,10 @@ internal abstract class ImpAssets
     internal static AudioClip ButtonClick;
     internal static AudioClip OpenClick;
 
-    /*
-     * Other
-     */
-    public static IReadOnlyCollection<string> EntityNames;
-
     internal static AssetBundle ImperiumAssets;
 
     internal static bool Load()
     {
-        if (!LoadEntityNames())
-        {
-            Imperium.IO.LogError("[INIT] Failed to load entity names from assembly, aborting!");
-            return false;
-        }
-
         if (!LoadAssets())
         {
             Imperium.IO.LogInfo("[INIT] Failed to load one or more assets from assembly, aborting!");
@@ -102,16 +91,6 @@ internal abstract class ImpAssets
         }
 
         return true;
-    }
-
-    private static bool LoadEntityNames()
-    {
-        using (var entityNamesStream = LoadResource("Imperium.resources.entityNames.txt"))
-        {
-            EntityNames = new StreamReader(entityNamesStream).ReadToEnd().Split("\n").Select(name => name.Trim()).ToList();
-        }
-
-        return EntityNames != null && EntityNames.Count != 0;
     }
 
     private static bool LoadAssets()
