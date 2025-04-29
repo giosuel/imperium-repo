@@ -13,7 +13,7 @@ internal static class PreInitPatches
     {
         if (hasAddedVersion) return;
 
-        __instance.GetComponent<TextMeshProUGUI>().text += $" ({Imperium.PLUGIN_NAME} v{Imperium.PLUGIN_VERSION})";
+        __instance.GetComponent<TextMeshProUGUI>().text += $" ({LCMPluginInfo.PLUGIN_NAME} v{LCMPluginInfo.PLUGIN_VERSION})";
 
         hasAddedVersion = true;
     }

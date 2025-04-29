@@ -6,9 +6,9 @@ repository = "https://thunderstore.io"
 
 [package]
 namespace = "giosuel"
-name = "Librarium"
-description = "A modding library that provides utilities for the Imperium mods."
-websiteUrl = "https://github.com/giosuel/Librarium"
+name = "Imperium"
+description = "Imperium is a powerful and highly performant all-in-one debugging tool to test and explore game mechanics and functionality in R.E.P.O. "
+websiteUrl = "https://github.com/giosuel/Imperium"
 containsNsfwContent = false
 
 [package.dependencies]
@@ -20,7 +20,7 @@ readme = "README.md"
 outdir = "artifacts/thunderstore/"
 
 [[build.copy]]
-source = "artifacts/bin/Librarium/release/giosuel.Librarium.dll"
+source = "artifacts/bin/Imperium/release/giosuel.Imperium.dll"
 target = "/"
 
 [[build.copy]]
@@ -35,4 +35,4 @@ target = "/"
 communities = ["repo"]
 
 [publish.categories]
-repo = ["clientside", "libraries", "tools"]
+repo = ["mods", "tools", "serverside", "clientside", "libraries", "misc"]

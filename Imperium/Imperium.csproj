@@ -4,67 +4,33 @@
         <!-- General Project Information -->
         <TargetFramework>netstandard2.1</TargetFramework>
         <Title>Imperium REPO</Title>
-        <PackageId>Imperium</PackageId>
-        <Version>0.0.1</Version>
+        <PackageId>ImperiumRepo</PackageId>
+        <Product>ImperiumRepo</Product>
         <AssemblyName>giosuel.Imperium</AssemblyName>
-        <Description>All-in-one debugging mod for REPO.</Description>
         <RootNamespace>Imperium</RootNamespace>
-        <PackageIcon>imperium_logo_alpha.png</PackageIcon>
-        <PackageTags>lethal;company;bepinex;harmony;debug</PackageTags>
-
-        <PackageReadmeFile>../README.md</PackageReadmeFile>
-        <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
-        <PackageProjectUrl>https://github.com/giosuel/imperium-repo</PackageProjectUrl>
-        <RepositoryUrl>https://github.com/giosuel/imperium-repo</RepositoryUrl>
-        <RepositoryType>git</RepositoryType>
-
-        <!-- Build Information -->
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <LangVersion>preview</LangVersion>
-
-        <!-- NuGet Information -->
-        <RestoreAdditionalProjectSources>
-            https://api.nuget.org/v3/index.json;
-            https://nuget.bepinex.dev/v3/index.json
-        </RestoreAdditionalProjectSources>
-
-        <!-- Auto Versioning -->
-        <MinVerDefaultPreReleaseIdentifiers>dev</MinVerDefaultPreReleaseIdentifiers>
-        <MinVerTagPrefix>v</MinVerTagPrefix>
+        <Description>Imperium is a powerful and highly performant all-in-one debugging tool to test and explore game mechanics and functionality in REPO.</Description>
     </PropertyGroup>
 
-    <!-- Include README and CHANGELOG in the package -->
     <ItemGroup>
-        <None Include="$(ProjectDir)../README.md" Pack="true" PackagePath="/"/>
-        <None Include="$(ProjectDir)../CHANGELOG.md" Pack="true" PackagePath="/"/>
-        <None Include="$(ProjectDir)../assets/imperium_logo_alpha.png" Pack="true" PackagePath="/"/>
-    </ItemGroup>
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.Core" Version="5.*" />
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.*" />
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" ExcludeAssets="runtime" />
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.21" IncludeAssets="compile" />
 
-    <!-- BepInEx Package References -->
-    <ItemGroup>
-        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
-        <PackageReference Include="BepInEx.Core" Version="5.*"/>
-        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.*"/>
-        <PackageReference Include="Rune580.Mods.Repo.RepoSteamNetworking" Version="0.1.0"/>
-        <PackageReference Include="UnityEngine.Modules" Version="2022.3.21" IncludeAssets="compile"/>
-        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" ExcludeAssets="runtime"/>
-        <PackageReference Include="Zehs.REPOLib" Version="2.1.0"/>
-        <PackageReference Include="rainbowblood.UniverseLib.Mono" Version="2.*"/>
-        <PackageReference Include="R.E.P.O.GameLibs.Steam" Version="*-*" PrivateAssets="all" Publicize="true"/>
-        <PackageReference Include="LibrariumLib" Version="*-*" PrivateAssets="all" Publicize="true"/>
+        <PackageReference Include="Rune580.Mods.Repo.RepoSteamNetworking" Version="0.1.0" />
+        <PackageReference Include="Zehs.REPOLib" Version="2.1.0" />
+        <PackageReference Include="rainbowblood.UniverseLib.Mono" Version="2.*" />
+        <PackageReference Include="R.E.P.O.GameLibs.Steam" Version="*-*" PrivateAssets="all" Publicize="true" />
+        <PackageReference Include="LibrariumLib" Version="*-*" Publicize="true" />
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="UnityExplorer.BIE5.Mono" HintPath="..\deps\UnityExplorer.BIE5.Mono.dll"/>
-    </ItemGroup>
-
-    <!-- IDE Assemblies - Easier to Find Source Code -->
-    <ItemGroup Condition="$(CI) != 'true'">
-        <!--        <Reference Include="Unity.InputSystem" HintPath="$(RepoDir)REPO_Data/Managed/Unity.InputSystem.dll" Private="False" Publicize="true" />-->
+        <Reference Include="UnityExplorer.BIE5.Mono" HintPath="..\deps\UnityExplorer.BIE5.Mono.dll" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="resources\assets\imperium_assets"/>
-        <EmbeddedResource Include="resources\assets\imperium_assets"/>
+        <None Remove="resources\assets\imperium_assets" />
+        <EmbeddedResource Include="resources\assets\imperium_assets" />
     </ItemGroup>
 </Project>

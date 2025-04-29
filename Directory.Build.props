@@ -4,11 +4,18 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
-        <!-- Allows references to non-public members at runtime, for use with BepInEx.AssemblyPublicizer. -->
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageLicenseExpression>GPL-3.0-or-later</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
+
+        <Authors>giosuel</Authors>
+        <PackageProjectUrl>https://github.com/giosuel/imperium-repo</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/giosuel/imperium-repo</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+
+        <PackageIcon>assets/icon.png</PackageIcon>
+        <PackageTags>repo;bepinex;harmony;debug;mod;unity</PackageTags>
     </PropertyGroup>
 
     <!-- Enable debug symbols. This will show source code line numbers in stack traces. -->
@@ -37,5 +44,6 @@
 
     <ItemGroup>
         <None Include="../README.md" Pack="true" PackagePath="/"/>
+        <None Include="../assets/icon.png" Pack="true" PackagePath="assets/"/>
     </ItemGroup>
 </Project>

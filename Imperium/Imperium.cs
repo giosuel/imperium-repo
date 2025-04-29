@@ -15,11 +15,9 @@ using Imperium.Interface.MapUI;
 using Imperium.Interface.SpawningUI;
 using Imperium.Networking;
 using Imperium.Patches;
-using Imperium.Patches.Systems;
 using Imperium.Util;
 using Librarium.Binding;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using ImpSettings = Imperium.Core.ImpSettings;
 
 #endregion
@@ -31,13 +29,9 @@ namespace Imperium;
 [BepInDependency("giosuel.Librarium")]
 [BepInDependency("com.sinai.universelib", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInDependency("com.sinai.unityexplorer", BepInDependency.DependencyFlags.SoftDependency)]
-[BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
+[BepInPlugin(LCMPluginInfo.PLUGIN_GUID, LCMPluginInfo.PLUGIN_NAME, LCMPluginInfo.PLUGIN_VERSION)]
 public class Imperium : BaseUnityPlugin
 {
-    public const string PLUGIN_GUID = "giosuel.Imperium";
-    public const string PLUGIN_NAME = "Imperium";
-    public const string PLUGIN_VERSION = "0.3.0";
-
     private static Harmony Harmony;
     private static ManualLogSource Log;
     private static ConfigFile configFile;
@@ -129,7 +123,7 @@ public class Imperium : BaseUnityPlugin
 
         if (!ImpAssets.Load()) return;
 
-        Harmony = new Harmony(PLUGIN_GUID);
+        Harmony = new Harmony(LCMPluginInfo.PLUGIN_GUID);
         PreLaunchPatches();
 
         IsImperiumInitialized = true;
