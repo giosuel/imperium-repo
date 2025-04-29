@@ -28,6 +28,9 @@ namespace Imperium;
 
 [BepInDependency("com.rune580.reposteamnetworking")]
 [BepInDependency("REPOLib")]
+[BepInDependency("giosuel.Librarium")]
+[BepInDependency("com.sinai.universelib", BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency("com.sinai.unityexplorer", BepInDependency.DependencyFlags.SoftDependency)]
 [BepInPlugin(PLUGIN_GUID, PLUGIN_NAME, PLUGIN_VERSION)]
 public class Imperium : BaseUnityPlugin
 {
@@ -71,9 +74,9 @@ public class Imperium : BaseUnityPlugin
     internal static ImpMap Map { get; private set; }
     internal static ImpFreecam Freecam { get; private set; }
     internal static ImpNightVision NightVision { get; private set; }
-    internal static ImpTapeMeasure ImpTapeMeasure { get; private set; }
+    internal static TapeMeasure TapeMeasure { get; private set; }
     internal static ImpInputBindings InputBindings { get; private set; }
-    internal static ImpPositionIndicator ImpPositionIndicator { get; private set; }
+    internal static PositionIndicator PositionIndicator { get; private set; }
     internal static ImpInterfaceManager Interface { get; private set; }
     internal static WaypointManager WaypointManager { get; private set; }
 
@@ -186,10 +189,10 @@ public class Imperium : BaseUnityPlugin
         Map = ImpScript.Create<ImpMap>(GameObject.transform);
         Freecam = ImpScript.Create<ImpFreecam>(GameObject.transform);
         NightVision = ImpScript.Create<ImpNightVision>(GameObject.transform);
-        ImpTapeMeasure = ImpScript.Create<ImpTapeMeasure>(
+        TapeMeasure = ImpScript.Create<TapeMeasure>(
             GameObject.transform, ImpAssets.TapeIndicatorObject
         );
-        ImpPositionIndicator = ImpScript.Create<ImpPositionIndicator>(
+        PositionIndicator = ImpScript.Create<PositionIndicator>(
             GameObject.transform, ImpAssets.PositionIndicatorObject
         );
 
@@ -222,8 +225,8 @@ public class Imperium : BaseUnityPlugin
         Interface.Close();
         PlayerManager.IsFlying.SetFalse();
         Freecam.IsFreecamEnabled.SetFalse();
-        ImpPositionIndicator.Deactivate();
-        ImpTapeMeasure.Deactivate();
+        PositionIndicator.Deactivate();
+        TapeMeasure.Deactivate();
 
         InputBindings.BaseMap.Disable();
         InputBindings.StaticMap.Disable();
@@ -272,7 +275,7 @@ public class Imperium : BaseUnityPlugin
     {
         Interface.OpenInterface.onUpdate += openInterface =>
         {
-            if (openInterface) ImpPositionIndicator.Deactivate();
+            if (openInterface) PositionIndicator.Deactivate();
         };
 
         Interface.RegisterInterface<ImperiumUI>(

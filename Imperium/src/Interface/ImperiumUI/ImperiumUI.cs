@@ -83,22 +83,22 @@ public class ImperiumUI : BaseUI
             "Right/Rendering",
             "Render Settings"
         );
-        RegisterImperiumWindow<SaveEditorWindow>(
-            ImpAssets.SaveEditorWindowObject,
-            "Right/SaveEditor",
-            "Save File Editor"
-        );
+        // RegisterImperiumWindow<SaveEditorWindow>(
+        //     ImpAssets.SaveEditorWindowObject,
+        //     "Right/SaveEditor",
+        //     "Save File Editor"
+        // );
         RegisterImperiumWindow<EventLogWindow>(
             ImpAssets.EventLogWindowObject,
             "Right/EventLog",
             "Event Log"
         );
-        RegisterImperiumWindow<InfoWindow>(
-            ImpAssets.InfoWindowObject,
-            "Right/Info",
-            "Level Information",
-            canOpenBindings: Imperium.IsArenaLoaded
-        );
+        // RegisterImperiumWindow<InfoWindow>(
+        //     ImpAssets.InfoWindowObject,
+        //     "Right/Info",
+        //     "Level Information",
+        //     canOpenBindings: Imperium.IsArenaLoaded
+        // );
         RegisterImperiumWindow<PreferencesWindow>(
             ImpAssets.PreferencesWindowObject,
             "Right/Preferences",
@@ -251,7 +251,7 @@ public class ImperiumUI : BaseUI
 
         foreach (var windowDefinition in configList)
         {
-            var existingDefinition = windowControllers[windowDefinition.WindowType];
+            if (!windowControllers.TryGetValue(windowDefinition.WindowType, out var existingDefinition)) continue;
             if (!controllers.Add(existingDefinition.WindowType)) continue;
 
             // Propagate data from config to existing definition and add it to the stack

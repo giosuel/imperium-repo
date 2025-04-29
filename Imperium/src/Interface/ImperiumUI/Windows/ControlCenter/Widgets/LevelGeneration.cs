@@ -9,7 +9,7 @@ using TMPro;
 
 #endregion
 
-namespace Imperium.Interface.ImperiumUI.Windows.ArenaControl.Widgets;
+namespace Imperium.Interface.ImperiumUI.Windows.ControlCenter.Widgets;
 
 public class LevelGeneration : ImpWidget
 {

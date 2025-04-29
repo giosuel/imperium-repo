@@ -15,21 +15,25 @@ using Object = UnityEngine.Object;
 
 namespace Imperium.Visualizers;
 
-internal class LevelPointVisualizer(
-    Transform parent,
-    ImpBinding<bool> isLoadedBinding,
-    ImpBinding<bool> visibilityBinding
-) : BaseVisualizer<bool, Component>(parent, isLoadedBinding, visibilityBinding: visibilityBinding)
+internal class LevelPointVisualizer : BaseVisualizer<bool, Component>
 {
+    private readonly GameObject levelPointParent;
+
+    internal LevelPointVisualizer(
+        Transform parent, ImpBinding<bool> isLoadedBinding, ImpBinding<bool> visibilityBinding
+    ) : base(parent, isLoadedBinding, visibilityBinding)
+    {
+        levelPointParent = new GameObject($"ImpVis_LevelPoints");
+        levelPointParent.transform.SetParent(parent);
+    }
+
     protected override void OnRefresh(bool isSceneLoaded)
     {
         ClearObjects();
 
-        var levelPointParent = new GameObject($"ImpVis_LevelPoints");
-        levelPointParent.transform.SetParent(parent);
+        if (!isSceneLoaded) return;
 
         var connections = new HashSet<ValueTuple<Vector3, Vector3>>();
-
         foreach (var levelPoint in Object.FindObjectsByType<LevelPoint>(FindObjectsSortMode.None))
         {
             var levelPointIndicator = Object.Instantiate(ImpAssets.LevelPoint, levelPointParent.transform);

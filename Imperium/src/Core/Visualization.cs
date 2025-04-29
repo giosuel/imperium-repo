@@ -39,10 +39,15 @@ internal class Visualization
         );
 
         PlayerGizmos = new PlayerGizmos(visualizerParent.transform, objectManager.CurrentPlayers, config);
-        EntityGizmos = new EntityGizmos(visualizerParent.transform, objectManager.CurrentLevelEntities, config);
+        EntityGizmos = new EntityGizmos(
+            visualizerParent.transform,
+            objectManager.CurrentLevelEntities,
+            Imperium.IsArenaLoaded,
+            config
+        );
         ObjectInsights = new ObjectInsights(visualizerParent.transform, config);
-        NoiseIndicators = ImpScript.Create<NoiseIndicators>(parent);
-        StaticVisualizers = ImpScript.Create<StaticVisualizers>(parent);
+        NoiseIndicators = ImpScript.Create<NoiseIndicators>(visualizerParent.transform);
+        StaticVisualizers = ImpScript.Create<StaticVisualizers>(visualizerParent.transform);
 
         Imperium.IsArenaLoaded.onTrigger += ObjectInsights.Refresh;
         Imperium.IsArenaLoaded.onTrigger += () => StaticVisualizers.Refresh(true);

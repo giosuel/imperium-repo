@@ -40,8 +40,6 @@ public class ImpMapCamera : ImpScript
         RenderSettings.ambientLight = new Color(1, 1, 1);
         RenderSettings.fogEndDistance = 500f;
 
-        Imperium.Visualization.NoiseIndicators.ToggleSpheres(true);
-
         isAvatarVisible = PlayerAvatar.instance.playerAvatarVisuals.meshParent.activeSelf;
         if (!isAvatarVisible) PlayerManager.ToggleLocalAvatar(true);
     }
@@ -53,8 +51,6 @@ public class ImpMapCamera : ImpScript
 
         RenderSettings.ambientLight = oldColor;
         RenderSettings.fogEndDistance = oldFogDistance;
-
-        Imperium.Visualization.NoiseIndicators.ToggleSpheres(false);
 
         // Disable avatar again if it was enabled in pre-render
         if (!isAvatarVisible) PlayerManager.ToggleLocalAvatar(false);

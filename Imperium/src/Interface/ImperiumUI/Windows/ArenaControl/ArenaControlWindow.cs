@@ -2,6 +2,7 @@
 
 using Imperium.Interface.Common;
 using Imperium.Interface.ImperiumUI.Windows.ArenaControl.Widgets;
+using Imperium.Interface.ImperiumUI.Windows.ControlCenter.Widgets;
 using Imperium.Types;
 using UnityEngine;
 
@@ -15,9 +16,8 @@ internal class ArenaControlWindow : ImperiumWindow
 
     protected override void InitWindow()
     {
-        content = transform.Find("Content");
+        InitQuotaAndCredits();
 
-        RegisterWidget<LevelGeneration>(transform, "Left/Generation");
         RegisterWidget<ArenaSettings>(transform, "Right");
     }
 
@@ -27,6 +27,43 @@ internal class ArenaControlWindow : ImperiumWindow
             themeUpdate,
             transform,
             new StyleOverride("Right", Variant.DARKER)
+        );
+    }
+
+    private void InitQuotaAndCredits()
+    {
+        ImpInput.Bind(
+            "Left/GroupCurrency/Input",
+            transform,
+            Imperium.GameManager.GroupCurrency,
+            min: 0,
+            theme: theme
+        );
+
+        ImpInput.Bind(
+            "Left/TotalHaul/Input",
+            transform,
+            Imperium.GameManager.TotalHaul,
+            min: 0,
+            theme: theme
+        );
+
+        ImpToggle.Bind(
+            "Left/LowHaul",
+            transform,
+            Imperium.GameManager.LowHaul,
+            theme
+        );
+
+        ImpButton.Bind(
+            "Left/ShopButtons/BuyItems",
+            transform,
+            () =>
+            {
+                StatsManager.instance.BuyAllItems();
+                SemiFunc.StatSyncAll();
+            },
+            theme
         );
     }
 }

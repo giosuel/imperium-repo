@@ -2,6 +2,7 @@
 
 using Imperium.Core;
 using Imperium.Interface.Common;
+using Imperium.Interface.ImperiumUI.Windows.ControlCenter.Widgets;
 using Imperium.Types;
 using Imperium.Util;
 using TMPro;
@@ -19,9 +20,10 @@ internal class ControlCenterWindow : ImperiumWindow
     {
         content = transform.Find("Content");
 
-        InitQuotaAndCredits();
         InitPlayerSettings();
         InitGameSettings();
+
+        RegisterWidget<LevelGeneration>(content, "Left/Generation");
 
         if (Random.Range(0, 100) >= 99) titleBox.Find("Title").GetComponent<TMP_Text>().text = "Emporium Control Panel";
     }
@@ -32,43 +34,6 @@ internal class ControlCenterWindow : ImperiumWindow
             themeUpdate,
             transform,
             new StyleOverride("Separator", Variant.DARKER)
-        );
-    }
-
-    private void InitQuotaAndCredits()
-    {
-        ImpInput.Bind(
-            "Left/GroupCurrency/Input",
-            content,
-            Imperium.GameManager.GroupCurrency,
-            min: 0,
-            theme: theme
-        );
-
-        ImpInput.Bind(
-            "Left/TotalHaul/Input",
-            content,
-            Imperium.GameManager.TotalHaul,
-            min: 0,
-            theme: theme
-        );
-
-        ImpToggle.Bind(
-            "Left/LowHaul",
-            content,
-            Imperium.GameManager.LowHaul,
-            theme
-        );
-
-        ImpButton.Bind(
-            "Left/ShopButtons/BuyItems",
-            content,
-            () =>
-            {
-                StatsManager.instance.BuyAllItems();
-                SemiFunc.StatSyncAll();
-            },
-            theme
         );
     }
 

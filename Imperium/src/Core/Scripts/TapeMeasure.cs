@@ -12,7 +12,7 @@ using UnityEngine.InputSystem;
 
 namespace Imperium.Core.Scripts;
 
-public class ImpTapeMeasure : ImpScript
+public class TapeMeasure : ImpScript
 {
     internal bool IsActive { get; private set; }
 

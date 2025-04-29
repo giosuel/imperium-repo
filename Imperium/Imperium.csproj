@@ -35,44 +35,36 @@
 
     <!-- Include README and CHANGELOG in the package -->
     <ItemGroup>
-        <None Include="$(ProjectDir)../README.md" Pack="true" PackagePath="/" />
-        <None Include="$(ProjectDir)../CHANGELOG.md" Pack="true" PackagePath="/" />
-        <None Include="$(ProjectDir)../assets/imperium_logo_alpha.png" Pack="true" PackagePath="/" />
+        <None Include="$(ProjectDir)../README.md" Pack="true" PackagePath="/"/>
+        <None Include="$(ProjectDir)../CHANGELOG.md" Pack="true" PackagePath="/"/>
+        <None Include="$(ProjectDir)../assets/imperium_logo_alpha.png" Pack="true" PackagePath="/"/>
     </ItemGroup>
 
     <!-- BepInEx Package References -->
     <ItemGroup>
-        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
-        <PackageReference Include="BepInEx.Core" Version="5.*" />
-        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.*" />
-        <PackageReference Include="UnityEngine.Modules" Version="2022.3.21" IncludeAssets="compile" />
-        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" ExcludeAssets="runtime" />
-        <PackageReference Include="Zehs.REPOLib" Version="2.*" />
-        <PackageReference Include="rainbowblood.UniverseLib.Mono" Version="2.*" />
-        <Reference Include="UnityExplorer.BIE5.Mono" HintPath="..\deps\UnityExplorer.BIE5.Mono.dll" />
+        <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all"/>
+        <PackageReference Include="BepInEx.Core" Version="5.*"/>
+        <PackageReference Include="BepInEx.PluginInfoProps" Version="2.1.*"/>
+        <PackageReference Include="Rune580.Mods.Repo.RepoSteamNetworking" Version="0.1.0"/>
+        <PackageReference Include="UnityEngine.Modules" Version="2022.3.21" IncludeAssets="compile"/>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" ExcludeAssets="runtime"/>
+        <PackageReference Include="Zehs.REPOLib" Version="2.1.0"/>
+        <PackageReference Include="rainbowblood.UniverseLib.Mono" Version="2.*"/>
+        <PackageReference Include="R.E.P.O.GameLibs.Steam" Version="*-*" PrivateAssets="all" Publicize="true"/>
+        <PackageReference Include="LibrariumLib" Version="*-*" PrivateAssets="all" Publicize="true"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Reference Include="UnityExplorer.BIE5.Mono" HintPath="..\deps\UnityExplorer.BIE5.Mono.dll"/>
     </ItemGroup>
 
     <!-- IDE Assemblies - Easier to Find Source Code -->
     <ItemGroup Condition="$(CI) != 'true'">
-        <PackageReference Include="R.E.P.O.GameLibs.Steam" Version="*-*" PrivateAssets="all" Publicize="true" />
-        <Reference Include="Unity.InputSystem" HintPath="$(RepoDir)REPO_Data/Managed/Unity.InputSystem.dll" Private="False" Publicize="true" />
+        <!--        <Reference Include="Unity.InputSystem" HintPath="$(RepoDir)REPO_Data/Managed/Unity.InputSystem.dll" Private="False" Publicize="true" />-->
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="UnityExplorer.BIE5.Mono" HintPath="..\deps\UnityExplorer.BIE5.Mono.dll" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="res\entity-names.txt" />
-      <EmbeddedResource Include="resources\entityNames.txt" />
-      <None Remove="res\imperium_assets" />
-      <None Include="resources\imperium_assets" />
-      <None Remove="resources\assets\imperium_assets" />
-      <EmbeddedResource Include="resources\assets\imperium_assets" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <ProjectReference Include="..\librarium\Librarium\Librarium.csproj" />
-      <ProjectReference Include="..\RepoSteamNetworking\RepoSteamNetworking\RepoSteamNetworking.csproj" />
+        <None Remove="resources\assets\imperium_assets"/>
+        <EmbeddedResource Include="resources\assets\imperium_assets"/>
     </ItemGroup>
 </Project>

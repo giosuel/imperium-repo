@@ -13,7 +13,7 @@ using Vector3 = UnityEngine.Vector3;
 
 namespace Imperium.Core.Scripts;
 
-public class ImpPositionIndicator : ImpScript
+public class PositionIndicator : ImpScript
 {
     private Transform origin;
     private GameObject indicator;

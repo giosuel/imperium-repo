@@ -280,7 +280,7 @@ internal class SpawningUI : BaseUI
                 ? Imperium.Freecam.transform
                 : PlayerAvatar.instance.localCamera.transform;
 
-            Imperium.ImpPositionIndicator.Activate(
+            Imperium.PositionIndicator.Activate(
                 position => spawningObjectEntry.Spawn(position, amount, value, false),
                 originTransform,
                 castGround: false

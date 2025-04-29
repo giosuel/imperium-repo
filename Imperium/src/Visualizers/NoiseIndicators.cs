@@ -55,11 +55,6 @@ internal class NoiseIndicators : ImpScript
         foreach (var indicator in noiseIndicators) indicator.Deactivate();
     }
 
-    internal void ToggleSpheres(bool isShown)
-    {
-        foreach (var indicator in noiseIndicators) indicator.ToggleSphere(isShown);
-    }
-
     internal void AddNoise(Vector3 position, float radius)
     {
         if (!Imperium.Settings.Visualization.NoiseIndicators.Value

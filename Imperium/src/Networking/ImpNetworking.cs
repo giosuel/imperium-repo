@@ -27,7 +27,7 @@ public class ImpNetworking
     /// <summary>
     ///     Set to true, when Imperium access is first granted. Always set to true on the host.
     /// </summary>
-    internal static bool WasImperiumAccessGranted { get; private set; }
+    internal bool WasImperiumAccessGranted { get; private set; }
 
     private readonly ImpNetEvent authenticateEvent;
     private readonly ImpNetEvent enableImperiumEvent;

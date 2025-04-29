@@ -274,35 +274,13 @@ internal class PlayerManager : ImpLifecycleObject
     private static void OnTeleportPlayerClient(TeleportPlayerRequest request)
     {
         Imperium.IO.LogInfo($"Teleport player: {request.PlayerId}, mine: {RepoSteamNetwork.CurrentSteamId}");
-        // if (request.PlayerId == RepoSteamNetwork.CurrentSteamId)
-        // {
+        if (request.PlayerId == RepoSteamNetwork.CurrentSteamId)
+        {
             Imperium.IO.LogInfo($"Player teleport request client received. Position: {Formatting.FormatVector(request.Destination)}");
             Imperium.Player.Spawn(request.Destination, Quaternion.identity);
             Imperium.Player.rb.position = request.Destination;
             PlayerController.instance.rb.position = request.Destination;
-        // }
-        // var player = Imperium.StartOfRound.allPlayerScripts.First(player => player.actualClientId == request.PlayerId);
-        //
-        // player.TeleportPlayer(request.Destination);
-        // var isInFactory = request.Destination.y < -100;
-        // player.isInsideFactory = isInFactory;
-        //
-        // // There is no easy way to check this, so it will just be off by default for now
-        // var isInElevator = Imperium.StartOfRound.shipBounds.bounds.Contains(request.Destination);
-        // player.isInElevator = isInElevator;
-        //
-        // var isInShip = Imperium.StartOfRound.shipInnerRoomBounds.bounds.Contains(request.Destination);
-        // player.isInHangarShipRoom = isInShip;
-        //
-        // foreach (var heldItem in player.ItemSlots)
-        // {
-        //     if (!heldItem) continue;
-        //     heldItem.isInFactory = isInFactory;
-        //     heldItem.isInShipRoom = isInShip;
-        //     heldItem.isInFactory = isInFactory;
-        // }
-        //
-        // if (request.PlayerId == NetworkManager.Singleton.LocalClientId) TimeOfDay.Instance.DisableAllWeather();
+        }
     }
 
     [ImpAttributes.HostOnly]

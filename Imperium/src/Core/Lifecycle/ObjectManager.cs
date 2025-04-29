@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Linq;
 using Imperium.API.Types.Networking;
 using Imperium.Core.Scripts;
+using Imperium.Extensions;
 using Imperium.Networking;
 using Imperium.Types;
 using Imperium.Util;
@@ -206,9 +207,7 @@ internal class ObjectManager : ImpLifecycleObject
             loadedEntityNames.Add(parent.enemyName);
         }
 
-        var allItems = Resources.FindObjectsOfTypeAll<Item>()
-            .Where(item => item.prefab && !ImpConstants.ItemBlacklist.Contains(item.itemName))
-            .ToHashSet();
+        var allItems = Resources.FindObjectsOfTypeAll<Item>().ToHashSet();
 
         var allValuables = Valuables.GetValuables().Select(obj => obj.GetComponent<ValuableObject>()).ToHashSet();
 

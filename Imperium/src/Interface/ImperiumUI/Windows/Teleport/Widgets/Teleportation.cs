@@ -89,7 +89,7 @@ public class Teleportation : ImpWidget
     private static void OnInteractive()
     {
         Imperium.Freecam.IsFreecamEnabled.Set(false);
-        Imperium.ImpPositionIndicator.Activate(Imperium.PlayerManager.TeleportLocalPlayer);
+        Imperium.PositionIndicator.Activate(Imperium.PlayerManager.TeleportLocalPlayer);
     }
 
     private void TeleportTo(Vector3? anchor)
@@ -192,13 +192,13 @@ public class Teleportation : ImpWidget
     {
         if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
 
-        if (Imperium.ImpPositionIndicator.IsActive)
+        if (Imperium.PositionIndicator.IsActive)
         {
-            Imperium.ImpPositionIndicator.Deactivate();
+            Imperium.PositionIndicator.Deactivate();
         }
         else
         {
-            Imperium.ImpPositionIndicator.Activate(Imperium.PlayerManager.TeleportLocalPlayer);
+            Imperium.PositionIndicator.Activate(Imperium.PlayerManager.TeleportLocalPlayer);
         }
     }
 }

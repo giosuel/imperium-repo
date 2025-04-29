@@ -8,9 +8,7 @@ using Imperium.API.Types;
 using Imperium.Core;
 using Imperium.Util;
 using Librarium.Binding;
-using JetBrains.Annotations;
 using Librarium;
-using Photon.Pun;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
@@ -90,20 +88,22 @@ public class EntityGizmo : MonoBehaviour
         playerCloseSphere = Geometry.CreatePrimitive(
             PrimitiveType.Sphere, enemyParent.Enemy.transform,
             material: ImpAssets.WireframeOrange,
-            size: 20f,
+            size: 20f * 2,
             spawnDisabled: true
         );
 
         playerVeryCloseSphere = Geometry.CreatePrimitive(
             PrimitiveType.Sphere, enemyParent.Enemy.transform,
             material: ImpAssets.WireframeRed,
-            size: 6f,
+            size: 6f * 2,
             spawnDisabled: true
         );
     }
 
     private void InitVisionObjects(EnemyVision vision)
     {
+        Imperium.IO.LogInfo("Init vision objects");
+
         coneStanding = CreateCone("standing", vision.VisionDotStanding, vision.VisionDistance, ImpAssets.WireframeCyan);
         coneCrouching = CreateCone("crouching", vision.VisionDotCrouch, vision.VisionDistance, ImpAssets.WireframeGreen);
         coneCrawling = CreateCone("crawl", vision.VisionDotCrawl, vision.VisionDistance, ImpAssets.WireframeRed);
@@ -203,7 +203,10 @@ public class EntityGizmo : MonoBehaviour
 
     internal void VisionUpdate()
     {
-        if (!hasInitializedVision || !entityConfig.Vision.Value && !entityConfig.Proximity.Value) return;
+        if (!hasInitializedVision) return;
+        // if (!hasInitializedVision || (!entityConfig.Vision.Value && !entityConfig.Proximity.Value)) return;
+
+        Imperium.IO.LogInfo("Vision update 1");
 
         lastUpdateTime = Time.realtimeSinceStartup;
 
@@ -211,15 +214,19 @@ public class EntityGizmo : MonoBehaviour
 
         if (entityConfig.Vision.Value)
         {
+            Imperium.IO.LogInfo("Vision update vision");
             activeCone.transform.SetParent(
                 Imperium.Settings.Visualization.SmoothAnimations.Value ? enemyVision.VisionTransform : transform
             );
             activeCone.transform.position = enemyVision.VisionTransform.position;
             activeCone.transform.rotation = Quaternion.LookRotation(enemyVision.VisionTransform.forward);
+
+            Imperium.IO.LogInfo($"active cone: {activeCone.activeSelf}");
         }
 
         if (entityConfig.Proximity.Value)
         {
+            Imperium.IO.LogInfo("Vision update proximity");
             activeSphere.transform.SetParent(
                 Imperium.Settings.Visualization.SmoothAnimations.Value ? enemyVision.VisionTransform : transform
             );
@@ -239,21 +246,24 @@ public class EntityGizmo : MonoBehaviour
 
         if (hasInitializedVision)
         {
-            if (Time.realtimeSinceStartup - lastUpdateTime > visualizerTimeout || !entityConfig.Vision.Value)
+            if (Time.realtimeSinceStartup - lastUpdateTime > visualizerTimeout)
             {
+                Imperium.IO.LogInfo($"Turning off enemy los, config: {entityConfig.Vision.Value}, time since last update: {Time.realtimeSinceStartup - lastUpdateTime}");
                 coneStanding.SetActive(false);
                 coneCrouching.SetActive(false);
                 coneCrawling.SetActive(false);
-
-                proximitySphereStanding.SetActive(false);
-                proximitySphereCrouching.SetActive(false);
             }
 
-            if (Time.realtimeSinceStartup - lastUpdateTime > visualizerTimeout || !entityConfig.Proximity.Value)
+            if (Time.realtimeSinceStartup - lastUpdateTime > visualizerTimeout)
             {
+                Imperium.IO.LogInfo($"Turning off enemy prox, config: {entityConfig.Proximity.Value}, time since last update: {Time.realtimeSinceStartup - lastUpdateTime}");
                 proximitySphereStanding.SetActive(false);
                 proximitySphereCrouching.SetActive(false);
             }
+
+            Imperium.IO.LogInfo($"cone standing cone: {coneStanding.activeSelf}");
+            Imperium.IO.LogInfo($"cone crouching cone: {coneCrouching.activeSelf}");
+            Imperium.IO.LogInfo($"cone crawling cone: {coneCrawling.activeSelf}");
         }
 
         DrawPathLines(entityConfig.Pathfinding.Value && enemyParent.enabled);
@@ -321,7 +331,9 @@ public class EntityGizmo : MonoBehaviour
         var isShown = Imperium.Settings.Visualization.PlayerProximity.Value;
 
         playerCloseSphere.SetActive(isShown);
-        playerVeryCloseSphere.SetActive(isShown);
+
+        // This is currently unused to we ignore it
+        // playerVeryCloseSphere.SetActive(isShown);
     }
 
     private void OnDestroy()
@@ -334,6 +346,9 @@ public class EntityGizmo : MonoBehaviour
             Destroy(proximitySphereStanding);
             Destroy(proximitySphereCrouching);
         }
+
+        Destroy(playerCloseSphere);
+        Destroy(playerVeryCloseSphere);
     }
 }
 

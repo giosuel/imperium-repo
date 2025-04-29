@@ -55,17 +55,12 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
 
     internal void Refresh()
     {
-        Imperium.ObjectManager.StartCoroutine(refresh());
-    }
-
-    private IEnumerator refresh()
-    {
-        yield return 0;
+        if (!Imperium.IsArenaLoaded) return;
 
         var stopwatch = Stopwatch.StartNew();
 
         // Skip udpating if no insights are visible
-        if (InsightVisibilityBindings.Value.All(binding => !binding.Value.Value)) yield break;
+        if (InsightVisibilityBindings.Value.All(binding => !binding.Value.Value)) return;
 
         foreach (var obj in Object.FindObjectsOfType<GameObject>())
         {
@@ -101,7 +96,15 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
 
         stopwatch.Stop();
         Imperium.IO.LogInfo($" - SPENT IN INSIGHTS: {stopwatch.ElapsedMilliseconds}");
+        // Imperium.ObjectManager.StartCoroutine(refresh());
     }
+    //
+    // private IEnumerator refresh()
+    // {
+    //     yield return 0;
+    //
+    //
+    // }
 
     internal InsightDefinition<T> InsightsFor<T>() where T : Component
     {
@@ -144,7 +147,6 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .RegisterInsight("Despawn Timer", enemy => Formatting.FormatSecondsMinutes(enemy.DespawnedTimer))
             .RegisterInsight("Valuable Timer", enemy => Formatting.FormatSecondsMinutes(enemy.valuableSpawnTimer))
             .RegisterInsight("Player Close", enemy => enemy.playerClose.ToString())
-            .RegisterInsight("Player Very Close", enemy => enemy.playerVeryClose.ToString())
             .SetPositionOverride(enemy => enemy.Enemy.transform.position)
             .SetConfigKey("Enemies");
 
@@ -156,6 +158,18 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .RegisterInsight("In Start Room", point => $"{point.inStartRoom}")
             .SetPositionOverride(DefaultPositionOverride)
             .SetConfigKey("Extraction Points");
+
+        InsightsFor<ValuableObject>()
+            .SetNameGenerator(valuable => valuable.name)
+            .RegisterInsight(
+                "Value",
+                valuable => $"{SemiFunc.DollarGetString(Mathf.RoundToInt(valuable.dollarValueCurrent))}"
+            )
+            .RegisterInsight("Is Discovered", valuable => $"${valuable.discovered}")
+            .RegisterInsight("Durability", valuable => $"${valuable.durabilityPreset.durability}")
+            .RegisterInsight("Discovered Timer", valuable => $"{valuable.discoveredReminderTimer:0}s")
+            .SetPositionOverride(DefaultPositionOverride)
+            .SetConfigKey("Valuables");
     }
 
     /*

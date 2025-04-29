@@ -34,7 +34,7 @@ internal class PlayerGizmos : BaseVisualizer<IReadOnlyCollection<PlayerAvatar>, 
         {
             if (!visualizerObjects.ContainsKey(player.GetInstanceID()))
             {
-                var playerGizmoObject = new GameObject($"Imp_PlayerInfo_{player.GetInstanceID()}");
+                var playerGizmoObject = new GameObject($"ImpVis_PlayerGizmo_{player.GetInstanceID()}");
                 playerGizmoObject.transform.SetParent(parent);
 
                 var playerGizmo = playerGizmoObject.AddComponent<PlayerGizmo>();

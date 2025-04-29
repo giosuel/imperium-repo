@@ -110,6 +110,15 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         windowGroup.blocksRaycasts = false;
     }
 
+    private void OnDisable()
+    {
+        // Reset all animation values when the window is closed
+        windowGroup.alpha = 0f;
+        windowGroup.interactable = false;
+        windowGroup.blocksRaycasts = false;
+        rect.localScale = Vector3.one;
+    }
+
     private IEnumerator hideAnimation()
     {
         var originalScale = rect.localScale;

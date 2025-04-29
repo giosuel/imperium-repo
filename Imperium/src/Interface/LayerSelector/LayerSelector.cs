@@ -220,7 +220,6 @@ internal class LayerSelector : BaseUI
 
     protected override void OnOpen(bool wasOpen)
     {
-        if (controlBorder) controlBorder.gameObject.SetActive(true);
         if (fovSlider) fovSlider.gameObject.SetActive(true);
         if (movementSpeedSlider) movementSpeedSlider.gameObject.SetActive(true);
     }

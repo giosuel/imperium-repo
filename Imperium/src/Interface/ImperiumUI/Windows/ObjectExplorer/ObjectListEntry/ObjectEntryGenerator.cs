@@ -150,7 +150,7 @@ internal static class ObjectEntryGenerator
         switch (entry.Type)
         {
             case ObjectType.Player:
-                Imperium.ImpPositionIndicator.Activate(position =>
+                Imperium.PositionIndicator.Activate(position =>
                 {
                     Imperium.PlayerManager.TeleportPlayer(new TeleportPlayerRequest
                     {
@@ -164,7 +164,7 @@ internal static class ObjectEntryGenerator
             case ObjectType.Entity:
             case ObjectType.Item:
             case ObjectType.Valuable:
-                Imperium.ImpPositionIndicator.Activate(position =>
+                Imperium.PositionIndicator.Activate(position =>
                 {
                     Imperium.ObjectManager.TeleportObject(new ObjectTeleportRequest
                     {

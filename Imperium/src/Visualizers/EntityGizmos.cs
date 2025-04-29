@@ -1,14 +1,13 @@
 #region
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
 using Imperium.API.Types;
-using Imperium.Types;
 using Librarium.Binding;
 using Imperium.Visualizers.Objects;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 #endregion
 
@@ -26,6 +25,7 @@ internal class EntityGizmos : BaseVisualizer<IReadOnlyCollection<EnemyParent>, E
     internal EntityGizmos(
         Transform parent,
         IBinding<IReadOnlyCollection<EnemyParent>> objectsBinding,
+        IBinding<bool> isArenaLoaded,
         ConfigFile config
     ) : base(parent, objectsBinding)
     {
@@ -35,31 +35,55 @@ internal class EntityGizmos : BaseVisualizer<IReadOnlyCollection<EnemyParent>, E
         {
             EntityInfoConfigs[entity.EnemyName] = new EntityGizmoConfig(entity.EnemyName, config);
         }
+
+        isArenaLoaded.onTrigger += () => HardRefresh(objectsBinding.Value);
     }
 
     protected override void OnRefresh(IReadOnlyCollection<EnemyParent> objects)
     {
-        ClearObjects();
+        var traversedGizmos = new HashSet<int>();
 
         foreach (var entity in objects.Where(entity => entity))
         {
-            if (!visualizerObjects.ContainsKey(entity.GetInstanceID()))
+            traversedGizmos.Add(entity.GetInstanceID());
+
+            if (visualizerObjects.ContainsKey(entity.GetInstanceID())) continue;
+
+            if (!EntityInfoConfigs.TryGetValue(entity.enemyName, out var entityConfig))
             {
-                if (!EntityInfoConfigs.TryGetValue(entity.enemyName, out var entityConfig))
-                {
-                    entityConfig = new EntityGizmoConfig(entity.enemyName, config);
-                    EntityInfoConfigs[entity.enemyName] = entityConfig;
-                }
+                entityConfig = new EntityGizmoConfig(entity.enemyName, config);
+                EntityInfoConfigs[entity.enemyName] = entityConfig;
+            }
 
-                var entityGizmoObject = new GameObject($"Imp_EntityGizmo_{entity.GetInstanceID()}");
-                entityGizmoObject.transform.SetParent(parent);
+            var entityGizmoObject = new GameObject($"ImpVis_EnemyGizmo_{entity.GetInstanceID()}");
+            entityGizmoObject.transform.SetParent(parent);
 
-                var entityGizmo = entityGizmoObject.AddComponent<EntityGizmo>();
-                entityGizmo.Init(entityConfig, entity);
+            var entityGizmo = entityGizmoObject.AddComponent<EntityGizmo>();
+            entityGizmo.Init(entityConfig, entity);
 
-                visualizerObjects[entity.GetInstanceID()] = entityGizmo;
+            visualizerObjects[entity.GetInstanceID()] = entityGizmo;
+        }
+
+        var gizmosToRemove = new HashSet<int>();
+
+        // Destroy all gizmos what haven't been updated
+        foreach (var (instanceId, gizmo) in visualizerObjects)
+        {
+            if (!traversedGizmos.Contains(instanceId))
+            {
+                gizmosToRemove.Add(instanceId);
+                Object.Destroy(gizmo);
             }
         }
+
+        // Remove destroyed gizmos from object list
+        foreach (var instanceId in gizmosToRemove) visualizerObjects.Remove(instanceId);
+    }
+
+    private void HardRefresh(IReadOnlyCollection<EnemyParent> objects)
+    {
+        ClearObjects();
+        OnRefresh(objects);
     }
 
     internal void VisionUpdate(EnemyVision vision)

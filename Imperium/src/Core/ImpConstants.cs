@@ -53,8 +53,6 @@ public struct ImpConstants
     {
         { nameof(EnemyParent), "Enemies" },
         { nameof(ExtractionPoint), "Extraction Points" },
+        { nameof(ValuableObject), "Valuables" },
     };
-
-    // Items that have no spawn prefab
-    public static readonly HashSet<string> ItemBlacklist = [];
 }

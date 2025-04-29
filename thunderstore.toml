@@ -1,0 +1,38 @@
+[config]
+schemaVersion = "0.0.1"
+
+[general]
+repository = "https://thunderstore.io"
+
+[package]
+namespace = "giosuel"
+name = "Librarium"
+description = "A modding library that provides utilities for the Imperium mods."
+websiteUrl = "https://github.com/giosuel/Librarium"
+containsNsfwContent = false
+
+[package.dependencies]
+BepInEx-BepInExPack = "5.4.2100"
+
+[build]
+icon = "assets/icon.png"
+readme = "README.md"
+outdir = "artifacts/thunderstore/"
+
+[[build.copy]]
+source = "artifacts/bin/Librarium/release/giosuel.Librarium.dll"
+target = "/"
+
+[[build.copy]]
+source = "CHANGELOG.md"
+target = "/"
+
+[[build.copy]]
+source = "LICENSE"
+target = "/"
+
+[publish]
+communities = ["repo"]
+
+[publish.categories]
+repo = ["clientside", "libraries", "tools"]
