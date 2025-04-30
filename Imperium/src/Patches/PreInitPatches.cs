@@ -5,17 +5,11 @@ namespace Imperium.Patches;
 
 internal static class PreInitPatches
 {
-    private static bool hasAddedVersion;
-
     [HarmonyPostfix]
     [HarmonyPatch(typeof(BuildName), "Start")]
     private static void StartPatch(BuildName __instance)
     {
-        if (hasAddedVersion) return;
-
-        __instance.GetComponent<TextMeshProUGUI>().text += $" ({LCMPluginInfo.PLUGIN_NAME} v{LCMPluginInfo.PLUGIN_VERSION})";
-
-        hasAddedVersion = true;
+        __instance.GetComponent<TextMeshProUGUI>().text += $" (Imperium v{LCMPluginInfo.PLUGIN_VERSION})";
     }
 
     [HarmonyPostfix]

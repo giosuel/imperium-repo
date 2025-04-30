@@ -1,21 +1,20 @@
 #region
 
+using System.Linq;
 using Imperium.Interface.Common;
 using Imperium.Types;
 using Imperium.Util;
 using Librarium.Binding;
 using Photon.Pun;
 using TMPro;
+using UnityEngine;
 
 #endregion
 
 namespace Imperium.Interface.ImperiumUI.Windows.ControlCenter.Widgets;
 
-public class LevelGeneration : ImpWidget
+public class PlayerDebug : ImpWidget
 {
-    private TMP_InputField levelMapSizeInput;
-    private TMP_InputField levelModuleAmountInput;
-
     protected override void InitWidget()
     {
         var disabledBinding = ImpBinaryBinding.CreateOr([
@@ -23,8 +22,8 @@ public class LevelGeneration : ImpWidget
             (new ImpBinding<bool>(!PhotonNetwork.IsMasterClient), false)
         ]);
 
-        levelMapSizeInput = ImpInput.Bind(
-            "MapSize/Input",
+        ImpInput.Bind(
+            "DebugPlayer/Input",
             transform,
             Imperium.GameManager.CustomMapSize,
             theme: theme,
@@ -35,7 +34,7 @@ public class LevelGeneration : ImpWidget
         ImpUtils.Interface.BindInputInteractable(disabledBinding, transform.Find("MapSize"), true);
 
         ImpButton.Bind(
-            "MapSize/Reset",
+            "DebugPlayer/Reset",
             transform,
             () => Imperium.GameManager.CustomMapSize.Reset(),
             theme: theme,
@@ -43,38 +42,19 @@ public class LevelGeneration : ImpWidget
             interactableBindings: disabledBinding
         );
 
-        levelModuleAmountInput = ImpInput.Bind(
-            "ModuleAmount/Input",
-            transform,
-            Imperium.GameManager.CustomModuleAmount,
-            theme: theme,
-            interactableInvert: true,
-            negativeIsEmpty: true,
-            interactableBindings: disabledBinding
-        );
-        ImpUtils.Interface.BindInputInteractable(disabledBinding, transform.Find("ModuleAmount"), true);
+        var options = Imperium.PlayerManager.DebugComputers
+            .Select(computer => new TMP_Dropdown.OptionData(computer.name))
+            .ToList();
 
-        ImpButton.Bind(
-            "ModuleAmount/Reset",
-            transform,
-            () => Imperium.GameManager.CustomModuleAmount.Reset(),
-            theme: theme,
-            interactableInvert: true,
-            interactableBindings: disabledBinding
-        );
-
-        // var options = Imperium.RoundManager.dungeonFlowTypes
-        //     .Select(flow => new TMP_Dropdown.OptionData(GetDungeonFlowDisplayName(flow.dungeonFlow.name)))
-        //     .ToList();
-
-        var dungeonFlowDropdown = transform.Find("Map/Dropdown").GetComponent<TMP_Dropdown>();
-        // dungeonFlowDropdown.options = options;
+        var dungeonFlowDropdown = transform.Find("DebugPlayer/Dropdown").GetComponent<TMP_Dropdown>();
+        dungeonFlowDropdown.options = options;
         dungeonFlowDropdown.value = -1;
 
         dungeonFlowDropdown.onValueChanged.AddListener(value =>
         {
             Imperium.GameManager.CustomDungeonFlow.Set(value);
         });
+
         ImpUtils.Interface.BindDropdownInteractable(disabledBinding, transform.Find("Map"), true);
 
         ImpButton.Bind(

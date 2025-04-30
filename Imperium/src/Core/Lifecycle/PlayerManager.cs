@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using HarmonyLib;
 using Imperium.API.Types.Networking;
 using Imperium.Networking;
 using Imperium.Util;
@@ -11,6 +13,7 @@ using RepoSteamNetworking.API;
 using Steamworks;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Object = UnityEngine.Object;
 
 #endregion
 
@@ -50,11 +53,12 @@ internal class PlayerManager : ImpLifecycleObject
         () => GameObject.Find("LungApparatus(Clone)")?.transform.position
     );
 
+    internal readonly ImpBinding<DebugComputerCheck> ActiveDebugComputer = new(null);
+
+    internal List<DebugComputerCheck> DebugComputers { get; private set; } = [];
 
     internal bool FlyIsAscending;
     internal bool FlyIsDescending;
-
-    private static readonly int GasEmitting = Animator.StringToHash("gasEmitting");
 
     protected override void Init()
     {
@@ -74,6 +78,21 @@ internal class PlayerManager : ImpLifecycleObject
         };
 
         Imperium.InputBindings.BaseMap.ToggleHUD.performed += ToggleHUD;
+
+        DebugComputers = FindObjectsByType<DebugComputerCheck>(
+                sortMode: FindObjectsSortMode.None,
+                findObjectsInactive: FindObjectsInactive.Include
+            )
+            .ToList();
+
+        // Add local device name to enable all computers on the local client
+        DebugComputers.Do(computer =>
+        {
+            computer.DebugDisable = false;
+            computer.computerNames = computer.computerNames.AddToArray(SystemInfo.deviceName);
+        });
+
+        ActiveDebugComputer.onUpdate += OnActiveDebugComputerSwitch;
     }
 
     protected override void OnSceneLoad()
@@ -146,6 +165,17 @@ internal class PlayerManager : ImpLifecycleObject
 
         PlayerAvatar.instance.playerAvatarVisuals.animator.enabled = isShown;
         PlayerAvatar.instance.playerAvatarVisuals.meshParent.SetActive(value: isShown);
+    }
+
+    private void OnActiveDebugComputerSwitch(DebugComputerCheck activeComputer)
+    {
+        DebugComputers.Do(computer =>
+        {
+            var isActive = computer == activeComputer;
+
+            computer.Active = isActive;
+            computer.gameObject.SetActive(isActive);
+        });
     }
 
     internal static void UpdateCameras(bool _) => UpdateCameras();
@@ -276,7 +306,8 @@ internal class PlayerManager : ImpLifecycleObject
         Imperium.IO.LogInfo($"Teleport player: {request.PlayerId}, mine: {RepoSteamNetwork.CurrentSteamId}");
         if (request.PlayerId == RepoSteamNetwork.CurrentSteamId)
         {
-            Imperium.IO.LogInfo($"Player teleport request client received. Position: {Formatting.FormatVector(request.Destination)}");
+            Imperium.IO.LogInfo(
+                $"Player teleport request client received. Position: {Formatting.FormatVector(request.Destination)}");
             Imperium.Player.Spawn(request.Destination, Quaternion.identity);
             Imperium.Player.rb.position = request.Destination;
             PlayerController.instance.rb.position = request.Destination;

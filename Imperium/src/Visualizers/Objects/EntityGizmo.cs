@@ -206,7 +206,7 @@ public class EntityGizmo : MonoBehaviour
         if (!hasInitializedVision) return;
         // if (!hasInitializedVision || (!entityConfig.Vision.Value && !entityConfig.Proximity.Value)) return;
 
-        Imperium.IO.LogInfo("Vision update 1");
+        // Imperium.IO.LogInfo("Vision update 1");
 
         lastUpdateTime = Time.realtimeSinceStartup;
 
@@ -261,9 +261,9 @@ public class EntityGizmo : MonoBehaviour
                 proximitySphereCrouching.SetActive(false);
             }
 
-            Imperium.IO.LogInfo($"cone standing cone: {coneStanding.activeSelf}");
-            Imperium.IO.LogInfo($"cone crouching cone: {coneCrouching.activeSelf}");
-            Imperium.IO.LogInfo($"cone crawling cone: {coneCrawling.activeSelf}");
+            // Imperium.IO.LogInfo($"cone standing cone: {coneStanding.activeSelf}");
+            // Imperium.IO.LogInfo($"cone crouching cone: {coneCrouching.activeSelf}");
+            // Imperium.IO.LogInfo($"cone crawling cone: {coneCrawling.activeSelf}");
         }
 
         DrawPathLines(entityConfig.Pathfinding.Value && enemyParent.enabled);

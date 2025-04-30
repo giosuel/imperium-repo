@@ -15,6 +15,7 @@ using Imperium.Interface.MapUI;
 using Imperium.Interface.SpawningUI;
 using Imperium.Networking;
 using Imperium.Patches;
+using Imperium.Patches.Objects;
 using Imperium.Util;
 using Librarium.Binding;
 using UnityEngine;
@@ -302,5 +303,9 @@ public class Imperium : BaseUnityPlugin
         IO.LogInfo("[SYS] Imperium interfaces have been registered! \\o/");
     }
 
-    private static void PreLaunchPatches() => Harmony.PatchAll(typeof(PreInitPatches));
+    private static void PreLaunchPatches()
+    {
+        Harmony.PatchAll(typeof(PreInitPatches));
+        Harmony.PatchAll(typeof(DebugComputerCheckPatch));
+    }
 }
