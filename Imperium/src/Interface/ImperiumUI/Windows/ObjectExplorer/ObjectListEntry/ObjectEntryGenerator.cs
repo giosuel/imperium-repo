@@ -182,6 +182,10 @@ internal static class ObjectEntryGenerator
     {
         switch (entry.Type)
         {
+            case ObjectType.ExtractionPoint:
+                var point = (ExtractionPoint)entry.component;
+                entry.completeButton.interactable = point.currentState != ExtractionPoint.State.Complete;
+                break;
             default:
                 break;
         }

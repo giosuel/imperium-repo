@@ -58,7 +58,14 @@ public abstract class ImpInput
         {
             input.onValueChanged.AddListener(value => OnIntFieldInput(input, value, min, max));
 
-            input.text = valueBinding.Value.ToString();
+            if (valueBinding.Value < 0 && negativeIsEmpty)
+            {
+                input.text = "";
+            }
+            else
+            {
+                input.text = valueBinding.Value.ToString();
+            }
 
             // Set binding to default value if input value is empty
             input.onSubmit.AddListener(value =>
@@ -138,7 +145,15 @@ public abstract class ImpInput
         {
             input.onValueChanged.AddListener(value => OnFloatFieldInput(input, value, min, max));
 
-            input.text = valueBinding.Value.ToString(CultureInfo.InvariantCulture);
+            if (valueBinding.Value < 0 && negativeIsEmpty)
+            {
+                input.text = "";
+            }
+            else
+            {
+                input.text = valueBinding.Value.ToString(CultureInfo.InvariantCulture);
+            }
+
             input.onSubmit.AddListener(value =>
             {
                 if (string.IsNullOrEmpty(value) || !float.TryParse(value, out var parsed))

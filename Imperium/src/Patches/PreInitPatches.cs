@@ -1,4 +1,5 @@
 using HarmonyLib;
+using Imperium.Core;
 using TMPro;
 
 namespace Imperium.Patches;
@@ -26,6 +27,33 @@ internal static class PreInitPatches
         else if (RunManager.instance.levelCurrent != RunManager.instance.levelLobbyMenu && !Imperium.IsImperiumLaunched)
         {
             Imperium.Networking.RequestImperiumAccess();
+        }
+    }
+
+    private static bool hasAutoLoaded;
+
+    [HarmonyPostfix]
+    [HarmonyPatch(typeof(MainMenuOpen), "Awake")]
+    private static void AwakePlayerAvatarPatch(MainMenuOpen __instance)
+    {
+        if (hasAutoLoaded) return;
+        hasAutoLoaded = true;
+
+        var autoLaunch = Imperium.Settings.Preferences.QuickloadAutoLaunch.Value;
+        var mode = Imperium.Settings.Preferences.QuickloadLaunchMode.Value;
+
+        if (!autoLaunch) return;
+
+        if (mode == LaunchMode.Singleplayer)
+        {
+            RunManager.instance.skipMainMenu = true;
+            if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu) RunManager.instance.SetRunLevel();
+        }
+
+        if (mode == LaunchMode.Multiplayer)
+        {
+            __instance.MainMenuSetState((int)MainMenuOpen.MainMenuGameModeState.MultiPlayer);
+            SemiFunc.MenuActionHostGame();
         }
     }
 }

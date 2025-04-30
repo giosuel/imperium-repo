@@ -124,11 +124,6 @@ internal class PlayerSettings(ConfigFile config, IBinding<bool> isSceneLoaded, I
         config,
         "Player",
         "NightVision",
-        0,
-        primaryUpdate: value =>
-        {
-            var intensity = value / 100 * 2;
-            RenderSettings.ambientLight = new Color(intensity, intensity, intensity);
-        }
+        0
     );
 }

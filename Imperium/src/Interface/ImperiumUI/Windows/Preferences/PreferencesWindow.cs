@@ -91,19 +91,6 @@ internal class PreferencesWindow : ImperiumWindow
     {
         var quickloadToggles = content.Find("Grid/Quickload/QuickloadToggles");
         ImpToggle.Bind(
-            "SkipSplashToggle",
-            quickloadToggles,
-            Imperium.Settings.Preferences.QuickloadSkipSplash,
-            theme,
-            tooltipDefinition: new TooltipDefinition
-            {
-                Title = "Quickload Skip Splash",
-                Description = "Whether to skip all splash screens during start-up.",
-                Tooltip = tooltip
-            }
-        );
-
-        ImpToggle.Bind(
             "AutoLaunchToggle",
             quickloadToggles,
             Imperium.Settings.Preferences.QuickloadAutoLaunch,
@@ -116,52 +103,7 @@ internal class PreferencesWindow : ImperiumWindow
             }
         );
 
-        ImpToggle.Bind(
-            "AutoLoadToggle",
-            quickloadToggles,
-            Imperium.Settings.Preferences.QuickloadAutoLoad,
-            theme,
-            tooltipDefinition: new TooltipDefinition
-            {
-                Title = "Quickload Auto Load",
-                Description = "Whether to auto load a save file on start-up.",
-                Tooltip = tooltip
-            }
-        );
-        ImpToggle.Bind(
-            "CleanSaveToggle",
-            quickloadToggles,
-            Imperium.Settings.Preferences.QuickloadCleanSave,
-            theme,
-            interactableBindings: Imperium.Settings.Preferences.QuickloadAutoLoad,
-            tooltipDefinition: new TooltipDefinition
-            {
-                Title = "Quickload Clean Save",
-                Description = "Whether to delete the auto loaded save on start-up.",
-                Tooltip = tooltip
-            }
-        );
-
         var quickloadBottom = content.Find("Grid/Quickload/QuickloadBottom");
-        quickloadBottom.Find("SaveFile/Title").gameObject.AddComponent<ImpTooltipTrigger>().Init(new TooltipDefinition
-        {
-            Title = "Quickload Save File",
-            Description = "The save file that's auto loaded on start-up.",
-            Tooltip = tooltip
-        });
-
-        ImpInput.Bind(
-            "SaveFile/Input",
-            quickloadBottom,
-            Imperium.Settings.Preferences.QuickloadSaveNumber,
-            theme,
-            interactableBindings: Imperium.Settings.Preferences.QuickloadAutoLoad
-        );
-        ImpUtils.Interface.BindInputInteractable(
-            Imperium.Settings.Preferences.QuickloadAutoLoad,
-            quickloadBottom.Find("SaveFile")
-        );
-
         launchModeDropdown = quickloadBottom.Find("LaunchMode/Dropdown").GetComponent<TMP_Dropdown>();
         launchModeDropdown.options = Enum.GetValues(typeof(LaunchMode))
             .Cast<LaunchMode>()

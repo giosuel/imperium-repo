@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.Reflection;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -18,6 +19,7 @@ using Imperium.Patches;
 using Imperium.Patches.Objects;
 using Imperium.Util;
 using Librarium.Binding;
+using Photon.Pun;
 using UnityEngine;
 using ImpSettings = Imperium.Core.ImpSettings;
 
@@ -210,6 +212,11 @@ public class Imperium : BaseUnityPlugin
         {
             DisableImperium();
         }
+
+        // We do the funni to allow for more network objects to spawn >:)
+        typeof(PhotonNetwork)
+            .GetField("MAX_VIEW_IDS", BindingFlags.Static | BindingFlags.Public)!
+            .SetValue(null, 100000);
     }
 
     internal static void DisableImperium()
@@ -306,6 +313,5 @@ public class Imperium : BaseUnityPlugin
     private static void PreLaunchPatches()
     {
         Harmony.PatchAll(typeof(PreInitPatches));
-        Harmony.PatchAll(typeof(DebugComputerCheckPatch));
     }
 }

@@ -53,10 +53,6 @@ internal class PlayerManager : ImpLifecycleObject
         () => GameObject.Find("LungApparatus(Clone)")?.transform.position
     );
 
-    internal readonly ImpBinding<DebugComputerCheck> ActiveDebugComputer = new(null);
-
-    internal List<DebugComputerCheck> DebugComputers { get; private set; } = [];
-
     internal bool FlyIsAscending;
     internal bool FlyIsDescending;
 
@@ -78,21 +74,6 @@ internal class PlayerManager : ImpLifecycleObject
         };
 
         Imperium.InputBindings.BaseMap.ToggleHUD.performed += ToggleHUD;
-
-        DebugComputers = FindObjectsByType<DebugComputerCheck>(
-                sortMode: FindObjectsSortMode.None,
-                findObjectsInactive: FindObjectsInactive.Include
-            )
-            .ToList();
-
-        // Add local device name to enable all computers on the local client
-        DebugComputers.Do(computer =>
-        {
-            computer.DebugDisable = false;
-            computer.computerNames = computer.computerNames.AddToArray(SystemInfo.deviceName);
-        });
-
-        ActiveDebugComputer.onUpdate += OnActiveDebugComputerSwitch;
     }
 
     protected override void OnSceneLoad()
@@ -165,17 +146,6 @@ internal class PlayerManager : ImpLifecycleObject
 
         PlayerAvatar.instance.playerAvatarVisuals.animator.enabled = isShown;
         PlayerAvatar.instance.playerAvatarVisuals.meshParent.SetActive(value: isShown);
-    }
-
-    private void OnActiveDebugComputerSwitch(DebugComputerCheck activeComputer)
-    {
-        DebugComputers.Do(computer =>
-        {
-            var isActive = computer == activeComputer;
-
-            computer.Active = isActive;
-            computer.gameObject.SetActive(isActive);
-        });
     }
 
     internal static void UpdateCameras(bool _) => UpdateCameras();

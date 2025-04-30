@@ -36,6 +36,8 @@ internal class ObjectManager : ImpLifecycleObject
      *
      * Loaded when Imperium initializes (Stage 1).
      */
+    internal readonly ImpBinding<IReadOnlyList<Level>> LoadedLevels = new([]);
+    internal readonly ImpBinding<IReadOnlyList<Module>> LoadedModules = new([]);
     internal readonly ImpBinding<IReadOnlyCollection<Item>> LoadedItems = new([]);
     internal readonly ImpBinding<IReadOnlyCollection<ValuableObject>> LoadedValuables = new([]);
     internal readonly ImpBinding<IReadOnlyCollection<ExtendedEnemySetup>> LoadedEntities = new([]);
@@ -208,10 +210,16 @@ internal class ObjectManager : ImpLifecycleObject
         }
 
         var allItems = Resources.FindObjectsOfTypeAll<Item>().ToHashSet();
+        var allLevels = Resources.FindObjectsOfTypeAll<Level>()
+            .Where(level => !ImpConstants.LevelBlacklist.Contains(level.NarrativeName))
+            .ToList();
+        var allModules = Resources.FindObjectsOfTypeAll<Module>().ToList();
 
         var allValuables = Valuables.GetValuables().Select(obj => obj.GetComponent<ValuableObject>()).ToHashSet();
 
         LoadedItems.Set(allItems);
+        LoadedLevels.Set(allLevels);
+        LoadedModules.Set(allModules);
         LoadedEntities.Set(allEntities);
         LoadedValuables.Set(allValuables);
     }

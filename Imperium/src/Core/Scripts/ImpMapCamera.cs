@@ -40,8 +40,11 @@ public class ImpMapCamera : ImpScript
         RenderSettings.ambientLight = new Color(1, 1, 1);
         RenderSettings.fogEndDistance = 500f;
 
-        isAvatarVisible = PlayerAvatar.instance.playerAvatarVisuals.meshParent.activeSelf;
-        if (!isAvatarVisible) PlayerManager.ToggleLocalAvatar(true);
+        if (PlayerAvatar.instance)
+        {
+            isAvatarVisible = PlayerAvatar.instance.playerAvatarVisuals.meshParent.activeSelf;
+            if (!isAvatarVisible) PlayerManager.ToggleLocalAvatar(true);
+        }
     }
 
 

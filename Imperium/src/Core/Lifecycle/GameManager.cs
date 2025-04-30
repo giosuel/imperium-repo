@@ -1,5 +1,6 @@
 #region
 
+using System.Linq;
 using Imperium.Networking;
 using Imperium.Util;
 using Photon.Pun;
@@ -12,16 +13,12 @@ internal class GameManager : ImpLifecycleObject
 {
     internal readonly ImpNetEvent FulfillQuotaEvent = new("FulfillQuota", Imperium.Networking);
 
-    protected override void Init()
-    {
-        if (PhotonNetwork.IsMasterClient) FulfillQuotaEvent.OnServerReceive += FulfillQuota;
-    }
+    internal readonly ImpNetworkBinding<string> LevelOverride = new("LevelOverride", Imperium.Networking, "");
+    internal readonly ImpNetworkBinding<string> ModuleOverride = new("ModuleOverride", Imperium.Networking, "");
+    // internal readonly ImpNetworkBinding<Module.Type> ModuleOverrideType = new("ModuleOverrideType", Imperium.Networking);
 
-    internal readonly ImpNetworkBinding<int> CustomSeed = new("CustomSeed", Imperium.Networking, -1);
-    internal readonly ImpNetworkBinding<int> CustomDungeonFlow = new("CustomDungeonFlow", Imperium.Networking, -1);
-
-    internal readonly ImpNetworkBinding<float> CustomMapSize = new("CustomMapSize", Imperium.Networking, -1);
-    internal readonly ImpNetworkBinding<float> CustomModuleAmount = new("CustomModuleAmount", Imperium.Networking, -1);
+    internal readonly ImpNetworkBinding<float> CustomLevelSize = new("CustomMapSize", Imperium.Networking, -1);
+    internal readonly ImpNetworkBinding<int> CustomModuleAmount = new("CustomModuleAmount", Imperium.Networking, -1);
 
     internal readonly ImpNetworkBinding<int> GroupCurrency = new(
         "GroupCurrency",
@@ -41,6 +38,13 @@ internal class GameManager : ImpLifecycleObject
         onUpdateClient: value => RoundDirector.instance.debugLowHaul = value
     );
 
+    protected override void Init()
+    {
+        LevelOverride.onUpdate += OnLevelOverrideUpdate;
+
+        if (PhotonNetwork.IsMasterClient) FulfillQuotaEvent.OnServerReceive += FulfillQuota;
+    }
+
     internal bool IsGameLoading { get; set; } = true;
 
     [ImpAttributes.HostOnly]
@@ -50,5 +54,17 @@ internal class GameManager : ImpLifecycleObject
 
     protected override void OnSceneLoad()
     {
+    }
+
+    private static void OnLevelOverrideUpdate(string levelName)
+    {
+        if (levelName == "")
+        {
+            RunManager.instance.debugLevel = null;
+            return;
+        }
+
+        var customLevel = Imperium.ObjectManager.LoadedLevels.Value.First(level => level.NarrativeName == levelName);
+        RunManager.instance.debugLevel = customLevel;
     }
 }

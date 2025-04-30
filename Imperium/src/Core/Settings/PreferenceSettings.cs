@@ -112,13 +112,6 @@ internal class PreferenceSettings(ConfigFile config, IBinding<bool> isSceneLoade
         true
     );
 
-    internal readonly ImpConfig<bool> QuickloadSkipSplash = new(
-        config,
-        "Preferences.Quickload",
-        "SkipSplash",
-        false
-    );
-
     internal readonly ImpConfig<bool> QuickloadAutoLaunch = new(
         config,
         "Preferences.Quickload",
@@ -126,39 +119,10 @@ internal class PreferenceSettings(ConfigFile config, IBinding<bool> isSceneLoade
         false
     );
 
-    internal readonly ImpConfig<bool> QuickloadAutoLoad = new(
-        config,
-        "Preferences.Quickload",
-        "AutoLoad",
-        false
-    );
-
-    internal readonly ImpConfig<bool> QuickloadCleanSave = new(
-        config,
-        "Preferences.Quickload",
-        "CleanSave",
-        false
-    );
-
-    internal readonly ImpConfig<int> QuickloadSaveNumber = new(
-        config,
-        "Preferences.Quickload",
-        "SaveNumber",
-        4
-    );
-
     internal readonly ImpConfig<LaunchMode> QuickloadLaunchMode = new(
         config,
         "Preferences.Quickload",
         "LaunchMode",
-        LaunchMode.Online
-    );
-
-    internal readonly ImpConfig<bool> DisableLeFunni = new(
-        config,
-        "Preferences.General",
-        "DisableLeFunni",
-        false,
-        description: "Disables 69% sales in the terminal. (\u0361\u00b0 \u035cʖ \u0361\u00b0)"
+        LaunchMode.Singleplayer
     );
 }

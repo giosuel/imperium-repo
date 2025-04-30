@@ -90,7 +90,7 @@ internal class ControlCenterWindow : ImperiumWindow
             tooltipDefinition: new TooltipDefinition
             {
                 Title = "No Tumble Mode",
-                Description = "Disables tumbling :(",
+                Description = "Disables tumbling when hit",
                 Tooltip = tooltip
             }
         );

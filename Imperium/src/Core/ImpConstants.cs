@@ -55,4 +55,15 @@ public struct ImpConstants
         { nameof(ExtractionPoint), "Extraction Points" },
         { nameof(ValuableObject), "Valuables" },
     };
+
+    /*
+     * Levels that can't be picked in the level override.
+     */
+    internal static readonly List<string> LevelBlacklist =
+    [
+        "Lobby Menu",
+        "Main Menu",
+        "Recording",
+        "Tutorial"
+    ];
 }

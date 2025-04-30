@@ -1,11 +1,16 @@
 #region
 
+using System.Linq;
+using Imperium.Core;
 using Imperium.Interface.Common;
 using Imperium.Types;
 using Imperium.Util;
 using Librarium.Binding;
 using Photon.Pun;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.InputSystem.Utilities;
 
 #endregion
 
@@ -13,38 +18,33 @@ namespace Imperium.Interface.ImperiumUI.Windows.ControlCenter.Widgets;
 
 public class LevelGeneration : ImpWidget
 {
-    private TMP_InputField levelMapSizeInput;
-    private TMP_InputField levelModuleAmountInput;
-
     protected override void InitWidget()
     {
-        var disabledBinding = ImpBinaryBinding.CreateOr([
-            (Imperium.IsArenaLoaded, false),
-            (new ImpBinding<bool>(!PhotonNetwork.IsMasterClient), false)
-        ]);
+        var disabledBinding = new ImpBinaryBinding(!PhotonNetwork.IsMasterClient);
 
-        levelMapSizeInput = ImpInput.Bind(
-            "MapSize/Input",
+        ImpInput.Bind(
+            "Numbers/LevelSize/Input",
             transform,
-            Imperium.GameManager.CustomMapSize,
+            Imperium.GameManager.CustomLevelSize,
             theme: theme,
             interactableInvert: true,
             negativeIsEmpty: true,
             interactableBindings: disabledBinding
         );
-        ImpUtils.Interface.BindInputInteractable(disabledBinding, transform.Find("MapSize"), true);
+        ImpUtils.Interface.BindInputInteractable(disabledBinding, transform.Find("Numbers/LevelSize"), true);
 
         ImpButton.Bind(
-            "MapSize/Reset",
+            "Numbers/LevelSize/Reset",
             transform,
-            () => Imperium.GameManager.CustomMapSize.Reset(),
+            () => Imperium.GameManager.CustomLevelSize.Reset(),
             theme: theme,
+            isIconButton: true,
             interactableInvert: true,
             interactableBindings: disabledBinding
         );
 
-        levelModuleAmountInput = ImpInput.Bind(
-            "ModuleAmount/Input",
+        ImpInput.Bind(
+            "Numbers/ModuleAmount/Input",
             transform,
             Imperium.GameManager.CustomModuleAmount,
             theme: theme,
@@ -52,67 +52,158 @@ public class LevelGeneration : ImpWidget
             negativeIsEmpty: true,
             interactableBindings: disabledBinding
         );
-        ImpUtils.Interface.BindInputInteractable(disabledBinding, transform.Find("ModuleAmount"), true);
+        ImpUtils.Interface.BindInputInteractable(disabledBinding, transform.Find("Numbers/ModuleAmount"), true);
 
         ImpButton.Bind(
-            "ModuleAmount/Reset",
+            "Numbers/ModuleAmount/Reset",
             transform,
             () => Imperium.GameManager.CustomModuleAmount.Reset(),
             theme: theme,
+            isIconButton: true,
             interactableInvert: true,
             interactableBindings: disabledBinding
         );
 
-        // var options = Imperium.RoundManager.dungeonFlowTypes
-        //     .Select(flow => new TMP_Dropdown.OptionData(GetDungeonFlowDisplayName(flow.dungeonFlow.name)))
-        //     .ToList();
-
-        var dungeonFlowDropdown = transform.Find("Map/Dropdown").GetComponent<TMP_Dropdown>();
-        // dungeonFlowDropdown.options = options;
-        dungeonFlowDropdown.value = -1;
-
-        dungeonFlowDropdown.onValueChanged.AddListener(value =>
-        {
-            Imperium.GameManager.CustomDungeonFlow.Set(value);
-        });
-        ImpUtils.Interface.BindDropdownInteractable(disabledBinding, transform.Find("Map"), true);
-
         ImpButton.Bind(
-            "DungeonFlow/Reset",
+            "ReloadLevel",
             transform,
-            () => Imperium.GameManager.CustomDungeonFlow.Reset(),
+            () => RunManager.instance.ChangeLevel(_completedLevel: true, _levelFailed: false),
             theme: theme,
             interactableInvert: true,
             interactableBindings: disabledBinding
         );
+
+        InitLevelOverride(disabledBinding);
+        InitModuleOverride(disabledBinding);
     }
+
+    private void InitLevelOverride(ImpBinaryBinding disabledBinding)
+    {
+        var options = Imperium.ObjectManager.LoadedLevels.Value
+            .Select(level => new TMP_Dropdown.OptionData(level.NarrativeName))
+            .ToList();
+
+        var dropdown = transform.Find("LevelOverride/Dropdown").GetComponent<TMP_Dropdown>();
+        dropdown.options = options;
+        dropdown.value = -1;
+
+        dropdown.onValueChanged.AddListener(value =>
+        {
+            var customLevel = Imperium.ObjectManager.LoadedLevels.Value[value];
+            Imperium.GameManager.LevelOverride.Set(customLevel.NarrativeName);
+        });
+
+        Imperium.GameManager.LevelOverride.onUpdate += value =>
+        {
+            if (value == "")
+            {
+                dropdown.value = -1;
+                return;
+            }
+
+            for (var i = 0; i < Imperium.ObjectManager.LoadedLevels.Value.Count; i++)
+            {
+                var level = Imperium.ObjectManager.LoadedLevels.Value[i];
+                if (level.NarrativeName == value)
+                {
+                    dropdown.value = i;
+                    break;
+                }
+            }
+        };
+        ImpUtils.Interface.BindDropdownInteractable(disabledBinding, transform.Find("LevelOverride"), true);
+
+        ImpButton.Bind(
+            "LevelOverride/Reset",
+            transform,
+            () => Imperium.GameManager.LevelOverride.Reset(),
+            theme: theme,
+            isIconButton: true,
+            interactableInvert: true,
+            interactableBindings: disabledBinding
+        );
+
+        transform.Find("LevelOverrideTitle").AddComponent<ImpTooltipTrigger>().Init(new TooltipDefinition
+        {
+            Title = "Level Override",
+            Description = "Forces the game to always load\nthe selected level.",
+            Tooltip = tooltip
+        });
+    }
+
+    private void InitModuleOverride(ImpBinaryBinding disabledBinding)
+    {
+        var options = Imperium.ObjectManager.LoadedModules.Value
+            .Select(module => new TMP_Dropdown.OptionData(NormalizeModuleName(module.name)))
+            .ToList();
+
+        var dropdown = transform.Find("ModuleOverride/Dropdown").GetComponent<TMP_Dropdown>();
+        dropdown.options = options;
+        dropdown.value = -1;
+
+        dropdown.onValueChanged.AddListener(value =>
+        {
+            var customModule = Imperium.ObjectManager.LoadedModules.Value[value];
+            Imperium.GameManager.ModuleOverride.Set(customModule.name);
+        });
+
+        Imperium.GameManager.ModuleOverride.onUpdate += value =>
+        {
+            if (value == "")
+            {
+                dropdown.value = -1;
+                return;
+            }
+
+            for (var i = 0; i < Imperium.ObjectManager.LoadedModules.Value.Count; i++)
+            {
+                var module = Imperium.ObjectManager.LoadedModules.Value[i];
+                if (module.name == value)
+                {
+                    dropdown.value = i;
+                    break;
+                }
+            }
+        };
+        ImpUtils.Interface.BindDropdownInteractable(disabledBinding, transform.Find("ModuleOverride"), true);
+
+        ImpButton.Bind(
+            "ModuleOverride/Reset",
+            transform,
+            () => Imperium.GameManager.ModuleOverride.Reset(),
+            theme: theme,
+            isIconButton: true,
+            interactableInvert: true,
+            interactableBindings: disabledBinding
+        );
+
+        transform.Find("ModuleOverrideTitle").AddComponent<ImpTooltipTrigger>().Init(new TooltipDefinition
+        {
+            Title = "Module Override",
+            Description = "Makes the level to be generated from a single module.\nCaution! Can cause faulty levels.",
+            Tooltip = tooltip
+        });
+    }
+
+    private static string NormalizeModuleName(string moduleName) => moduleName.Replace("Module - ", "").Replace(" - ", " ");
 
     protected override void OnThemeUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,
             transform,
-            new StyleOverride("Map/Dropdown", Variant.FOREGROUND),
-            new StyleOverride("Map/Dropdown/Arrow", Variant.FOREGROUND),
-            new StyleOverride("Map/Dropdown/Template", Variant.DARKER),
-            new StyleOverride("Map/Dropdown/Template/Viewport/Content/Item/Background", Variant.DARKER),
-            new StyleOverride("Map/Dropdown/Template/Scrollbar", Variant.DARKEST),
-            new StyleOverride("Map/Dropdown/Template/Scrollbar/SlidingArea/Handle", Variant.LIGHTER)
+            new StyleOverride("LevelOverride/Dropdown", Variant.FOREGROUND),
+            new StyleOverride("LevelOverride/Dropdown/Arrow", Variant.FOREGROUND),
+            new StyleOverride("LevelOverride/Dropdown/Template", Variant.DARKER),
+            new StyleOverride("LevelOverride/Dropdown/Template/Viewport/Content/Item/Background", Variant.DARKER),
+            new StyleOverride("LevelOverride/Dropdown/Template/Scrollbar", Variant.DARKEST),
+            new StyleOverride("LevelOverride/Dropdown/Template/Scrollbar/SlidingArea/Handle", Variant.LIGHTER),
+            new StyleOverride("ModuleOverride/Dropdown", Variant.FOREGROUND),
+            new StyleOverride("ModuleOverride/Dropdown/Arrow", Variant.FOREGROUND),
+            new StyleOverride("ModuleOverride/Dropdown/Template", Variant.DARKER),
+            new StyleOverride("ModuleOverride/Dropdown/Template/Viewport/Content/Item/Background", Variant.DARKER),
+            new StyleOverride("ModuleOverride/Dropdown/Template/Scrollbar", Variant.DARKEST),
+            new StyleOverride("ModuleOverride/Dropdown/Template/Scrollbar/SlidingArea/Handle", Variant.LIGHTER)
         );
-    }
-
-    protected override void OnOpen()
-    {
-        // levelSeedInput.text = Imperium.IsSceneLoaded.Value
-        //     ? Imperium.StartOfRound.randomMapSeed.ToString()
-        //     : Imperium.GameManager.CustomSeed.Value != -1
-        //         ? Imperium.GameManager.CustomSeed.Value.ToString()
-        //         : "";
-        //
-        // levelMapSizeInput.text = Imperium.GameManager.CustomMapSize.Value > -1
-        //     ? Imperium.GameManager.CustomMapSize.Value.ToString(CultureInfo.InvariantCulture)
-        //     : Imperium.IsSceneLoaded.Value
-        //         ? Imperium.RoundManager.currentLevel.factorySizeMultiplier.ToString(CultureInfo.InvariantCulture)
-        //         : "";
     }
 }
