@@ -12,4 +12,16 @@
     --md-text-font: "Figtree", Roboto;
     --md-code-font: "Iosevka", monospace; 
 }
+
+
+.md-tabs__link {
+  &[href^="//"]::after,
+  &[href^="http://"]::after,
+  &[href^="https://"]::after {
+      content: "↗";
+      font-size: 12px;
+      margin-left: .2em;
+      vertical-align: top;
+  }
+}
   

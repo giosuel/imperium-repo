@@ -100,9 +100,10 @@ public class ImpFreecam : ImpScript
 
     private void OnMinicamToggle(InputAction.CallbackContext callbackContext)
     {
-        if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
-
-        IsMinicamEnabled.Toggle();
+        // Minicam is currently disabled
+        
+        // if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
+        // IsMinicamEnabled.Toggle();
     }
 
     private void OnMinicamFullscreenToggle(InputAction.CallbackContext callbackContext)

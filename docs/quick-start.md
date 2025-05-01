@@ -7,14 +7,16 @@ hide:
 
 ## UI Layout
 
-Imperium currently consists of three main UIs.
+Imperium's user interface consists of three main parts; the main Imperium UI, the spawning UI and the fullscreen map. You can switch between those interfaces in the dock on the left. All of these interfaces are also directly accessible through keybinds.
 
 ## Imperium UI [F1]
-The main Imperium interface that provides access to the windows that contain the majority of Imperium's features.
+
+The main Imperium UI that provides access to the windows that contain the majority of Imperium's functionality such as the Object Explorer or the Control Center.
 
 ![Imperium UI](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/imperium.png?raw=true)
 
 ## Spawning UI [F2]
+
 A console that allows you to spawn enemies, valuables or items into the game.
 
 **Command Syntax:** `objectName [amount] [health / value]`
@@ -22,9 +24,30 @@ A console that allows you to spawn enemies, valuables or items into the game.
 ![Imperium Spawning](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/spawning.png?raw=true)
 
 ## Fullscreen Map [F8]
+
 Imperium's map with the layer and target selection. Also includes minimap preferences.
 
 ![Imperium Map](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/map.png?raw=true)
+
+## Freecam [F]
+
+Imperium's built-in freecam. The freecam camera is an exact copy of the player's gameplay camera with the exception of the culling layers that can be toggled in the layer selector. The layer selector can be toggled with **L** and is activated by default.
+
+Feehand mode allows you to take control of your local character while remaining in the freecam. To enable freehand mode, press `V` while the freecam is open.
+
+![Imperium Freecam](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/freecam.png?raw=true)
+
+## Minimap [M]
+
+Imperium's minimap that mirrores the fullscreen map and displays additional level data.
+
+![Imperium Minimap](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/minimap.png?raw=true)
+
+## Tape Measure [O]
+
+The tape measure is a virtual tool to measure distances in the game. The tape measure supports axis snapping when holding down the `Alt` key. It also tries to snap to surfaces as well as possible.
+
+![Imperium Tape Measure](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/tape.png?raw=true)
 
 ## Global Keybinds
 
@@ -49,6 +72,7 @@ Imperium's map with the layer and target selection. Also includes minimap prefer
 | `Keyboard / R`   | Resets the freecam's position to the local player. |
 | `Keyboard / G`   | Opens the teleportation indicator.                 |
 | `Keyboard / L`   | Toggles the freecam's layer selector and UI.       |
+| `Keyboard / V`   | Toggles the freecam's freehand mode.               |
 | `Mouse / Scroll` | Changes the freecam's flight speed.                |
 | `Keyboard / ←`   | Decreases the freecam's field of view.             |
 | `Keyboard / →`   | Increases the freecam's field of view.             |
