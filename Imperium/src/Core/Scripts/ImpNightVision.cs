@@ -10,7 +10,10 @@ public class ImpNightVision : ImpScript
 {
     private void Update()
     {
-        var intensity = Imperium.Settings.Player.NightVision.Value / 100 * 2;
-        RenderSettings.ambientLight = new Color(intensity, intensity, intensity);
+        if (Imperium.Settings.Player.NightVision.Value > 0)
+        {
+            var intensity = Imperium.Settings.Player.NightVision.Value / 100 * 2;
+            RenderSettings.ambientLight = new Color(intensity, intensity, intensity);
+        }
     }
 }

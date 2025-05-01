@@ -32,27 +32,33 @@ public class StaticVisualizers : ImpScript
         bool isOn,
         string identifier,
         VisualizerIdentifier type,
-        Material material = null
-    ) => Visualize(identifier, isOn, VisualizeColliders, type, 0f, material);
+        Material material = null,
+        bool overrideInactive = false
+    ) => Visualize(identifier, isOn, VisualizeColliders, type, 0f, material, overrideInactive);
 
     internal void Collider<T>(
         bool isOn,
-        Material material = null
-    ) => Visualize(typeof(T).AssemblyQualifiedName, isOn, VisualizeColliders, VisualizerIdentifier.Component, 0f, material);
+        Material material = null,
+        bool overrideInactive = false
+    ) => Visualize(typeof(T).AssemblyQualifiedName, isOn, VisualizeColliders, VisualizerIdentifier.Component, 0f, material,
+        overrideInactive);
 
     internal void Point(
         bool isOn,
         string identifier,
         VisualizerIdentifier type,
         float radius = 1,
-        Material material = null
-    ) => Visualize(identifier, isOn, VisualizePoint, type, radius, material);
+        Material material = null,
+        bool overrideInactive = false
+    ) => Visualize(identifier, isOn, VisualizePoint, type, radius, material, overrideInactive);
 
     internal void Point<T>(
         bool isOn,
         float radius = 1,
-        Material material = null
-    ) => Visualize(typeof(T).AssemblyQualifiedName, isOn, VisualizePoint, VisualizerIdentifier.Component, radius, material);
+        Material material = null,
+        bool overrideInactive = false
+    ) => Visualize(typeof(T).AssemblyQualifiedName, isOn, VisualizePoint, VisualizerIdentifier.Component, radius, material,
+        overrideInactive);
 
     internal void Refresh(bool hardRefresh = false)
     {
@@ -102,7 +108,8 @@ public class StaticVisualizers : ImpScript
         }
 
         // Go through all target objects and toggle / create the visualizers for them
-        foreach (var target in GetTargetObjects(visualizerDefinition.identifier, visualizerDefinition.type))
+        foreach (var target in GetTargetObjects(visualizerDefinition.identifier, visualizerDefinition.type,
+                     visualizerDefinition.overrideInactive))
         {
             if (visualizerObjects.TryGetValue(target.GetInstanceID(), out var targetVisualizerObjects))
             {
@@ -111,7 +118,7 @@ public class StaticVisualizers : ImpScript
             else
             {
                 visualizerObjects.Add(target.GetInstanceID(), visualizerDefinition.visualizer(
-                    target, visualizerDefinition.size, visualizerDefinition.material
+                    target, visualizerDefinition.size, visualizerDefinition.material, visualizerDefinition.overrideInactive
                 ).ToList());
             }
         }
@@ -123,37 +130,41 @@ public class StaticVisualizers : ImpScript
         VisualizerFunc visualizer,
         VisualizerIdentifier type,
         float size,
-        Material material
+        Material material,
+        bool overrideInactive
     )
     {
         var uniqueIdentifier = $"{identifier}_{size}";
 
         VisualizerRegistry[uniqueIdentifier] = new VisualizerDefinition(
-            identifier, type, size, visualizer, material
+            identifier, type, size, visualizer, material, overrideInactive
         );
 
         ToggleVisualizer(uniqueIdentifier, isOn);
     }
 
-    private static IEnumerable<GameObject> VisualizePoint(
+    private IEnumerable<GameObject> VisualizePoint(
         GameObject target,
         float size,
-        Material material = null
+        Material material = null,
+        bool overrideInactive = false
     )
     {
-        return
-        [
-            Geometry.CreatePrimitive(
-                PrimitiveType.Sphere,
-                target.transform,
-                material: material ?? DefaultMaterial,
-                size,
-                name: $"ImpVis_{target.GetInstanceID()}"
-            )
-        ];
+        var parent = overrideInactive ? transform : target.transform;
+        var point = Geometry.CreatePrimitive(
+            PrimitiveType.Sphere,
+            parent,
+            material: material ?? DefaultMaterial,
+            size,
+            name: $"ImpVis_{target.GetInstanceID()}"
+        );
+        point.transform.position = target.transform.position;
+
+        return [point];
     }
 
-    private static IEnumerable<GameObject> VisualizeColliders(GameObject target, float size, Material material = null)
+    private static IEnumerable<GameObject> VisualizeColliders(GameObject target, float size, Material material = null,
+        bool overrideInactive = false)
     {
         return target.GetComponentsInChildren<BoxCollider>()
             .Select(collider => VisualizeBoxCollider(collider, material))
@@ -226,10 +237,15 @@ public class StaticVisualizers : ImpScript
         return visualizer;
     }
 
-    private static IEnumerable<GameObject> GetTargetObjects(string identifier, VisualizerIdentifier type) => type switch
+    private static IEnumerable<GameObject> GetTargetObjects(
+        string identifier, VisualizerIdentifier type, bool overrideInactive
+    ) => type switch
     {
         VisualizerIdentifier.Tag => GameObject.FindGameObjectsWithTag(identifier),
-        VisualizerIdentifier.Layer => FindObjectsByType<GameObject>(FindObjectsSortMode.None)
+        VisualizerIdentifier.Layer => FindObjectsByType<GameObject>(
+                findObjectsInactive: overrideInactive ? FindObjectsInactive.Include : FindObjectsInactive.Exclude,
+                FindObjectsSortMode.None
+            )
             .Where(obj => obj.layer == LayerMask.NameToLayer(identifier))
             .ToArray(),
         VisualizerIdentifier.Component => FindObjectsByType(

@@ -45,7 +45,7 @@ public class EnemyGizmo : MonoBehaviour
     private GameObject playerCloseSphere;
     private GameObject playerVeryCloseSphere;
 
-    private float lastUpdateTime;
+    private float lastUpdateTimer;
 
     private bool hasInitializedVision;
 
@@ -205,7 +205,7 @@ public class EnemyGizmo : MonoBehaviour
     {
         if (!hasInitializedVision || !entityConfig.Vision.Value && !entityConfig.Proximity.Value) return;
 
-        lastUpdateTime = Time.realtimeSinceStartup;
+        lastUpdateTimer = visualizerTimeout;
 
         var (activeCone, activeSphere) = SelectActiveVisionObjects();
 
@@ -239,14 +239,14 @@ public class EnemyGizmo : MonoBehaviour
 
         if (hasInitializedVision)
         {
-            if (!entityConfig.Vision.Value || Time.realtimeSinceStartup - lastUpdateTime > visualizerTimeout)
+            if (!entityConfig.Vision.Value || lastUpdateTimer < 0)
             {
                 coneStanding.SetActive(false);
                 coneCrouching.SetActive(false);
                 coneCrawling.SetActive(false);
             }
 
-            if (!entityConfig.Proximity.Value || Time.realtimeSinceStartup - lastUpdateTime > visualizerTimeout)
+            if (!entityConfig.Proximity.Value || lastUpdateTimer < 0)
             {
                 proximitySphereStanding.SetActive(false);
                 proximitySphereCrouching.SetActive(false);
@@ -259,6 +259,11 @@ public class EnemyGizmo : MonoBehaviour
 
         // Vision object is sometimes not set right away so we just do it as soon as possible.
         if (!hasInitializedVision && enemyParent.Enemy.Vision) InitVisionObjects(enemyParent.Enemy.Vision);
+
+        if (!Imperium.ObjectManager.DisabledObjects.Value.Contains(enemyParent.photonView.ViewID))
+        {
+            lastUpdateTimer -= Time.deltaTime;
+        }
     }
 
     private void DrawNoiseLine(bool isShown)

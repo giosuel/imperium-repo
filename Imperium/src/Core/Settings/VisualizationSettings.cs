@@ -76,4 +76,12 @@ internal class VisualizationSettings(ConfigFile config, IBinding<bool> isSceneLo
         "LevelPoints",
         false
     );
+
+    internal readonly ImpConfig<bool> ValuableSpawns = new(
+        config,
+        "Visualization.Gizmos",
+        "ValuableSpawns",
+        false,
+        primaryUpdate: value => Imperium.Visualization.StaticVisualizers.Point<ValuableVolume>(value, 0.2f, ImpAssets.FresnelBlue, overrideInactive: true)
+    );
 }

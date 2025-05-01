@@ -20,18 +20,23 @@ public class ImpNetMessage<T> : INetworkSubscribable
     // Whether the server should relay all received packets to the clients directly.
     private readonly bool relayPackets;
 
+    // If set to true, will never unsubscribe
+    private readonly bool isPersistent;
+
     private readonly ImpNetworking networking;
 
     public ImpNetMessage(
         string identifier,
         ImpNetworking networking,
         bool relayPackets = false,
-        bool allowUnauthenticated = false
+        bool allowUnauthenticated = false,
+        bool isPersistent = false
     )
     {
         this.identifier = $"{identifier}_message";
         this.networking = networking;
         this.relayPackets = relayPackets;
+        this.isPersistent = isPersistent;
 
         networking.SubscribeChannel(this.identifier, OnPacketReceived, allowUnauthenticated);
         networking.RegisterSubscriber(this);
@@ -90,9 +95,9 @@ public class ImpNetMessage<T> : INetworkSubscribable
 
     private void OnClientReceived(T data) => OnClientRecive?.Invoke(data);
 
-    public void Clear()
+    public void Unsubscribe()
     {
-        networking.ClearSubscription(identifier);
+        if (!isPersistent) networking.Unsubscribe(identifier);
     }
 
     public void BroadcastToClient(ulong clientId)

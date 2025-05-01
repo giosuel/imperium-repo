@@ -19,9 +19,15 @@ internal static class ObjectEntryGenerator
         _ => true
     };
 
-    internal static bool CanRespawn(ObjectEntry entry) => entry.Type switch
+    internal static bool CanDespawn(ObjectEntry entry) => entry.Type switch
     {
-        ObjectType.Entity => true,
+        ObjectType.Entity when entry.component is EnemyParent { Spawned: true } => true,
+        _ => false
+    };
+
+    internal static bool CanSpawn(ObjectEntry entry) => entry.Type switch
+    {
+        ObjectType.Entity when entry.component is EnemyParent { Spawned: false } => true,
         _ => false
     };
 
@@ -49,7 +55,7 @@ internal static class ObjectEntryGenerator
         _ => false
     };
 
-    internal static void DespawnObject(ObjectEntry entry, bool isRespawn = false)
+    internal static void DestroyObject(ObjectEntry entry)
     {
         switch (entry.Type)
         {
@@ -66,18 +72,28 @@ internal static class ObjectEntryGenerator
         }
     }
 
-    internal static void RespawnObject(ObjectEntry entry)
+    internal static void DespawnObject(ObjectEntry entry)
     {
         switch (entry.Type)
         {
             case ObjectType.Entity:
-                // var entityType = ((EnemyAI)entry.component).enemyType;
-                // DespawnObject(entry, isRespawn: true);
-                // Imperium.ObjectManager.SpawnEntity(new EntitySpawnRequest
-                // {
-                //     Name = entityType.enemyName,
-                //     SpawnPosition = entry.containerObject.transform.position
-                // });
+                ((EnemyParent)entry.component).Despawn();
+                break;
+            case ObjectType.Player:
+            case ObjectType.Item:
+            case ObjectType.Valuable:
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+    }
+
+    internal static void SpawnObject(ObjectEntry entry)
+    {
+        switch (entry.Type)
+        {
+            case ObjectType.Entity:
+                ((EnemyParent)entry.component).Spawn();
                 break;
             case ObjectType.Player:
             case ObjectType.Item:
@@ -134,9 +150,9 @@ internal static class ObjectEntryGenerator
             case ObjectType.Entity:
                 var entity = (EnemyParent)entry.component;
                 entity.enabled = isActive;
-                entity.Enemy.enabled = isActive;
+                entity.Enemy.gameObject.SetActive(isActive);
                 if (entity.Enemy?.NavMeshAgent?.Agent != null) entity.Enemy.NavMeshAgent.Agent.isStopped = !isActive;
-                foreach (var animator in entity.GetComponentsInChildren<Animator>()) animator.enabled = isActive;
+                // foreach (var animator in entity.GetComponentsInChildren<Animator>()) animator.enabled = isActive;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -145,8 +161,6 @@ internal static class ObjectEntryGenerator
 
     internal static void TeleportObjectHere(ObjectEntry entry)
     {
-        var origin = Imperium.Freecam.IsFreecamEnabled.Value ? Imperium.Freecam.transform : null;
-
         switch (entry.Type)
         {
             case ObjectType.Player:
@@ -171,7 +185,7 @@ internal static class ObjectEntryGenerator
                         Destination = position,
                         ViewId = entry.View.ViewID
                     });
-                }, origin, castGround: false);
+                }, castGround: false);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -186,8 +200,13 @@ internal static class ObjectEntryGenerator
                 var point = (ExtractionPoint)entry.component;
                 entry.completeButton.interactable = point.currentState != ExtractionPoint.State.Complete;
                 break;
-            default:
+            case ObjectType.Entity:
+            case ObjectType.Player:
+            case ObjectType.Item:
+            case ObjectType.Valuable:
                 break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
@@ -204,7 +223,7 @@ internal static class ObjectEntryGenerator
     {
         ObjectType.Player => GetPlayerName((PlayerAvatar)entry.component),
         ObjectType.ExtractionPoint => ((ExtractionPoint)entry.component).name,
-        ObjectType.Entity => ((EnemyParent)entry.component).enemyName,
+        ObjectType.Entity => GetEnemyName((EnemyParent)entry.component),
         ObjectType.Item => ((ItemAttributes)entry.component).itemName,
         ObjectType.Valuable => GetValuableName((ValuableObject)entry.component),
         _ => entry.component.name
@@ -244,5 +263,10 @@ internal static class ObjectEntryGenerator
         }
 
         return !player.gameObject.activeSelf ? RichText.Strikethrough(playerName) : playerName;
+    }
+
+    private static string GetEnemyName(EnemyParent enemy)
+    {
+        return enemy.Spawned ? enemy.enemyName : RichText.Strikethrough(enemy.enemyName);
     }
 }

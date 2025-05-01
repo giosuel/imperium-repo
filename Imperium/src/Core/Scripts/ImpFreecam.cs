@@ -184,6 +184,8 @@ public class ImpFreecam : ImpScript
         PlayerManager.ToggleLocalAvatar(Imperium.Settings.Rendering.AvatarInMain.Value);
     }
 
+    internal void Teleport(Vector3 position) => camera.transform.position = position + Vector3.up * 2;
+
     private void OnFreecamReset(InputAction.CallbackContext callbackContext)
     {
         if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
@@ -269,9 +271,12 @@ public class ImpFreecam : ImpScript
             var movement = Imperium.InputBindings.BaseMap.Movement.ReadValue<Vector2>();
             var movementY = Imperium.InputBindings.BaseMap.FlyAscend.IsPressed() ? 1 :
                 Imperium.InputBindings.BaseMap.FlyDescend.IsPressed() ? -1 : 0;
-            var deltaMove = new Vector3(movement.x, movementY, movement.y)
+            var horizontalMovement = new Vector3(movement.x, 0, movement.y)
                             * (Imperium.Settings.Freecam.FreecamMovementSpeed.Value * Time.deltaTime);
-            cameraTransform.Translate(deltaMove);
+            var verticalMovement = new Vector3(0, movementY, 0)
+                                   * (Imperium.Settings.Freecam.FreecamMovementSpeed.Value * Time.deltaTime);
+            cameraTransform.Translate(horizontalMovement);
+            cameraTransform.Translate(verticalMovement, relativeTo: Space.World);
         }
     }
 }

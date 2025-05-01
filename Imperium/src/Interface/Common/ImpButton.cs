@@ -243,7 +243,7 @@ public abstract class ImpButton
                 theme,
                 container,
                 new StyleOverride("", Variant.LIGHTER),
-                new StyleOverride("Icon", Variant.FOREGROUND)
+                new StyleOverride("Icon", Variant.LIGHTER)
             );
         }
         else

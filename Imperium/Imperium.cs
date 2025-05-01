@@ -145,9 +145,6 @@ public class Imperium : BaseUnityPlugin
         GameObject = new GameObject("Imperium");
         DontDestroyOnLoad(GameObject);
 
-        // Register camera update when scene is loaded
-        ActiveCamera = new ImpExternalBinding<Camera, bool>(() => PlayerAvatar.instance.localCamera, IsArenaLoaded);
-
         InputBlocker = new InputBlocker();
         InputBindings = new ImpInputBindings();
 
@@ -158,6 +155,9 @@ public class Imperium : BaseUnityPlugin
         {
             if (isLoaded) Settings.LoadAll();
         };
+
+        // Register camera update when scene is loaded
+        ActiveCamera = new ImpExternalBinding<Camera, bool>(() => PlayerAvatar.instance.localCamera, IsArenaLoaded);
 
         IO.BindNotificationSettings(Settings);
         Networking.BindAllowClients(Settings.Preferences.AllowClients);
@@ -256,10 +256,12 @@ public class Imperium : BaseUnityPlugin
         if (!IsImperiumLaunched) return;
 
         Harmony.UnpatchSelf();
-        Networking.Reset();
+        Networking.Unload();
 
         DisableImperium();
         PreLaunchPatches();
+
+        Destroy(GameObject);
 
         IsImperiumLaunched = false;
     }

@@ -147,9 +147,9 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
         Set(DefaultValue, invokePrimary, invokeSecondary);
     }
 
-    public void Clear()
+    public void Unsubscribe()
     {
-        networking.ClearSubscription(identifier);
+        networking.Unsubscribe(identifier);
     }
 
     [ImpAttributes.HostOnly]
@@ -167,6 +167,6 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
 
 public interface INetworkSubscribable
 {
-    public void Clear();
+    public void Unsubscribe();
     public void BroadcastToClient(ulong clientId);
 }

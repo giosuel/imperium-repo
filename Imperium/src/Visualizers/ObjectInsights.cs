@@ -134,7 +134,8 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .RegisterInsight("Despawn Timer", enemy => Formatting.FormatSecondsMinutes(enemy.DespawnedTimer))
             .RegisterInsight("Valuable Timer", enemy => Formatting.FormatSecondsMinutes(enemy.valuableSpawnTimer))
             .RegisterInsight("Player Close", enemy => enemy.playerClose.ToString())
-            .RegisterInsight("Spawn Idle Timer", _ => Formatting.FormatSecondsMinutes(EnemyDirector.instance.spawnIdlePauseTimer))
+            .RegisterInsight("Spawn Idle Timer",
+                _ => Formatting.FormatSecondsMinutes(EnemyDirector.instance.spawnIdlePauseTimer))
             .SetPositionOverride(enemy => enemy.Enemy.transform.position)
             .SetConfigKey("Enemies");
 
@@ -148,7 +149,7 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .SetConfigKey("Extraction Points");
 
         InsightsFor<ValuableObject>()
-            .SetNameGenerator(valuable => valuable.name)
+            .SetNameGenerator(valuable => valuable.name.Replace("Valuable ", "").Replace("(Clone)", ""))
             .RegisterInsight(
                 "Value",
                 valuable => $"{SemiFunc.DollarGetString(Mathf.RoundToInt(valuable.dollarValueCurrent))}"

@@ -42,7 +42,7 @@ public class ImpNetworking
         RepoSteamNetwork.RegisterPacket<ImpPacket>();
         RepoSteamNetwork.AddCallback<ImpPacket>(OnPacketReceived);
 
-        authenticateEvent = new ImpNetEvent("AuthenticateImperium", this, allowUnauthenticated: true);
+        authenticateEvent = new ImpNetEvent("AuthenticateImperium", this, allowUnauthenticated: true, isPersistent: true);
         enableImperiumEvent = new ImpNetEvent("EnableImperium", this);
         disableImperiumEvent = new ImpNetEvent("DisableImperium", this);
         networkLog = new ImpNetMessage<NetworkNotification>("NetworkLog", this);
@@ -79,7 +79,7 @@ public class ImpNetworking
         subscription.OnPacket.Invoke(packet);
     }
 
-    internal void ClearSubscription(string channel) => subscribers.Remove(channel);
+    internal void Unsubscribe(string channel) => subscribers.Remove(channel);
 
     internal void SubscribeChannel(string channel, Action<ImpPacket> callback, bool allowUnauthenticated)
     {
@@ -156,6 +156,7 @@ public class ImpNetworking
         if (senderId == RepoSteamNetwork.CurrentSteamId)
         {
             authenticateEvent.DispatchToClients(RepoSteamNetwork.CurrentSteamId);
+            ImperiumUsers.Set(ImperiumUsers.Value.Toggle(senderId));
             return;
         }
 
@@ -256,11 +257,11 @@ public class ImpNetworking
         }
     }
 
-    public void Reset()
+    public void Unload()
     {
-        // WasImperiumAccessGranted = false;
+        WasImperiumAccessGranted = false;
 
-        foreach (var subscriber in RegisteredNetworkSubscribers) subscriber.Clear();
+        foreach (var subscriber in RegisteredNetworkSubscribers) subscriber.Unsubscribe();
         RegisteredNetworkSubscribers.Clear();
     }
 }

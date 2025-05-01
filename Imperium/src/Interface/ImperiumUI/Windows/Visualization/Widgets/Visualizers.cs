@@ -37,5 +37,12 @@ internal class Visualizers : ImpWidget
             Imperium.Settings.Visualization.LevelPoints,
             theme
         );
+
+        // ImpToggle.Bind(
+        //     "Gizmos/ValuableSpawns",
+        //     transform,
+        //     Imperium.Settings.Visualization.ValuableSpawns,
+        //     theme
+        // );
     }
 }

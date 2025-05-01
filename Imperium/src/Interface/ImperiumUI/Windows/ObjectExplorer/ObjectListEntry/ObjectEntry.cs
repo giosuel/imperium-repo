@@ -24,7 +24,8 @@ internal class ObjectEntry : MonoBehaviour
     internal Button reviveButton { get; private set; }
     internal Button killButton { get; private set; }
     internal Button destroyButton { get; private set; }
-    internal Button respawnButton { get; private set; }
+    internal Button despawnButton { get; private set; }
+    internal Button spawnButton { get; private set; }
     internal Button teleportHereButton { get; private set; }
     internal Button teleportToButton { get; private set; }
     internal Toggle activeToggle { get; private set; }
@@ -72,8 +73,15 @@ internal class ObjectEntry : MonoBehaviour
         teleportToButton = ImpButton.Bind("TeleportTo", transform,
             () =>
             {
-                Imperium.PlayerManager.TeleportLocalPlayer(ObjectEntryGenerator.GetTeleportPosition(this));
-                Imperium.Interface.Close();
+                if (Imperium.Freecam.IsFreecamEnabled.Value)
+                {
+                    Imperium.Freecam.Teleport(ObjectEntryGenerator.GetTeleportPosition(this));
+                }
+                else
+                {
+                    Imperium.PlayerManager.TeleportLocalPlayer(ObjectEntryGenerator.GetTeleportPosition(this));
+                    Imperium.Interface.Close();
+                }
             },
             theme,
             isIconButton: true
@@ -92,14 +100,23 @@ internal class ObjectEntry : MonoBehaviour
         destroyButton = ImpButton.Bind(
             "Destroy",
             transform,
-            () => ObjectEntryGenerator.DespawnObject(this)
+            () => ObjectEntryGenerator.DestroyObject(this)
         );
 
-        // Respawn button
-        respawnButton = ImpButton.Bind(
-            "Respawn",
+        // Despawn button
+        despawnButton = ImpButton.Bind(
+            "Despawn",
             transform,
-            () => ObjectEntryGenerator.RespawnObject(this),
+            () => ObjectEntryGenerator.DespawnObject(this),
+            theme,
+            isIconButton: true
+        );
+
+        // Spawn button
+        spawnButton = ImpButton.Bind(
+            "Spawn",
+            transform,
+            () => ObjectEntryGenerator.SpawnObject(this),
             theme,
             isIconButton: true
         );
@@ -132,7 +149,8 @@ internal class ObjectEntry : MonoBehaviour
         teleportToButton.gameObject.SetActive(false);
         destroyButton.gameObject.SetActive(false);
         activeToggle.gameObject.SetActive(false);
-        respawnButton.gameObject.SetActive(false);
+        despawnButton.gameObject.SetActive(false);
+        spawnButton.gameObject.SetActive(false);
         completeButton.gameObject.SetActive(false);
         killButton.gameObject.SetActive(false);
         reviveButton.gameObject.SetActive(false);
@@ -167,7 +185,8 @@ internal class ObjectEntry : MonoBehaviour
         teleportHereButton.gameObject.SetActive(true);
         destroyButton.gameObject.SetActive(ObjectEntryGenerator.CanDestroy(this));
         activeToggle.gameObject.SetActive(ObjectEntryGenerator.CanToggle(this));
-        respawnButton.gameObject.SetActive(ObjectEntryGenerator.CanRespawn(this));
+        despawnButton.gameObject.SetActive(ObjectEntryGenerator.CanDespawn(this));
+        spawnButton.gameObject.SetActive(ObjectEntryGenerator.CanSpawn(this));
         completeButton.gameObject.SetActive(ObjectEntryGenerator.CanComplete(this));
         killButton.gameObject.SetActive(ObjectEntryGenerator.CanKill(this));
         reviveButton.gameObject.SetActive(ObjectEntryGenerator.CanRevive(this));
@@ -179,11 +198,14 @@ internal class ObjectEntry : MonoBehaviour
     {
         if (intervalUpdateTimer.Tick() && component)
         {
-            // Update kill and revive buttons since they switch based on the player's alive status
+            // These buttons need to be updated since their active state can change when the UI is open
             killButton.gameObject.SetActive(ObjectEntryGenerator.CanKill(this));
             reviveButton.gameObject.SetActive(ObjectEntryGenerator.CanRevive(this));
+            spawnButton.gameObject.SetActive(ObjectEntryGenerator.CanSpawn(this));
+            despawnButton.gameObject.SetActive(ObjectEntryGenerator.CanDespawn(this));
 
             ObjectEntryGenerator.IntervalUpdate(this);
+            objectName = ObjectEntryGenerator.GetObjectName(this);
         }
     }
 }
