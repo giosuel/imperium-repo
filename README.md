@@ -16,9 +16,13 @@ This is the official R.E.P.O. port of the original [Imperium for Lethal Company]
 ## Features
 
 * **Modular and User-Centered UI**  
-    The user-interface is the core of Imperium and ensures a smooth and simple experience when using the many features it offers. Now with the brand new themes *REPO* and *Shade*!
+    The user-interface is the core of Imperium and ensures a smooth and simple experience when using the many features it offers. Now with the brand new themes REPO and Shade!
 * **Full Multiplayer Support**  
     Imperium works in singleplayer as well as multiplayer, as long as the host has it installed. It is recommended though, that everyone in the lobby has Imperium installed.
+* **Spawning of Enemies, Items and Valuables**  
+    Imperium allows you to spawn, despawn and move enemies, items and valuable on command.
+* **Creative Mode Tools**  
+    Imperium includes creative mode tools like god mode, infinite stamina, invisibility and much more.
 * **Visualization of Hitboxes**  
     Imperium comes with a variety of different visualizers for enemy line of sight, detection radius and more.
 * **The Freecam**  
@@ -38,7 +42,7 @@ This is the official R.E.P.O. port of the original [Imperium for Lethal Company]
 
 ## How to use?
 
-Pleas refer to the [Imperium Repo Wiki](https://giosuel.github.io/imperium-repo/) for documentation and guides.
+Please refer to the [Imperium Repo Wiki](https://giosuel.github.io/imperium-repo/) for documentation and guides.
 
 ## Bug Reports and Feature Requests
 

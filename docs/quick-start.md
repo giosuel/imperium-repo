@@ -9,14 +9,27 @@ hide:
 
 Imperium currently consists of three main UIs.
 
-* **Imperium UI**  
-    The main Imperium interface that provides access to the windows that contain the majority of Imperium's features.
-* **Spawning UI**  
-    A console that allows you to spawn enemies, valuables or items into the game.
-* **Fullscreen Map**  
-    Imperium's map with the layer and target selection. Also includes minimap preferences.
+## Imperium UI [F1]
+The main Imperium interface that provides access to the windows that contain the majority of Imperium's features.
+
+![Imperium UI](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/imperium.png?raw=true)
+
+## Spawning UI [F2]
+A console that allows you to spawn enemies, valuables or items into the game.
+
+**Command Syntax:** `objectName [amount] [health / value]`
+
+![Imperium Spawning](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/spawning.png?raw=true)
+
+## Fullscreen Map [F8]
+Imperium's map with the layer and target selection. Also includes minimap preferences.
+
+![Imperium Map](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/map.png?raw=true)
 
 ## Global Keybinds
+
+!!! info "Customizable Keybinds"
+    Currently, no keybind rebinding mod exists for REPO. Due to this, all keybinds in Imperium are hard-coded and can't be changed as of right now.
 
 | Keybind         | Description                                              |
 | --------------- | -------------------------------------------------------- |
@@ -39,6 +52,3 @@ Imperium currently consists of three main UIs.
 | `Mouse / Scroll` | Changes the freecam's flight speed.                |
 | `Keyboard / ←`   | Decreases the freecam's field of view.             |
 | `Keyboard / →`   | Increases the freecam's field of view.             |
-
-!!! info "Customizable Keybinds"
-    Currently, no keybind rebinding mod exists for REPO. Due to this, all keybinds in Imperium are hard-coded and can't be changed as of right now.

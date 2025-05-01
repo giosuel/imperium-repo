@@ -1,7 +1,7 @@
-site_name: Imperium Wiki
+site_name: Imperium Repo Wiki
 site_author: giosuel
 site_url: https://giosuel.github.io/imperium-repo
-site_description: The official Imperium wiki. A powerful and highly performant all-in-one debugging tool to test and explore game mechanics and functionality in R.E.P.O.
+site_description: The official Imperium Repo wiki. A powerful and highly performant all-in-one debugging tool to test and explore game mechanics and functionality in R.E.P.O.
 
 repo_name: giosuel/imperium-repo
 repo_url: https://github.com/giosuel/imperium-repo
@@ -50,8 +50,8 @@ theme:
   icon:
     repo: fontawesome/brands/github
     edit: material/file-edit-outline
-  logo: images/icon_256x256.png
-  favicon: images/icon_256x256.png
+  logo: https://github.com/giosuel/imperium-repo/blob/development/assets/icon_256x256.png?raw=true
+  favicon: https://github.com/giosuel/imperium-repo/blob/development/assets/icon_256x256.png?raw=true
 
 markdown_extensions:
   - admonition

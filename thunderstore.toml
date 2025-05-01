@@ -20,7 +20,7 @@ giosuel-Librarium = "0.0.4"
 DiFFoZ-BepInEx_MonoMod_Debug_Patcher = "1.1.1"
 
 [build]
-icon = "assets/icon.png"
+icon = "assets/icon_256x256.png"
 readme = "README.md"
 outdir = "artifacts/thunderstore/"
 
