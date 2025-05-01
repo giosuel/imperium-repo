@@ -57,8 +57,6 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
     {
         if (!Imperium.IsArenaLoaded) return;
 
-        var stopwatch = Stopwatch.StartNew();
-
         // Skip udpating if no insights are visible
         if (InsightVisibilityBindings.Value.All(binding => !binding.Value.Value)) return;
 
@@ -93,18 +91,7 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
                 }
             }
         }
-
-        stopwatch.Stop();
-        Imperium.IO.LogInfo($" - SPENT IN INSIGHTS: {stopwatch.ElapsedMilliseconds}");
-        // Imperium.ObjectManager.StartCoroutine(refresh());
     }
-    //
-    // private IEnumerator refresh()
-    // {
-    //     yield return 0;
-    //
-    //
-    // }
 
     internal InsightDefinition<T> InsightsFor<T>() where T : Component
     {
@@ -147,6 +134,7 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .RegisterInsight("Despawn Timer", enemy => Formatting.FormatSecondsMinutes(enemy.DespawnedTimer))
             .RegisterInsight("Valuable Timer", enemy => Formatting.FormatSecondsMinutes(enemy.valuableSpawnTimer))
             .RegisterInsight("Player Close", enemy => enemy.playerClose.ToString())
+            .RegisterInsight("Spawn Idle Timer", _ => Formatting.FormatSecondsMinutes(EnemyDirector.instance.spawnIdlePauseTimer))
             .SetPositionOverride(enemy => enemy.Enemy.transform.position)
             .SetConfigKey("Enemies");
 

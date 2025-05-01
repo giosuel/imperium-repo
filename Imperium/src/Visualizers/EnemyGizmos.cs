@@ -16,13 +16,13 @@ namespace Imperium.Visualizers;
 /// <summary>
 ///     Entity-specific gizmos like LoS indicators, target rays, noise rays, etc.
 /// </summary>
-internal class EntityGizmos : BaseVisualizer<IReadOnlyCollection<EnemyParent>, EntityGizmo>
+internal class EnemyGizmos : BaseVisualizer<IReadOnlyCollection<EnemyParent>, EnemyGizmo>
 {
     internal readonly Dictionary<string, EntityGizmoConfig> EntityInfoConfigs = [];
 
     private readonly ConfigFile config;
 
-    internal EntityGizmos(
+    internal EnemyGizmos(
         Transform parent,
         IBinding<IReadOnlyCollection<EnemyParent>> objectsBinding,
         IBinding<bool> isArenaLoaded,
@@ -58,7 +58,7 @@ internal class EntityGizmos : BaseVisualizer<IReadOnlyCollection<EnemyParent>, E
             var entityGizmoObject = new GameObject($"ImpVis_EnemyGizmo_{entity.GetInstanceID()}");
             entityGizmoObject.transform.SetParent(parent);
 
-            var entityGizmo = entityGizmoObject.AddComponent<EntityGizmo>();
+            var entityGizmo = entityGizmoObject.AddComponent<EnemyGizmo>();
             entityGizmo.Init(entityConfig, entity);
 
             visualizerObjects[entity.GetInstanceID()] = entityGizmo;

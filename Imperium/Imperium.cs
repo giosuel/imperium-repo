@@ -214,9 +214,9 @@ public class Imperium : BaseUnityPlugin
         }
 
         // We do the funni to allow for more network objects to spawn >:)
-        typeof(PhotonNetwork)
-            .GetField("MAX_VIEW_IDS", BindingFlags.Static | BindingFlags.Public)!
-            .SetValue(null, 100000);
+        // typeof(PhotonNetwork)
+        //     .GetField("MAX_VIEW_IDS", BindingFlags.Static | BindingFlags.Public)!
+        //     .SetValue(null, 100000);
     }
 
     internal static void DisableImperium()
@@ -244,7 +244,6 @@ public class Imperium : BaseUnityPlugin
         Settings.LoadAll();
 
         RegisterInterfaces();
-        PlayerManager.UpdateCameras();
 
         InputBindings.BaseMap.Enable();
         InputBindings.StaticMap.Enable();

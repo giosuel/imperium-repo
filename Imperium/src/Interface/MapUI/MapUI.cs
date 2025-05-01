@@ -155,19 +155,12 @@ internal class MapUI : BaseUI
 
     private static void OnMinimapToggle(InputAction.CallbackContext _)
     {
-        // if (PlayerAvatar.instance.quickMenuManager.isMenuOpen ||
-        //     PlayerAvatar.instance.inTerminalMenu ||
-        //     PlayerAvatar.instance.isTypingChat ||
-        //     Imperium.ShipBuildModeManager.InBuildMode) return;
-        Imperium.IO.LogInfo("MINIMAP TOGGLE");
-
         Imperium.Settings.Map.MinimapEnabled.Set(!Imperium.Settings.Map.MinimapEnabled.Value);
     }
 
     private void OnMapReset(InputAction.CallbackContext _) => OnMapReset();
     private void OnMapReset()
     {
-        Imperium.IO.LogInfo($"target reset: {PlayerAvatar.instance.localCamera}");
         MoveCameraToTarget(PlayerAvatar.instance.localCamera.transform);
     }
 

@@ -1,9 +1,7 @@
 #region
 
 using Imperium.Core.Scripts;
-using Imperium.Util;
 using Imperium.Visualizers.Objects;
-using Librarium;
 using UnityEngine;
 
 #endregion
@@ -20,32 +18,19 @@ internal class NoiseIndicators : ImpScript
 
     private void Awake()
     {
-        var noiseOverlayObj = Instantiate(ImpAssets.NoiseOverlay, transform);
-        var noiseOverlayCanvas = noiseOverlayObj.GetComponent<Canvas>();
-        noiseOverlayCanvas.sortingOrder = 12;
-
-        var template = noiseOverlayObj.transform.Find("Indicator").gameObject;
-        template.gameObject.SetActive(false);
-
         for (var i = 0; i < noiseIndicatorCount; i++)
         {
-            var noiseIndicatorObj = Instantiate(template, noiseOverlayCanvas.transform);
-            noiseIndicatorObj.transform.SetParent(noiseOverlayCanvas.transform);
+            var noiseIndicatorObj = new GameObject("ImpVis_NoiseIndicator" + i);
+            noiseIndicatorObj.transform.SetParent(transform);
 
-            var noiseIndicator = noiseIndicatorObj.AddComponent<NoiseIndicator>();
-            noiseIndicator.Init(noiseOverlayCanvas, transform);
-
-            noiseIndicators[i] = noiseIndicator;
+            noiseIndicators[i] = noiseIndicatorObj.AddComponent<NoiseIndicator>();
         }
 
         Imperium.Settings.Visualization.NoiseIndicators.onUpdate += value =>
         {
             if (!value)
             {
-                for (var i = 0; i < noiseIndicatorCount; i++)
-                {
-                    noiseIndicators[i].Deactivate();
-                }
+                for (var i = 0; i < noiseIndicatorCount; i++) noiseIndicators[i].Deactivate();
             }
         };
     }
@@ -55,7 +40,7 @@ internal class NoiseIndicators : ImpScript
         foreach (var indicator in noiseIndicators) indicator.Deactivate();
     }
 
-    internal void AddNoise(Vector3 position, float radius)
+    internal void AddNoise(Vector3 position, float radius, bool isMuted)
     {
         if (!Imperium.Settings.Visualization.NoiseIndicators.Value
             || !Imperium.IsArenaLoaded
@@ -64,7 +49,7 @@ internal class NoiseIndicators : ImpScript
             return;
         }
 
-        noiseIndicators[noiseIndex].Activate(position, radius, noiseIndicatorDisplayTime);
+        noiseIndicators[noiseIndex].Activate(position, radius, noiseIndicatorDisplayTime, isMuted);
         noiseIndex = (noiseIndex + 1) % noiseIndicators.Length;
     }
 }

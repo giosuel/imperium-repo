@@ -22,7 +22,7 @@
         <PackageReference Include="Zehs.REPOLib" Version="2.1.0" />
         <PackageReference Include="rainbowblood.UniverseLib.Mono" Version="2.*" />
         <PackageReference Include="R.E.P.O.GameLibs.Steam" Version="*-*" PrivateAssets="all" Publicize="true" />
-        <PackageReference Include="LibrariumLib" Version="*-*" Publicize="true" />
+        <PackageReference Include="LibrariumLib" Version="0.0.4" Publicize="true" />
     </ItemGroup>
 
     <ItemGroup>

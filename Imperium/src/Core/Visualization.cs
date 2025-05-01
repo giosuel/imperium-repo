@@ -15,7 +15,7 @@ internal class Visualization
     internal readonly StaticVisualizers StaticVisualizers;
 
     internal readonly PlayerGizmos PlayerGizmos;
-    internal readonly EntityGizmos EntityGizmos;
+    internal readonly EnemyGizmos EnemyGizmos;
 
     internal readonly ObjectInsights ObjectInsights;
     internal readonly NoiseIndicators NoiseIndicators;
@@ -39,7 +39,7 @@ internal class Visualization
         );
 
         PlayerGizmos = new PlayerGizmos(visualizerParent.transform, objectManager.CurrentPlayers, config);
-        EntityGizmos = new EntityGizmos(
+        EnemyGizmos = new EnemyGizmos(
             visualizerParent.transform,
             objectManager.CurrentLevelEntities,
             Imperium.IsArenaLoaded,

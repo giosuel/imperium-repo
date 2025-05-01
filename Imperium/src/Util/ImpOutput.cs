@@ -47,9 +47,8 @@ internal class ImpOutput(ManualLogSource logger)
         NotificationType type = NotificationType.Other
     )
     {
-        Imperium.IO.LogInfo("Message received to send");
         // Disable notifications if turned off or during loading of settings
-        // if (!IsNotificationEnabled(type) || Imperium.Settings.IsLoading) return;
+        if (!IsNotificationEnabled(type) || Imperium.Settings.IsLoading) return;
 
         SemiFunc.UIFocusText(text, Color.white, AssetManager.instance.colorYellow);
     }

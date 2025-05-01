@@ -63,14 +63,8 @@ internal abstract class ImpAssets
      */
     internal static GameObject PositionIndicatorObject;
     internal static GameObject TapeIndicatorObject;
-    internal static GameObject DoorMarkerObject;
-    internal static GameObject NoiseOverlay;
     internal static GameObject WaypointOverlay;
-    internal static GameObject SpawnTimerObject;
-    internal static GameObject SpikeTrapTimerObject;
-    internal static GameObject SpawnIndicator;
     internal static GameObject ObjectInsightPanel;
-    internal static GameObject BuildInfoPanel;
     internal static GameObject WaypointBeacon;
     internal static GameObject LevelPoint;
 
@@ -131,15 +125,9 @@ internal abstract class ImpAssets
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/visualization.prefab", out VisualizationWindowObject),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/tape_indicator.prefab", out TapeIndicatorObject),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/position_indicator.prefab", out PositionIndicatorObject),
-            LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/door_marker.prefab", out DoorMarkerObject),
-            LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/spawn_timer.prefab", out SpawnTimerObject),
-            LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/spiketrap_timer.prefab", out SpikeTrapTimerObject),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/insight_panel.prefab", out ObjectInsightPanel),
-            LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/prop_info.prefab", out BuildInfoPanel),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/waypoint_beacon.prefab", out WaypointBeacon),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/level_point.prefab", out LevelPoint),
-            LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/spawn_indicator.prefab", out SpawnIndicator),
-            LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/noise_overlay.prefab", out NoiseOverlay),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/waypoint_overlay.prefab", out WaypointOverlay),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/xray.mat", out XRay),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_white.mat", out FresnelWhite),

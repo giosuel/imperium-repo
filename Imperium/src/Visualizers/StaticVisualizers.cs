@@ -56,8 +56,6 @@ public class StaticVisualizers : ImpScript
 
     internal void Refresh(bool hardRefresh = false)
     {
-        var stopwatch = Stopwatch.StartNew();
-
         if (hardRefresh)
         {
             VisualizerObjectMap.Values
@@ -72,9 +70,6 @@ public class StaticVisualizers : ImpScript
         {
             ToggleVisualizer(uniqueIdentifier, EnabledVisualizers.Contains(uniqueIdentifier));
         }
-
-        stopwatch.Stop();
-        Imperium.IO.LogInfo($" - SPENT IN VISUALIZATION: {stopwatch.ElapsedMilliseconds}");
     }
 
     private void ToggleVisualizer(string uniqueIdentifier, bool isOn)

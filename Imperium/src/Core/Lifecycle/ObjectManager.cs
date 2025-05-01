@@ -192,7 +192,16 @@ internal class ObjectManager : ImpLifecycleObject
         foreach (var enemyType in EnemyDirector.instance.GetEnemies())
         {
             if (enemyType.spawnObjects.Count < 1) continue;
-            var parent = enemyType.spawnObjects[0].GetComponent<EnemyParent>();
+
+            /*
+             * Since enemies with multiple spawn prefabs have a director script as their first prefab, we need to take the
+             * second prefab to get the enemy parent here.
+             */
+            var parent =
+                enemyType.spawnObjects.Count > 1
+                    ? enemyType.spawnObjects[1].GetComponent<EnemyParent>()
+                    : enemyType.spawnObjects[0].GetComponent<EnemyParent>();
+
             if (!parent || loadedEntityNames.Contains(parent.enemyName)) continue;
 
             allEntities.Add(new ExtendedEnemySetup

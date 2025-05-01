@@ -23,11 +23,11 @@ internal class PlayerManager : ImpLifecycleObject
 {
     internal readonly ImpBinaryBinding IsFlying = new(false);
 
-    internal readonly ImpNetworkBinding<HashSet<ulong>> untargetablePlayers = new(
-        "UntargetablePlayers", Imperium.Networking, []
+    internal readonly ImpNetworkBinding<HashSet<ulong>> MutedPlayers = new(
+        "MutedPlayers", Imperium.Networking, []
     );
 
-    internal readonly ImpNetworkBinding<HashSet<ulong>> invisiblePlayers = new(
+    internal readonly ImpNetworkBinding<HashSet<ulong>> InvisiblePlayers = new(
         "InvisiblePlayers", Imperium.Networking, []
     );
 
@@ -39,18 +39,8 @@ internal class PlayerManager : ImpLifecycleObject
         "TeleportPlayer", Imperium.Networking, true
     );
 
-    private static readonly Dictionary<int, Vector2> CameraOriginalResolutions = [];
-
-    internal readonly ImpExternalBinding<Vector3?, bool> ShipTPAnchor = new(
-        () => GameObject.Find("CatwalkShip")?.transform.position
-    );
-
-    internal readonly ImpExternalBinding<Vector3?, bool> MainEntranceTPAnchor = new(
-        () => GameObject.Find("EntranceTeleportA")?.transform.position
-    );
-
-    internal readonly ImpExternalBinding<Vector3?, bool> ApparatusTPAnchor = new(
-        () => GameObject.Find("LungApparatus(Clone)")?.transform.position
+    internal readonly ImpExternalBinding<Vector3?, bool> TruckTPAnchor = new(
+        () => GameObject.Find("Truck Item Shelf")?.transform.position
     );
 
     internal bool FlyIsAscending;
@@ -58,8 +48,19 @@ internal class PlayerManager : ImpLifecycleObject
 
     protected override void Init()
     {
-        dropItemMessage.OnClientRecive += OnDropitemClient;
         teleportPlayerMessage.OnClientRecive += OnTeleportPlayerClient;
+
+        Imperium.Settings.Player.Invisibility.onUpdate += isInvisible =>
+        {
+            ImpUtils.Bindings.ToggleSet(InvisiblePlayers, PlayerAvatar.instance.GetSteamId(), isInvisible);
+        };
+
+        Imperium.Settings.Player.Muted.onUpdate += isMuted =>
+        {
+            ImpUtils.Bindings.ToggleSet(MutedPlayers, PlayerAvatar.instance.GetSteamId(), isMuted);
+        };
+
+        Imperium.InputBindings.BaseMap.ToggleHUD.performed += ToggleHUD;
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -67,20 +68,11 @@ internal class PlayerManager : ImpLifecycleObject
             killPlayerMessage.OnServerReceive += OnKillPlayerServer;
             revivePlayerMessage.OnServerReceive += OnRevivePlayerServer;
         }
-
-        Imperium.Settings.Player.Invisibility.onUpdate += isInvisible =>
-        {
-            // ImpUtils.Bindings.ToggleSet(invisiblePlayers, PlayerAvatar.instance.actualClientId, isInvisible);
-        };
-
-        Imperium.InputBindings.BaseMap.ToggleHUD.performed += ToggleHUD;
     }
 
     protected override void OnSceneLoad()
     {
-        ShipTPAnchor.Refresh();
-        MainEntranceTPAnchor.Refresh();
-        ApparatusTPAnchor.Refresh();
+        TruckTPAnchor.Refresh();
     }
 
     [ImpAttributes.RemoteMethod]
@@ -99,137 +91,12 @@ internal class PlayerManager : ImpLifecycleObject
         Destination = position
     });
 
-    [ImpAttributes.RemoteMethod]
-    internal void DropItem(DropItemRequest request) => dropItemMessage.DispatchToClients(request);
-
-    // [ImpAttributes.LocalMethod]
-    // internal static void GrabObject(GrabbableObject grabbableItem, PlayerControllerB player)
-    // {
-    //     NetworkObjectReference networkObject = grabbableItem.NetworkObject;
-    //
-    //     player.carryWeight += Mathf.Clamp(grabbableItem.itemProperties.weight - 1f, 0f, 10f);
-    //     player.GrabObjectServerRpc(networkObject);
-    //
-    //     grabbableItem.parentObject = player.localItemHolder;
-    //     grabbableItem.GrabItemOnClient();
-    // }
-    //
-    // internal static int GetItemHolderSlot(GrabbableObject grabbableObject)
-    // {
-    //     if (!grabbableObject.playerHeldBy || !grabbableObject.playerHeldBy.currentlyHeldObjectServer) return -1;
-    //
-    //     for (var i = 0; i < grabbableObject.playerHeldBy.ItemSlots.Length; i++)
-    //     {
-    //         if (grabbableObject.playerHeldBy.ItemSlots[i] == grabbableObject)
-    //         {
-    //             return i;
-    //         }
-    //     }
-    //
-    //     throw new ArgumentOutOfRangeException();
-    // }
-    //
-    // [ImpAttributes.LocalMethod]
-    // internal static void RestoreLocalPlayerHealth(PlayerControllerB player)
-    // {
-    //     player.health = 100;
-    //     HUDManager.Instance.UpdateHealthUI(100, hurtPlayer: false);
-    //     HUDManager.Instance.gasHelmetAnimator.SetBool(GasEmitting, value: false);
-    //
-    //     player.bleedingHeavily = false;
-    //     player.criticallyInjured = false;
-    // }
-
     internal static void ToggleLocalAvatar(bool isShown)
     {
         if (!Imperium.IsArenaLoaded) return;
 
         PlayerAvatar.instance.playerAvatarVisuals.animator.enabled = isShown;
         PlayerAvatar.instance.playerAvatarVisuals.meshParent.SetActive(value: isShown);
-    }
-
-    internal static void UpdateCameras(bool _) => UpdateCameras();
-
-    internal static void UpdateCameras()
-    {
-        foreach (var camera in FindObjectsOfType<Camera>())
-        {
-            if (camera.gameObject.name == "MapCamera" || !camera.targetTexture) continue;
-
-            var targetTexture = camera.targetTexture;
-
-            if (!CameraOriginalResolutions.TryGetValue(targetTexture.GetInstanceID(), out var originalResolution))
-            {
-                originalResolution = new Vector2(targetTexture.width, targetTexture.height);
-                CameraOriginalResolutions[targetTexture.GetInstanceID()] = originalResolution;
-            }
-
-            targetTexture.Release();
-            targetTexture.width = Mathf.RoundToInt(
-                originalResolution.x * Imperium.Settings.Rendering.ResolutionMultiplier.Value
-            );
-            targetTexture.height = Mathf.RoundToInt(
-                originalResolution.y * Imperium.Settings.Rendering.ResolutionMultiplier.Value
-            );
-            targetTexture.Create();
-        }
-
-        Resources.UnloadUnusedAssets();
-
-        // foreach (var camera in FindObjectsByType<HDAdditionalCameraData>(FindObjectsSortMode.None))
-        // {
-        //     if (camera.gameObject.name == "MapCamera") continue;
-        //
-        //     camera.customRenderingSettings = true;
-        //
-        //     camera.renderingPathCustomFrameSettingsOverrideMask.mask
-        //         [(int)FrameSettingsField.DecalLayers] = Imperium.Settings.Rendering.DecalLayers.Value;
-        //     camera.renderingPathCustomFrameSettings.SetEnabled(
-        //         FrameSettingsField.DecalLayers, Imperium.Settings.Rendering.DecalLayers.Value
-        //     );
-        //
-        //     camera.renderingPathCustomFrameSettingsOverrideMask.mask
-        //         [(int)FrameSettingsField.SSGI] = Imperium.Settings.Rendering.SSGI.Value;
-        //     camera.renderingPathCustomFrameSettings.SetEnabled(
-        //         FrameSettingsField.SSGI, Imperium.Settings.Rendering.SSGI.Value
-        //     );
-        //
-        //     camera.renderingPathCustomFrameSettingsOverrideMask.mask
-        //         [(int)FrameSettingsField.RayTracing] = Imperium.Settings.Rendering.RayTracing.Value;
-        //     camera.renderingPathCustomFrameSettings.SetEnabled(
-        //         FrameSettingsField.RayTracing, Imperium.Settings.Rendering.RayTracing.Value
-        //     );
-        //
-        //     camera.renderingPathCustomFrameSettingsOverrideMask.mask
-        //         [(int)FrameSettingsField.VolumetricClouds] = Imperium.Settings.Rendering.VolumetricClouds.Value;
-        //     camera.renderingPathCustomFrameSettings.SetEnabled(
-        //         FrameSettingsField.VolumetricClouds, Imperium.Settings.Rendering.VolumetricClouds.Value
-        //     );
-        //
-        //     camera.renderingPathCustomFrameSettingsOverrideMask.mask
-        //         [(int)FrameSettingsField.SubsurfaceScattering] = Imperium.Settings.Rendering.SSS.Value;
-        //     camera.renderingPathCustomFrameSettings.SetEnabled(
-        //         FrameSettingsField.SubsurfaceScattering, Imperium.Settings.Rendering.SSS.Value
-        //     );
-        //
-        //     camera.renderingPathCustomFrameSettingsOverrideMask.mask
-        //         [(int)FrameSettingsField.ReprojectionForVolumetrics] = Imperium.Settings.Rendering.VolumeReprojection.Value;
-        //     camera.renderingPathCustomFrameSettings.SetEnabled(
-        //         FrameSettingsField.ReprojectionForVolumetrics, Imperium.Settings.Rendering.VolumeReprojection.Value
-        //     );
-        //
-        //     camera.renderingPathCustomFrameSettingsOverrideMask.mask
-        //         [(int)FrameSettingsField.TransparentPrepass] = Imperium.Settings.Rendering.TransparentPrepass.Value;
-        //     camera.renderingPathCustomFrameSettings.SetEnabled(
-        //         FrameSettingsField.TransparentPrepass, Imperium.Settings.Rendering.TransparentPrepass.Value
-        //     );
-        //
-        //     camera.renderingPathCustomFrameSettingsOverrideMask.mask
-        //         [(int)FrameSettingsField.TransparentPostpass] = Imperium.Settings.Rendering.TransparentPostpass.Value;
-        //     camera.renderingPathCustomFrameSettings.SetEnabled(
-        //         FrameSettingsField.TransparentPostpass, Imperium.Settings.Rendering.TransparentPostpass.Value
-        //     );
-        // }
     }
 
     private static void ToggleHUD(InputAction.CallbackContext callbackContext)
@@ -252,18 +119,6 @@ internal class PlayerManager : ImpLifecycleObject
 
     #region RPC Handlers
 
-    [ImpAttributes.LocalMethod]
-    private static void OnDropitemClient(DropItemRequest request)
-    {
-        // var player = Imperium.StartOfRound.allPlayerScripts.First(player => player.actualClientId == request.PlayerId);
-        // var previousSlot = player.currentItemSlot;
-
-        // Switch to item slot, discard item and switch back
-        // player.SwitchToItemSlot(request.ItemIndex);
-        // player.DiscardHeldObject();
-        // player.SwitchToItemSlot(previousSlot);
-    }
-
     [ImpAttributes.HostOnly]
     private void OnDropItemServer(DropItemRequest request, ulong clientId)
     {
@@ -273,11 +128,8 @@ internal class PlayerManager : ImpLifecycleObject
     [ImpAttributes.LocalMethod]
     private static void OnTeleportPlayerClient(TeleportPlayerRequest request)
     {
-        Imperium.IO.LogInfo($"Teleport player: {request.PlayerId}, mine: {RepoSteamNetwork.CurrentSteamId}");
         if (request.PlayerId == RepoSteamNetwork.CurrentSteamId)
         {
-            Imperium.IO.LogInfo(
-                $"Player teleport request client received. Position: {Formatting.FormatVector(request.Destination)}");
             Imperium.Player.Spawn(request.Destination, Quaternion.identity);
             Imperium.Player.rb.position = request.Destination;
             PlayerController.instance.rb.position = request.Destination;

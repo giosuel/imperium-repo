@@ -10,15 +10,6 @@ namespace Imperium.Core.Settings;
 internal class RenderingSettings(ConfigFile config, IBinding<bool> isSceneLoaded, IBinding<bool> isEnabled)
     : SettingsContainer(config)
 {
-    internal readonly ImpConfig<float> ResolutionMultiplier = new(
-        config,
-        "Rendering.General",
-        "ResolutionMultiplier",
-        1,
-        primaryUpdate: _ => PlayerManager.UpdateCameras(),
-        ignoreRefresh: true
-    );
-
     internal readonly ImpConfig<float> FogStart = new(
         config,
         "Rendering.General",

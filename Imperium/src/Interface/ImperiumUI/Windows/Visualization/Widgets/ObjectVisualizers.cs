@@ -161,14 +161,14 @@ internal class ObjectVisualizers : ImpWidget
 
     private static void ToggleEntityConfigs(Func<EntityGizmoConfig, ImpBinding<bool>> configGetter)
     {
-        var total = Imperium.Visualization.EntityGizmos.EntityInfoConfigs.Count;
-        var activated = Imperium.Visualization.EntityGizmos.EntityInfoConfigs.Values.Count(
+        var total = Imperium.Visualization.EnemyGizmos.EntityInfoConfigs.Count;
+        var activated = Imperium.Visualization.EnemyGizmos.EntityInfoConfigs.Values.Count(
             config => configGetter(config).Value
         );
 
         // Set all active if at least half are inactive and vice-versa
         var setActive = activated < total / 2;
-        foreach (var entityInfoConfig in Imperium.Visualization.EntityGizmos.EntityInfoConfigs.Values)
+        foreach (var entityInfoConfig in Imperium.Visualization.EnemyGizmos.EntityInfoConfigs.Values)
         {
             configGetter(entityInfoConfig).Set(setActive);
         }
@@ -206,7 +206,7 @@ internal class ObjectVisualizers : ImpWidget
             entityEntryObject.SetActive(true);
 
             var entityEntry = entityEntryObject.AddComponent<ObjectVisualizerEntityEntry>();
-            entityEntry.Init(Imperium.Visualization.EntityGizmos.EntityInfoConfigs[enemy.EnemyName], theme);
+            entityEntry.Init(Imperium.Visualization.EnemyGizmos.EntityInfoConfigs[enemy.EnemyName], theme);
 
             entityEntries[enemy.Enemy.GetInstanceID()] = entityEntry;
         }

@@ -10,6 +10,6 @@ internal static class EnemyStateInvestigatePatch
     [HarmonyPatch("Set")]
     private static void SetPatch(EnemyStateInvestigate __instance, Vector3 position)
     {
-        Imperium.Visualization.EntityGizmos.NoiseVisualizerUpdate(__instance, position);
+        Imperium.Visualization.EnemyGizmos.NoiseVisualizerUpdate(__instance, position);
     }
 }

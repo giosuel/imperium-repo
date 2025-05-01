@@ -14,9 +14,7 @@ namespace Imperium.Interface.ImperiumUI.Windows.Teleport.Widgets;
 
 public class Teleportation : ImpWidget
 {
-    private Button tpMainEntrance;
     private Button tpShip;
-    private Button tpApparatus;
 
     private Transform extractionPointContainer;
     private GameObject extractionPointTemplate;
@@ -29,19 +27,9 @@ public class Teleportation : ImpWidget
 
     protected override void InitWidget()
     {
-        tpMainEntrance = ImpButton.Bind(
-            "Presets/MainEntrance", transform,
-            () => TeleportTo(Imperium.PlayerManager.MainEntranceTPAnchor.Value),
-            theme
-        );
         tpShip = ImpButton.Bind(
-            "Presets/Ship", transform,
-            () => TeleportTo(Imperium.PlayerManager.ShipTPAnchor.Value),
-            theme
-        );
-        tpApparatus = ImpButton.Bind(
-            "Presets/Apparatus", transform,
-            () => TeleportTo(Imperium.PlayerManager.ApparatusTPAnchor.Value),
+            "Presets/Truck", transform,
+            () => TeleportTo(Imperium.PlayerManager.TruckTPAnchor.Value),
             theme
         );
         ImpButton.Bind(
@@ -72,11 +60,7 @@ public class Teleportation : ImpWidget
 
     protected override void OnOpen()
     {
-        tpShip.interactable = Imperium.PlayerManager.ShipTPAnchor.Value != null;
-        tpMainEntrance.interactable = Imperium.PlayerManager.MainEntranceTPAnchor.Value != null
-                                      && Imperium.IsArenaLoaded.Value;
-        tpApparatus.interactable = Imperium.PlayerManager.ApparatusTPAnchor.Value != null
-                                   && Imperium.IsArenaLoaded.Value;
+        tpShip.interactable = Imperium.PlayerManager.TruckTPAnchor.Value != null;
 
         var position = PlayerAvatar.instance.transform.position;
         coordinateX.Set(MathF.Round(position.x, 2), invokeSecondary: false);

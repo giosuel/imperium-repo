@@ -13,12 +13,13 @@ internal static class LevelGeneratorPatch
         if (Imperium.GameManager.ModuleOverride.Value == "")
         {
             __instance.DebugModule = null;
-            return;
         }
-
-        var customModule = Imperium.ObjectManager.LoadedModules.Value
-            .First(module => module.name == Imperium.GameManager.ModuleOverride.Value);
-        __instance.DebugModule = customModule.gameObject;
+        else
+        {
+            var customModule = Imperium.ObjectManager.LoadedModules.Value
+                .First(module => module.name == Imperium.GameManager.ModuleOverride.Value);
+            __instance.DebugModule = customModule.gameObject;
+        }
 
         LevelGenerator.Instance.DebugLevelSize = Imperium.GameManager.CustomLevelSize.Value >= 0
             ? Imperium.GameManager.CustomLevelSize.Value

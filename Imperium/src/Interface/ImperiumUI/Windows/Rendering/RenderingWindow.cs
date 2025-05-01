@@ -14,15 +14,6 @@ internal class RenderingWindow : ImperiumWindow
         var content = transform.Find("Content");
 
         ImpSlider.Bind(
-            path: "Resolution",
-            container: content,
-            valueBinding: Imperium.Settings.Rendering.ResolutionMultiplier,
-            indicatorFormatter: value => $"{Formatting.FormatFloatToThreeDigits(value)}",
-            debounceTime: 0.2f,
-            theme: theme
-        );
-
-        ImpSlider.Bind(
             path: "FogStart",
             container: content,
             valueBinding: Imperium.Settings.Rendering.FogStart,
