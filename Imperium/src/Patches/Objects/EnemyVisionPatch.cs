@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using HarmonyLib;
-using Imperium.Util;
-using MonoMod.Utils;
-using Photon.Pun;
 using RepoSteamNetworking.API;
 
 namespace Imperium.Patches.Objects;
@@ -12,32 +10,41 @@ namespace Imperium.Patches.Objects;
 [HarmonyPatch(typeof(EnemyVision))]
 internal static class EnemyVisionPatch
 {
-    private static List<PlayerAvatar> playerListBackup;
+    [HarmonyTranspiler]
+    [HarmonyPatch("Vision", MethodType.Enumerator)]
+    private static IEnumerable<CodeInstruction> VisionTranspiler(IEnumerable<CodeInstruction> instructions)
+    {
+        return new CodeMatcher(instructions)
+            .MatchForward(
+                true,
+                new CodeMatch(
+                    OpCodes.Ldfld, AccessTools.Field(typeof(GameDirector), nameof(GameDirector.PlayerList))
+                )
+            )
+            .Repeat(match => match
+                .Advance(1)
+                .Insert(Transpilers.EmitDelegate(GetPlayerList))
+            )
+            .Instructions();
+    }
 
     [HarmonyPostfix]
     [HarmonyPatch("Vision")]
-    private static IEnumerator VisionPatch(IEnumerator result, EnemyVision __instance)
+    private static IEnumerator Vision(IEnumerator result, EnemyVision __instance)
     {
         while (result.MoveNext())
         {
-            // Restore original player list after vision update
-            if (PhotonNetwork.IsMasterClient && playerListBackup != null)
-            {
-                GameDirector.instance.PlayerList = playerListBackup;
-            }
-
             yield return result.Current;
-
-            // Replace the player list for the next iteration to exclude invisible players
-            if (PhotonNetwork.IsMasterClient)
-            {
-                playerListBackup = GameDirector.instance.PlayerList;
-                GameDirector.instance.PlayerList = GameDirector.instance.PlayerList
-                    .Where(player => !Imperium.PlayerManager.InvisiblePlayers.Value.Contains(player.GetSteamId()))
-                    .ToList();
-            }
 
             Imperium.Visualization.EnemyGizmos.VisionUpdate(__instance);
         }
+    }
+
+    private static List<PlayerAvatar> GetPlayerList(List<PlayerAvatar> players)
+    {
+        Imperium.IO.LogInfo("Replacing player list");
+        return players
+            .Where(player => !Imperium.PlayerManager.InvisiblePlayers.Value.Contains(player.GetSteamId()))
+            .ToList();
     }
 }
