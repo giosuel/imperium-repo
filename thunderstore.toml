@@ -6,8 +6,8 @@ repository = "https://thunderstore.io"
 
 [package]
 namespace = "giosuel"
-name = "Imperium"
-description = "Imperium is a powerful and highly performant all-in-one debugging tool to test and explore game mechanics and functionality in R.E.P.O. "
+name = "Imperium_Repo"
+description = "Imperium is a powerful and highly performant all-in-one debugging tool and creative mode to test and explore game mechanics and functionality in R.E.P.O. "
 websiteUrl = "https://github.com/giosuel/Imperium"
 containsNsfwContent = false
 
