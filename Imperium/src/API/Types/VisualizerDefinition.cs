@@ -7,7 +7,8 @@ using UnityEngine;
 
 namespace Imperium.API.Types;
 
-public delegate IEnumerable<GameObject> VisualizerFunc(GameObject target, float size, Material material = null, bool overrideInactive = false);
+public delegate IEnumerable<GameObject> VisualizerFunc(GameObject target, float size, Material material = null,
+    bool overrideInactive = false);
 
 public record VisualizerDefinition(
     string identifier,

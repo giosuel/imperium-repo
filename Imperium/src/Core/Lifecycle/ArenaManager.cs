@@ -1,8 +1,6 @@
 #region
 
 using Imperium.Networking;
-using Imperium.Util;
-using Photon.Pun;
 
 #endregion
 
@@ -12,7 +10,6 @@ internal class ArenaManager : ImpLifecycleObject
 {
     protected override void Init()
     {
-
     }
 
     internal readonly ImpNetworkBinding<bool> DisableGameOver = new(

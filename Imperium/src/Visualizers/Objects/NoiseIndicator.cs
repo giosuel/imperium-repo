@@ -1,13 +1,8 @@
 #region
 
-using System;
 using Imperium.Util;
 using Librarium;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using Quaternion = UnityEngine.Quaternion;
-using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
 #endregion

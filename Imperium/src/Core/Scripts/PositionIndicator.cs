@@ -1,12 +1,9 @@
 #region
 
 using System;
-using Imperium.Util;
-using Librarium;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using ImpMath = Imperium.Util.ImpMath;
-using Quaternion = UnityEngine.Quaternion;
 using Vector3 = UnityEngine.Vector3;
 
 #endregion

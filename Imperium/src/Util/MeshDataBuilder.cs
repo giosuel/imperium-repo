@@ -1,11 +1,14 @@
+#region
+
 using UnityEngine;
+
+#endregion
 
 namespace Imperium.Util;
 
 /// <summary>
-/// Used to recalculate the meshd data for the wireframe shader.
-///
-/// Source: https://github.com/ArturoNereu/WireframeShaderGraph
+///     Used to recalculate the meshd data for the wireframe shader.
+///     Source: https://github.com/ArturoNereu/WireframeShaderGraph
 /// </summary>
 public class MeshDataBuilder : MonoBehaviour
 {
@@ -15,39 +18,39 @@ public class MeshDataBuilder : MonoBehaviour
     }
 
     /// <summary>
-    /// We will assign a color to each Vertex in a Triangle on the object's mesh
+    ///     We will assign a color to each Vertex in a Triangle on the object's mesh
     /// </summary>
-    void GenerateMeshData()
+    private void GenerateMeshData()
     {
-        Mesh mesh = GetComponent<MeshFilter>().sharedMesh;
+        var mesh = GetComponent<MeshFilter>().sharedMesh;
 
         SplitMesh(mesh);
         SetVertexColors(mesh);
     }
 
     /// <summary>
-    /// For this approach, we need to make sure there are not shared vertices
-    /// on the mesh, that's why we use this method to split the mesh.
-    /// This will increase the number of vertices, so less optimized.
+    ///     For this approach, we need to make sure there are not shared vertices
+    ///     on the mesh, that's why we use this method to split the mesh.
+    ///     This will increase the number of vertices, so less optimized.
     /// </summary>
     /// <param name="mesh"></param>
-    void SplitMesh(Mesh mesh)
+    private void SplitMesh(Mesh mesh)
     {
-        int[] triangles = mesh.triangles;
-        Vector3[] verts = mesh.vertices;
-        Vector3[] normals = mesh.normals;
-        Vector2[] uvs = mesh.uv;
+        var triangles = mesh.triangles;
+        var verts = mesh.vertices;
+        var normals = mesh.normals;
+        var uvs = mesh.uv;
 
         Vector3[] newVerts;
         Vector3[] newNormals;
         Vector2[] newUvs;
 
-        int n = triangles.Length;
+        var n = triangles.Length;
         newVerts = new Vector3[n];
         newNormals = new Vector3[n];
         newUvs = new Vector2[n];
 
-        for (int i = 0; i < n; i++)
+        for (var i = 0; i < n; i++)
         {
             newVerts[i] = verts[triangles[i]];
             if (triangles.Length > i && normals.Length > triangles[i]) newNormals[i] = normals[triangles[i]];
@@ -66,21 +69,21 @@ public class MeshDataBuilder : MonoBehaviour
     }
 
     /// <summary>
-    /// We paint the vertex color
+    ///     We paint the vertex color
     /// </summary>
     /// <param name="mesh"></param>
-    void SetVertexColors(Mesh mesh)
+    private void SetVertexColors(Mesh mesh)
     {
-        Color[] colorCoords = new[]
+        var colorCoords = new[]
         {
             new Color(1, 0, 0),
             new Color(0, 1, 0),
             new Color(0, 0, 1),
         };
 
-        Color32[] vertexColors = new Color32[mesh.vertices.Length];
+        var vertexColors = new Color32[mesh.vertices.Length];
 
-        for (int i = 0; i < vertexColors.Length; i += 3)
+        for (var i = 0; i < vertexColors.Length; i += 3)
         {
             vertexColors[i] = colorCoords[0];
             vertexColors[i + 1] = colorCoords[1];

@@ -1,9 +1,12 @@
+#region
+
 using System.Diagnostics;
 using System.Linq;
 using HarmonyLib;
-using Photon.Pun;
 using RepoSteamNetworking.API;
 using UnityEngine;
+
+#endregion
 
 namespace Imperium.Patches.Systems;
 
@@ -12,7 +15,8 @@ internal static class EnemyDirectorPatch
 {
     [HarmonyPrefix]
     [HarmonyPatch("SetInvestigate")]
-    private static bool SetInvestigatePrefixPatch(EnemyDirector __instance, Vector3 position, float radius, out bool __state)
+    private static bool SetInvestigatePrefixPatch(EnemyDirector __instance, Vector3 position, float radius,
+        out bool __state)
     {
         if (!SemiFunc.IsMasterClientOrSingleplayer())
         {
@@ -45,6 +49,6 @@ internal static class EnemyDirectorPatch
     [HarmonyPatch("SetInvestigate")]
     private static void SetInvestigatePostfixPatch(EnemyDirector __instance, Vector3 position, float radius, bool __state)
     {
-       Imperium.Visualization.NoiseIndicators.AddNoise(position, radius, !__state);
+        Imperium.Visualization.NoiseIndicators.AddNoise(position, radius, !__state);
     }
 }

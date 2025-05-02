@@ -1,6 +1,10 @@
+#region
+
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+#endregion
 
 namespace Imperium.Core.Input.InputUtilsStatic;
 

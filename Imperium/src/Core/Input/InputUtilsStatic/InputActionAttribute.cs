@@ -1,5 +1,9 @@
+#region
+
 using System;
 using UnityEngine.InputSystem;
+
+#endregion
 
 namespace Imperium.Core.Input.InputUtilsStatic;
 
@@ -22,24 +26,25 @@ public class InputActionAttribute : Attribute
     public readonly string KbmPath;
 
     /// <summary>
-    /// Overrides the generated actionId for this <see cref="InputAction"/>.<remarks>Only needs to be unique within your mod</remarks>
+    ///     Overrides the generated actionId for this <see cref="InputAction" />.
+    ///     <remarks>Only needs to be unique within your mod</remarks>
     /// </summary>
     public string ActionId { get; set; }
 
     public InputActionType ActionType { get; set; } = InputActionType.Button;
 
     /// <summary>
-    /// Sets the interactions of the kbm binding.
+    ///     Sets the interactions of the kbm binding.
     /// </summary>
     public string KbmInteractions { get; set; }
 
     /// <summary>
-    /// Sets the interactions of the gamepad binding.
+    ///     Sets the interactions of the gamepad binding.
     /// </summary>
     public string GamepadInteractions { get; set; }
 
     /// <summary>
-    /// Override the display name of the keybind in-game.
+    ///     Override the display name of the keybind in-game.
     /// </summary>
     public string Name { get; set; }
 }

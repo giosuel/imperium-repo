@@ -1,6 +1,5 @@
 #region
 
-using System;
 using Imperium.Interface.MapUI;
 using Imperium.Util;
 using Librarium.Binding;
@@ -24,7 +23,8 @@ public class ImpMap : ImpScript
 
     private void Awake()
     {
-        var originalMapCam = Map.Instance.transform.parent.Find("Active/Player/Dirt Finder Map Camera").GetComponent<Camera>();
+        var originalMapCam = Map.Instance.transform.parent.Find("Active/Player/Dirt Finder Map Camera")
+            .GetComponent<Camera>();
 
         // var cameraMapObject = Instantiate(originalMapCam, transform);
         var cameraMapObject = new GameObject("Imp_MapCamera");
@@ -87,7 +87,7 @@ public class ImpMap : ImpScript
 
         var multiplier = Mathf.Sign(context.ReadValue<float>()) * (Imperium.Settings.Map.CameraZoom.Value / 10);
         Imperium.Settings.Map.CameraZoom.Set(
-                Mathf.Clamp(Imperium.Settings.Map.CameraZoom.Value - multiplier, 1, 100)
+            Mathf.Clamp(Imperium.Settings.Map.CameraZoom.Value - multiplier, 1, 100)
         );
     }
 

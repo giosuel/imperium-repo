@@ -115,7 +115,7 @@ public static class Formatting
         };
 
     /// <summary>
-    /// Formats a second value to minutes and seconds. E.g. 1m 15s or 45s or 5m
+    ///     Formats a second value to minutes and seconds. E.g. 1m 15s or 45s or 5m
     /// </summary>
     /// <param name="seconds"></param>
     /// <returns></returns>

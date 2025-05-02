@@ -1,6 +1,10 @@
+#region
+
 using System.Reflection;
 using HarmonyLib;
 using MonoMod.Utils;
+
+#endregion
 
 namespace Imperium.Patches.Objects;
 

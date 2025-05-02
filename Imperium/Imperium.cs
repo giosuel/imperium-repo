@@ -1,6 +1,5 @@
 ﻿#region
 
-using System.Reflection;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -16,10 +15,8 @@ using Imperium.Interface.MapUI;
 using Imperium.Interface.SpawningUI;
 using Imperium.Networking;
 using Imperium.Patches;
-using Imperium.Patches.Objects;
 using Imperium.Util;
 using Librarium.Binding;
-using Photon.Pun;
 using UnityEngine;
 using ImpSettings = Imperium.Core.ImpSettings;
 
@@ -102,9 +99,8 @@ public class Imperium : BaseUnityPlugin
     internal static ImpBinding<Camera> ActiveCamera;
 
     /// <summary>
-    /// Imperium initialization (Stage 1)
-    ///
-    /// This happens as soon as BepInEx loads the Imperium plugin.
+    ///     Imperium initialization (Stage 1)
+    ///     This happens as soon as BepInEx loads the Imperium plugin.
     /// </summary>
     private void Awake()
     {
@@ -134,9 +130,8 @@ public class Imperium : BaseUnityPlugin
     }
 
     /// <summary>
-    /// Imperium launch (Stage 2)
-    ///
-    /// This is executed after Imperium access has been granted by the host.
+    ///     Imperium launch (Stage 2)
+    ///     This is executed after Imperium access has been granted by the host.
     /// </summary>
     internal static void Launch()
     {

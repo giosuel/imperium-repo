@@ -1,7 +1,9 @@
-using System.Reflection;
+#region
+
 using HarmonyLib;
-using MonoMod.Utils;
 using UnityEngine;
+
+#endregion
 
 namespace Imperium.Patches.Objects;
 

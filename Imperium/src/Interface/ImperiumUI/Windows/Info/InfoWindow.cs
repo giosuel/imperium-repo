@@ -1,9 +1,7 @@
 #region
 
-using System.Linq;
 using TMPro;
 using UnityEngine;
-using Random = System.Random;
 
 #endregion
 

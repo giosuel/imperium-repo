@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using Imperium.API.Types.Networking;
 using Imperium.Util;
 using Librarium.Binding;
-using Photon.Pun;
 using RepoSteamNetworking.API;
 using RepoSteamNetworking.Networking;
 

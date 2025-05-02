@@ -2,8 +2,6 @@
 
 using System.Linq;
 using Imperium.Networking;
-using Imperium.Util;
-using Photon.Pun;
 
 #endregion
 

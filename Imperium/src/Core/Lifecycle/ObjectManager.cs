@@ -2,29 +2,23 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Imperium.API.Types.Networking;
-using Imperium.Core.Scripts;
 using Imperium.Extensions;
 using Imperium.Networking;
 using Imperium.Types;
 using Imperium.Util;
 using Librarium.Binding;
 using Photon.Pun;
-using REPOLib.Extensions;
 using REPOLib.Modules;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using Random = UnityEngine.Random;
 
 #endregion
 
 namespace Imperium.Core.Lifecycle;
 
 /// <summary>
-/// Lifecycle object that manages all object-related functionality. Keeps track of loaded and currently active objects.
+///     Lifecycle object that manages all object-related functionality. Keeps track of loaded and currently active objects.
 /// </summary>
 internal class ObjectManager : ImpLifecycleObject
 {
@@ -165,7 +159,8 @@ internal class ObjectManager : ImpLifecycleObject
     internal void TeleportEnemy(EnemyTeleportRequest request) => enemyTeleportationRequest.DispatchToServer(request);
 
     [ImpAttributes.RemoteMethod]
-    internal void TeleportValuable(ValuableTeleportRequest request) => valuableTeleportationRequest.DispatchToServer(request);
+    internal void TeleportValuable(ValuableTeleportRequest request) =>
+        valuableTeleportationRequest.DispatchToServer(request);
 
     [ImpAttributes.RemoteMethod]
     internal void CompleteExtraction(ExtractionCompleteRequest request)

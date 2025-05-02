@@ -1,7 +1,6 @@
 #region
 
 using Imperium.Interface.Common;
-using Imperium.Interface.ImperiumUI.Windows.ArenaControl.Widgets;
 using UnityEngine;
 
 #endregion
@@ -102,6 +101,5 @@ internal class GrabberControlWindow : ImperiumWindow
 
     private void InitPhysicsSettings()
     {
-
     }
 }

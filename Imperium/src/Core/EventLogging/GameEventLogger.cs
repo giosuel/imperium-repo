@@ -1,8 +1,5 @@
 #region
 
-using System.Linq;
-using Imperium.Util;
-
 #endregion
 
 namespace Imperium.Core.EventLogging;

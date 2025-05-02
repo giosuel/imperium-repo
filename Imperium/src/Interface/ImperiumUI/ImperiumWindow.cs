@@ -10,6 +10,7 @@ using Librarium.Binding;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using Vector2 = System.Numerics.Vector2;
 
 #endregion
 
@@ -241,9 +242,9 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         }
     }
 
-    internal void PlaceWindow(System.Numerics.Vector2 position, float scale, bool isOpen)
+    internal void PlaceWindow(Vector2 position, float scale, bool isOpen)
     {
-        transform.position = new Vector2(position.X, position.Y);
+        transform.position = new UnityEngine.Vector2(position.X, position.Y);
         transform.localScale = new Vector3(scale * 1, scale * 1, 1);
         scaleFactor = scale;
 
@@ -284,7 +285,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         FocusWindow();
 
         // Set position if is opened the first time
-        windowDefinition.Position = new System.Numerics.Vector2(transform.position.x, transform.position.y);
+        windowDefinition.Position = new Vector2(transform.position.x, transform.position.y);
         windowDefinition.IsOpen = true;
 
         onOpen?.Invoke();
@@ -305,7 +306,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
     private float scaleFactor = 1f;
 
     /// <summary>
-    /// Sets the window's anchors based on the screen side the window is currently placed without moving the window.
+    ///     Sets the window's anchors based on the screen side the window is currently placed without moving the window.
     /// </summary>
     private void SetWindowAnchors()
     {
@@ -314,13 +315,13 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
 
         if (posX < Screen.width / 2f)
         {
-            rect.anchorMin = new Vector2(0, 0.5f);
-            rect.anchorMax = new Vector2(0, 0.5f);
+            rect.anchorMin = new UnityEngine.Vector2(0, 0.5f);
+            rect.anchorMax = new UnityEngine.Vector2(0, 0.5f);
         }
         else
         {
-            rect.anchorMin = new Vector2(1, 0.5f);
-            rect.anchorMax = new Vector2(1, 0.5f);
+            rect.anchorMin = new UnityEngine.Vector2(1, 0.5f);
+            rect.anchorMax = new UnityEngine.Vector2(1, 0.5f);
         }
 
         // Restore original window position
@@ -332,7 +333,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         if (Imperium.InputBindings.StaticMap["Alt"].IsPressed())
         {
             var delta = eventData.delta.magnitude * 0.002f;
-            var windowOrigin = new Vector2(transform.position.x, transform.position.y);
+            var windowOrigin = new UnityEngine.Vector2(transform.position.x, transform.position.y);
             if ((windowOrigin - eventData.position).magnitude <
                 (windowOrigin - eventData.position + eventData.delta).magnitude) delta *= -1;
             scaleFactor = Math.Clamp(scaleFactor + delta, 0.5f, 1f);
@@ -343,8 +344,8 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         }
         else
         {
-            transform.position = (Vector2)transform.position + eventData.delta;
-            windowDefinition.Position = new System.Numerics.Vector2(transform.position.x, transform.position.y);
+            transform.position = (UnityEngine.Vector2)transform.position + eventData.delta;
+            windowDefinition.Position = new Vector2(transform.position.x, transform.position.y);
         }
     }
 

@@ -1,7 +1,11 @@
+#region
+
 using BepInEx.Configuration;
 using Librarium;
 using Librarium.Binding;
 using UnityEngine;
+
+#endregion
 
 namespace Imperium.Core.Settings;
 

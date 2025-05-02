@@ -162,7 +162,8 @@ internal class MinimapOverlay : BaseUI
                 $"{Formatting.FormatVector(playerRotation, separator: "/", roundDigits: 0, unit: "\u00b0")}";
 
             levelText.text = $"{RunManager.instance.levelsCompleted + 1}";
-            extractionText.text = $"{RoundDirector.instance.extractionPointsCompleted}/{RoundDirector.instance.extractionPoints}";
+            extractionText.text =
+                $"{RoundDirector.instance.extractionPointsCompleted}/{RoundDirector.instance.extractionPoints}";
         }
 
         // Only update the compass when it's activated

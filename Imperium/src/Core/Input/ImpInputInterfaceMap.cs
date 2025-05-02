@@ -17,6 +17,7 @@ public class ImpInputInterfaceMap : LcInputActions
 
     [InputAction("<Keyboard>/F8", Name = "Map UI")]
     internal InputAction MapUI { get; set; }
+
     [InputAction("<Keyboard>/F3", Name = "Teleportation Window")]
     internal InputAction TeleportWindow { get; set; }
 }

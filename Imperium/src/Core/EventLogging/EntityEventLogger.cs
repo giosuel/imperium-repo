@@ -1,5 +1,9 @@
+#region
+
 using Imperium.Util;
 using UnityEngine;
+
+#endregion
 
 namespace Imperium.Core.EventLogging;
 

@@ -224,8 +224,6 @@ internal static class ObjectEntryGenerator
     {
         switch (entry.Type)
         {
-            default:
-                break;
         }
     }
 

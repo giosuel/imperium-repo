@@ -1,5 +1,9 @@
+#region
+
 using HarmonyLib;
 using UnityEngine;
+
+#endregion
 
 namespace Imperium.Patches.Objects;
 

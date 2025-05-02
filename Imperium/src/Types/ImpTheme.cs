@@ -14,7 +14,9 @@ namespace Imperium.Types;
 public struct ImpTheme
 {
     internal Color backgroundColor;
+
     internal Color primaryColor;
+
     // Secondary color is currently unused
     internal Color? secondaryColor;
     internal Color textColor;

@@ -54,7 +54,10 @@ public class ImpSlider : MonoBehaviour
     /// <param name="clickAudio">The audio clip that is played when the slider value is changed.</param>
     /// <param name="playClickSound">Whether the click sound playes when the slider value is changed.</param>
     /// <param name="tooltipDefinition">The tooltip definition of the toggle tooltip.</param>
-    /// <param name="negativeIsDefault">When set to true and the binding value is negative, the default value will be displayed instead.</param>
+    /// <param name="negativeIsDefault">
+    ///     When set to true and the binding value is negative, the default value will be displayed
+    ///     instead.
+    /// </param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the slider is interactable</param>
     internal static ImpSlider Bind(
         string path,

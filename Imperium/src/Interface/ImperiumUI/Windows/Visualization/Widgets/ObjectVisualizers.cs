@@ -8,8 +8,8 @@ using Imperium.Interface.Common;
 using Imperium.Interface.ImperiumUI.Windows.Visualization.ObjectVisualizerEntries;
 using Imperium.Types;
 using Imperium.Util;
-using Librarium.Binding;
 using Imperium.Visualizers.Objects;
+using Librarium.Binding;
 using UnityEngine;
 
 #endregion

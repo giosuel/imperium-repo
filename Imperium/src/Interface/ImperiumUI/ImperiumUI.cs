@@ -8,11 +8,9 @@ using Imperium.Interface.ImperiumUI.Windows.ArenaControl;
 using Imperium.Interface.ImperiumUI.Windows.ControlCenter;
 using Imperium.Interface.ImperiumUI.Windows.EventLog;
 using Imperium.Interface.ImperiumUI.Windows.GrabberControl;
-using Imperium.Interface.ImperiumUI.Windows.Info;
 using Imperium.Interface.ImperiumUI.Windows.ObjectExplorer;
 using Imperium.Interface.ImperiumUI.Windows.Preferences;
 using Imperium.Interface.ImperiumUI.Windows.Rendering;
-using Imperium.Interface.ImperiumUI.Windows.SaveEditor;
 using Imperium.Interface.ImperiumUI.Windows.Teleport;
 using Imperium.Interface.ImperiumUI.Windows.Visualization;
 using Imperium.Types;
@@ -22,6 +20,7 @@ using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using Vector2 = System.Numerics.Vector2;
 
 #endregion
 
@@ -210,7 +209,7 @@ public class ImperiumUI : BaseUI
     {
         if (dockRect && !wasOpen)
         {
-            StartCoroutine(ImpUtils.Interface.SlideInAnimation(dockRect, Vector2.down));
+            StartCoroutine(ImpUtils.Interface.SlideInAnimation(dockRect, UnityEngine.Vector2.down));
         }
 
         foreach (var windowDefinition in controllerStack.Where(controller => controller.IsOpen))
@@ -277,7 +276,7 @@ public record WindowDefinition
 {
     internal ImperiumWindow Controller { get; init; }
     public Type WindowType { get; init; }
-    public System.Numerics.Vector2 Position { get; set; }
+    public Vector2 Position { get; set; }
     public float ScaleFactor { get; set; } = 1;
     public bool IsOpen { get; set; }
 }

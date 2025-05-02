@@ -1,5 +1,9 @@
+#region
+
 using RepoSteamNetworking.API;
 using RepoSteamNetworking.Networking.Serialization;
+
+#endregion
 
 namespace Imperium.Networking;
 

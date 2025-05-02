@@ -101,7 +101,7 @@ public class ImpFreecam : ImpScript
     private void OnMinicamToggle(InputAction.CallbackContext callbackContext)
     {
         // Minicam is currently disabled
-        
+
         // if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
         // IsMinicamEnabled.Toggle();
     }
@@ -273,7 +273,7 @@ public class ImpFreecam : ImpScript
             var movementY = Imperium.InputBindings.BaseMap.FlyAscend.IsPressed() ? 1 :
                 Imperium.InputBindings.BaseMap.FlyDescend.IsPressed() ? -1 : 0;
             var horizontalMovement = new Vector3(movement.x, 0, movement.y)
-                            * (Imperium.Settings.Freecam.FreecamMovementSpeed.Value * Time.deltaTime);
+                                     * (Imperium.Settings.Freecam.FreecamMovementSpeed.Value * Time.deltaTime);
             var verticalMovement = new Vector3(0, movementY, 0)
                                    * (Imperium.Settings.Freecam.FreecamMovementSpeed.Value * Time.deltaTime);
             cameraTransform.Translate(horizontalMovement);

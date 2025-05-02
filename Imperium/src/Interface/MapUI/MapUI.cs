@@ -1,12 +1,8 @@
 #region
 
-using System.Collections.Generic;
-using System.Linq;
 using Imperium.Core;
 using Imperium.Interface.Common;
 using Imperium.Types;
-using Imperium.Util;
-using Librarium;
 using Librarium.Binding;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -159,6 +155,7 @@ internal class MapUI : BaseUI
     }
 
     private void OnMapReset(InputAction.CallbackContext _) => OnMapReset();
+
     private void OnMapReset()
     {
         MoveCameraToTarget(PlayerAvatar.instance.localCamera.transform);

@@ -1,13 +1,8 @@
 #region
 
-#endregion
-
-#region
-
 using System.Globalization;
 using System.Linq;
 using Imperium.Types;
-using Imperium.Util;
 using Librarium;
 using Librarium.Binding;
 using TMPro;

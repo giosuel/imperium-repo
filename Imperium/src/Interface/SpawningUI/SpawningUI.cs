@@ -73,7 +73,7 @@ internal class SpawningUI : BaseUI
                 _ => SelectItemAndDeselectOthers(currentIndex),
                 typeDisplayNames,
                 theme
-                );
+            );
             entries.Add(spawningEntry);
         }
 

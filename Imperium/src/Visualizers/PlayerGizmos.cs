@@ -3,8 +3,8 @@
 using System.Collections.Generic;
 using BepInEx.Configuration;
 using Imperium.API.Types;
-using Librarium.Binding;
 using Imperium.Visualizers.Objects;
+using Librarium.Binding;
 using UnityEngine;
 
 #endregion

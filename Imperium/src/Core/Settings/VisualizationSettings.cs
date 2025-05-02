@@ -1,7 +1,11 @@
+#region
+
 using BepInEx.Configuration;
 using Imperium.Util;
 using Librarium;
 using Librarium.Binding;
+
+#endregion
 
 namespace Imperium.Core.Settings;
 
@@ -82,6 +86,8 @@ internal class VisualizationSettings(ConfigFile config, IBinding<bool> isSceneLo
         "Visualization.Gizmos",
         "ValuableSpawns",
         false,
-        primaryUpdate: value => Imperium.Visualization.StaticVisualizers.Point<ValuableVolume>(value, 0.2f, ImpAssets.FresnelBlue, overrideInactive: true)
+        primaryUpdate: value =>
+            Imperium.Visualization.StaticVisualizers.Point<ValuableVolume>(value, 0.2f, ImpAssets.FresnelBlue,
+                overrideInactive: true)
     );
 }

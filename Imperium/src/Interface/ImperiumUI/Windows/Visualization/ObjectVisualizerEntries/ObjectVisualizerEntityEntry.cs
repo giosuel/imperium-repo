@@ -2,8 +2,8 @@
 
 using Imperium.Interface.Common;
 using Imperium.Types;
-using Librarium.Binding;
 using Imperium.Visualizers.Objects;
+using Librarium.Binding;
 using TMPro;
 using UnityEngine;
 

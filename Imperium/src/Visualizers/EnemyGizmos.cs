@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
 using Imperium.API.Types;
-using Librarium.Binding;
 using Imperium.Visualizers.Objects;
+using Librarium.Binding;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

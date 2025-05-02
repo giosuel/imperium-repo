@@ -1,5 +1,9 @@
+#region
+
 using System.Linq;
 using HarmonyLib;
+
+#endregion
 
 namespace Imperium.Patches.Objects;
 

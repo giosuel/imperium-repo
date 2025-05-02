@@ -18,7 +18,7 @@ internal class NavMeshVisualizer : BaseVisualizer<bool, Component>
         Transform parent, ImpBinding<bool> isLoadedBinding, ImpBinding<bool> visibilityBinding
     ) : base(parent, isLoadedBinding, visibilityBinding: visibilityBinding)
     {
-        navMeshParent = new GameObject($"ImpVis_NavMesh");
+        navMeshParent = new GameObject("ImpVis_NavMesh");
         navMeshParent.transform.SetParent(parent);
     }
 

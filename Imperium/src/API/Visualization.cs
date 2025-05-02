@@ -1,5 +1,9 @@
+#region
+
 using Imperium.API.Types;
 using UnityEngine;
+
+#endregion
 
 namespace Imperium.API;
 
@@ -10,7 +14,6 @@ public static class Visualization
     ///     Insights are visualizations of instance fields of components in Lethal Company. They are displayed in the insight
     ///     panels that can be toggled per component type. The insight definition holds all information about the insight
     ///     panel.
-    ///
     ///     Insight definitions support inheritance, meaning components that inherit from another component that already has
     ///     an insight defintions, will inherit from that.
     /// </summary>
@@ -26,7 +29,6 @@ public static class Visualization
     /// <summary>
     ///     Visualizes the colliders of a group of game objects by tag, layer or object type.
     ///     Can display multiple visualizers per object as long as they have different sizes.
-    ///
     ///     When picking component as type, the name of the component type is the identifier.
     /// </summary>
     /// <param name="isOn">Whether the visualizer is turned on or off</param>
@@ -66,7 +68,6 @@ public static class Visualization
     /// <summary>
     ///     Visualizes a group of game objects with a sphere by tag, layer or object type.
     ///     Can display multiple visualizers per object as long as they have different sizes.
-    ///
     ///     When picking component as type, the name of the component type is the identifier.
     /// </summary>
     /// <param name="isOn">Whether the visualizer is turned on or off</param>
@@ -108,7 +109,7 @@ public static class Visualization
     }
 
     /// <summary>
-    /// Refreshes all the currently active static visualizers.
+    ///     Refreshes all the currently active static visualizers.
     /// </summary>
     /// <param name="hardRefresh">Whether to destroy and rebuild all static visualizers.</param>
     public static void Refresh(bool hardRefresh = false)
@@ -119,7 +120,7 @@ public static class Visualization
     }
 
     /// <summary>
-    /// Clears all transient visualizer objects such as noise indicators and refreshes all static visualizers.
+    ///     Clears all transient visualizer objects such as noise indicators and refreshes all static visualizers.
     /// </summary>
     public static void Clear()
     {

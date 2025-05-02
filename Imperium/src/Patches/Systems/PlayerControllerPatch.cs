@@ -1,4 +1,8 @@
+#region
+
 using HarmonyLib;
+
+#endregion
 
 namespace Imperium.Patches.Systems;
 
@@ -9,6 +13,5 @@ internal static class PlayerControllerPatch
     [HarmonyPatch("Update")]
     private static void StartPostfixPatch(PlayerController __instance)
     {
-
     }
 }

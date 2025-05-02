@@ -1,7 +1,11 @@
+#region
+
 using HarmonyLib;
 using Imperium.Core;
 using Imperium.Util;
 using TMPro;
+
+#endregion
 
 namespace Imperium.Patches;
 

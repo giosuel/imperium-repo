@@ -1,14 +1,9 @@
 #region
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using BepInEx.Configuration;
-using Imperium.API.Types;
-using Imperium.Core;
 using Imperium.Util;
-using Librarium.Binding;
 using Librarium;
+using Librarium.Binding;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 

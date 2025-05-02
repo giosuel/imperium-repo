@@ -9,7 +9,8 @@ namespace Imperium.Core;
 
 public abstract class ImpLifecycleObject : MonoBehaviour
 {
-    internal static T Create<T>(Transform parent, ImpBinaryBinding sceneLoaded, IBinding<int> playersConnected) where T : ImpLifecycleObject
+    internal static T Create<T>(Transform parent, ImpBinaryBinding sceneLoaded, IBinding<int> playersConnected)
+        where T : ImpLifecycleObject
     {
         var lifecycleObj = new GameObject($"Imp_{typeof(T).Name}").AddComponent<T>();
         lifecycleObj.transform.SetParent(parent);

@@ -4,8 +4,8 @@ using System;
 using Imperium.Core;
 using Imperium.Types;
 using Imperium.Util;
-using Librarium.Binding;
 using JetBrains.Annotations;
+using Librarium.Binding;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

@@ -23,7 +23,7 @@ internal class LevelPointVisualizer : BaseVisualizer<bool, Component>
         Transform parent, ImpBinding<bool> isLoadedBinding, ImpBinding<bool> visibilityBinding
     ) : base(parent, isLoadedBinding, visibilityBinding)
     {
-        levelPointParent = new GameObject($"ImpVis_LevelPoints");
+        levelPointParent = new GameObject("ImpVis_LevelPoints");
         levelPointParent.transform.SetParent(parent);
     }
 

@@ -1,16 +1,16 @@
+#region
+
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using HarmonyLib;
 using Imperium.API.Types;
 using Imperium.Core.Scripts;
-using Imperium.Types;
 using Imperium.Util;
 using Librarium;
-using Unity.VisualScripting;
 using UnityEngine;
-using Object = UnityEngine.Object;
+
+#endregion
 
 namespace Imperium.Visualizers;
 

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using BepInEx.Configuration;
 using Imperium.API.Types;
-using Imperium.Util;
 using Librarium;
 using Librarium.Binding;
 using UnityEngine;
