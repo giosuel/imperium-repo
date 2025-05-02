@@ -1,5 +1,6 @@
 using HarmonyLib;
 using Imperium.Core;
+using Imperium.Util;
 using TMPro;
 
 namespace Imperium.Patches;
@@ -23,12 +24,18 @@ internal static class PreInitPatches
         if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu ||
             RunManager.instance.levelCurrent == RunManager.instance.levelLobbyMenu)
         {
-
             Imperium.Unload();
         }
         else if (!Imperium.IsImperiumLaunched)
         {
-            Imperium.Networking.RequestImperiumAccess();
+            if (!SemiFunc.IsMultiplayer())
+            {
+                if (!ImpUtils.RunSafe(Imperium.Launch, "Imperium startup failed")) Imperium.DisableImperium();
+            }
+            else
+            {
+                Imperium.Networking.RequestImperiumAccess();
+            }
         }
     }
 
@@ -51,8 +58,9 @@ internal static class PreInitPatches
             RunManager.instance.skipMainMenu = true;
             if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu)
             {
-                RunManager.instance.SetRunLevel();
-                // RunManager.instance.ChangeLevel(_completedLevel: true, _levelFailed: false, RunManager.ChangeLevelType.RunLevel);
+                RunManager.instance.ChangeLevel(
+                    _completedLevel: true, _levelFailed: false, RunManager.ChangeLevelType.RunLevel
+                );
             }
         }
 

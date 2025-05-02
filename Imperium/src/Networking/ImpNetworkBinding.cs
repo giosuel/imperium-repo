@@ -76,7 +76,6 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
         }
         else
         {
-            Imperium.IO.LogDebug($"[NET] Client received binding update {identifier}.");
             OnClientReceived(
                 (BindingUpdateRequest<T>)Convert.ChangeType(packet.Payload, typeof(BindingUpdateRequest<T>))
             );
@@ -85,8 +84,6 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
 
     private void OnServerReceived(BindingUpdateRequest<T> request, ulong senderId)
     {
-        Imperium.IO.LogDebug($"[NET] Server received binding update {identifier}.");
-
         if (senderId != RepoSteamNetwork.CurrentSteamId && !Imperium.Settings.Preferences.AllowClients.Value)
         {
             Imperium.IO.LogDebug($"[NET] Server blocked client message {identifier}.");

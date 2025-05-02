@@ -70,7 +70,8 @@ public class ImpNetworking
             return;
         }
 
-        if (!subscription.AllowUnauthenticated && !ImperiumUsers.Value.Contains((ulong)packet.Header.Target))
+        if (SemiFunc.IsMultiplayer() && !subscription.AllowUnauthenticated &&
+            !ImperiumUsers.Value.Contains(packet.Header.Target))
         {
             Imperium.IO.LogWarning($"[NET] Received packet from unauthenticated client: {packet.Header.Target}. Blocking.");
             return;
@@ -119,8 +120,9 @@ public class ImpNetworking
             {
                 RepoSteamNetwork.SendPacket(packet, destination);
             }
-            else
+            else if (destination != NetworkDestination.ClientsOnly)
             {
+                // Short circuit packet if it was also targeted at the host
                 OnPacketReceived(packet);
             }
         }
