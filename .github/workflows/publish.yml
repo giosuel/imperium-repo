@@ -28,16 +28,23 @@ jobs:
         run: |
           dotnet build -c Release --no-restore
 
-      # Temporary packing only
-      - name: Pack Thunderstore
+      - name: Pack and Publish to Thunderstore
+        env:
+          TCLI_AUTH_TOKEN: ${{ secrets.TCLI_AUTH_TOKEN }}
         run: |
-          dotnet pack -c Release --no-build -target:PackThunderstore
+          dotnet pack -c Release --no-build -target:PublishThunderstore
 
-      # - name: Pack and Publish to Thunderstore
-      #   env:
-      #     TCLI_AUTH_TOKEN: ${{ secrets.TCLI_AUTH_TOKEN }}
-      #   run: |
-      #     dotnet pack -c Release --no-build -target:PublishThunderstore
+      - name: Upload Thunderstore artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: thunderstore-build
+          path: ./artifacts/thunderstore/*.zip
+
+      - name: Upload nupkg artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: nupkg-build
+          path: ./artifacts/package/release/*.nupkg
 
       - name: Publish to NuGet.org
         run: |
