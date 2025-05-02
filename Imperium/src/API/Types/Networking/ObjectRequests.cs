@@ -44,7 +44,13 @@ public readonly struct ExtractionCompleteRequest
     [SerializeField] public int ViewId { get; init; }
 }
 
-public readonly struct ObjectTeleportRequest()
+public readonly struct EnemyTeleportRequest()
+{
+    [SerializeField] public int ViewId { get; init; } = 0;
+    [SerializeField] public Vector3 Destination { get; init; }
+}
+
+public readonly struct ValuableTeleportRequest()
 {
     [SerializeField] public int ViewId { get; init; } = 0;
     [SerializeField] public Vector3 Destination { get; init; }

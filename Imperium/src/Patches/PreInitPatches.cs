@@ -24,12 +24,10 @@ internal static class PreInitPatches
             RunManager.instance.levelCurrent == RunManager.instance.levelLobbyMenu)
         {
 
-            Imperium.IO.LogInfo("Unloading Imperium");
             Imperium.Unload();
         }
         else if (!Imperium.IsImperiumLaunched)
         {
-            Imperium.IO.LogInfo("Launching imperium");
             Imperium.Networking.RequestImperiumAccess();
         }
     }
@@ -51,13 +49,19 @@ internal static class PreInitPatches
         if (mode == LaunchMode.Singleplayer)
         {
             RunManager.instance.skipMainMenu = true;
-            if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu) RunManager.instance.SetRunLevel();
+            if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu)
+            {
+                RunManager.instance.SetRunLevel();
+                // RunManager.instance.ChangeLevel(_completedLevel: true, _levelFailed: false, RunManager.ChangeLevelType.RunLevel);
+            }
         }
 
         if (mode == LaunchMode.Multiplayer)
         {
+            StatsManager.instance.SaveGame(ImpConstants.ImperiumSaveFile);
+
             __instance.MainMenuSetState((int)MainMenuOpen.MainMenuGameModeState.MultiPlayer);
-            SemiFunc.MenuActionHostGame();
+            SemiFunc.MenuActionHostGame(ImpConstants.ImperiumSaveFile);
         }
     }
 }

@@ -25,19 +25,25 @@ internal static class EnemyParentPatch
             .GetField("<>4__this", BindingFlags.Instance | BindingFlags.Public)!;
     }
 
-
-    [HarmonyPrefix]
-    [HarmonyPatch("Despawn")]
-    private static void DespawnPatch(EnemyParent __instance)
+    [HarmonyPostfix]
+    [HarmonyPatch("Awake")]
+    private static void StartPatch(EnemyParent __instance)
     {
-        Imperium.IO.LogInfo($"Entity despawn: {__instance.name}");
+        Imperium.EventLog.EntityEvents.Awake(__instance);
     }
 
-    [HarmonyPrefix]
-    [HarmonyPatch("Spawn")]
-    private static void SpawnPatch(EnemyParent __instance)
+    [HarmonyPostfix]
+    [HarmonyPatch("Despawn")]
+    private static void DespawnRPCPatch(EnemyParent __instance)
     {
-        Imperium.IO.LogInfo($"Entity spawn: {__instance.name}");
+        Imperium.EventLog.EntityEvents.Despawn(__instance);
+    }
+
+    [HarmonyPostfix]
+    [HarmonyPatch("SpawnRPC")]
+    private static void SpawnRPCPatch(EnemyParent __instance)
+    {
+        Imperium.EventLog.EntityEvents.Spawn(__instance);
     }
 
     [HarmonyPrefix]

@@ -42,7 +42,6 @@ internal static class EnemyVisionPatch
 
     private static List<PlayerAvatar> GetPlayerList(List<PlayerAvatar> players)
     {
-        Imperium.IO.LogInfo("Replacing player list");
         return players
             .Where(player => !Imperium.PlayerManager.InvisiblePlayers.Value.Contains(player.GetSteamId()))
             .ToList();

@@ -174,18 +174,28 @@ internal static class ObjectEntryGenerator
                 }, Imperium.Freecam.IsFreecamEnabled.Value ? Imperium.Freecam.transform : null, castGround: true);
                 Imperium.Interface.Close();
                 break;
-            case ObjectType.ExtractionPoint:
             case ObjectType.Entity:
-            case ObjectType.Item:
-            case ObjectType.Valuable:
                 Imperium.PositionIndicator.Activate(position =>
                 {
-                    Imperium.ObjectManager.TeleportObject(new ObjectTeleportRequest
+                    Imperium.ObjectManager.TeleportEnemy(new EnemyTeleportRequest
                     {
                         Destination = position,
                         ViewId = entry.View.ViewID
                     });
                 }, castGround: false);
+                break;
+            case ObjectType.Valuable:
+                Imperium.PositionIndicator.Activate(position =>
+                {
+                    Imperium.ObjectManager.TeleportValuable(new ValuableTeleportRequest
+                    {
+                        Destination = position,
+                        ViewId = entry.View.ViewID
+                    });
+                }, castGround: true);
+                break;
+            case ObjectType.ExtractionPoint:
+            case ObjectType.Item:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

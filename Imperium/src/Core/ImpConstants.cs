@@ -23,7 +23,7 @@ public struct ImpConstants
     public const float DefaultSlideTime = 0.5f;
     public const float DefaultJumpForce = 17f;
 
-    internal const float DefaultMapCameraScale = 20f;
+    internal const float DefaultMapCameraScale = 12f;
 
     internal const int DefaultMapCameraFarClip = 50;
     internal const int DefaultMapCameraNearClip = 9;
@@ -40,6 +40,7 @@ public struct ImpConstants
     internal const float DefaultGrabberForceConstant = 4f;
     internal const float DefaultGrabberMaxForce = 4f;
 
+    internal const string ImperiumSaveFile = "REPO_SAVE_IMPERIUM";
     internal const string GeneralSaveFile = "LCGeneralSaveData";
 
     internal static readonly LayerMask IndicatorMask = LayerMask.GetMask("Default", "PhysGrabObjectHinge");

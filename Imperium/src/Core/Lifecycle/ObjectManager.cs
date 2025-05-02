@@ -101,8 +101,12 @@ internal class ObjectManager : ImpLifecycleObject
     private readonly ImpNetMessage<ItemSpawnRequest> itemSpawnMessage = new("SpawnItem", Imperium.Networking);
     private readonly ImpNetMessage<ValuableSpawnRequest> valuableSpawnMessage = new("SpawnValuable", Imperium.Networking);
 
-    private readonly ImpNetMessage<ObjectTeleportRequest> objectTeleportationRequest = new(
-        "TeleportObject", Imperium.Networking
+    private readonly ImpNetMessage<EnemyTeleportRequest> enemyTeleportationRequest = new(
+        "TeleportEnemy", Imperium.Networking
+    );
+
+    private readonly ImpNetMessage<ValuableTeleportRequest> valuableTeleportationRequest = new(
+        "TeleportValuable", Imperium.Networking
     );
 
     private readonly ImpNetMessage<ObjectDespawnRequest> objectDespawnMessage = new("DespawnObject", Imperium.Networking);
@@ -126,7 +130,6 @@ internal class ObjectManager : ImpLifecycleObject
         Imperium.IsArenaLoaded.onTrigger += FetchPlayers;
 
         objectsChangedEvent.OnClientRecive += RefreshLevelObjects;
-        objectTeleportationRequest.OnClientRecive += OnObjectTeleportRequestClient;
 
         if (SemiFunc.IsMasterClientOrSingleplayer())
         {
@@ -135,9 +138,10 @@ internal class ObjectManager : ImpLifecycleObject
             valuableSpawnMessage.OnServerReceive += OnSpawnValuable;
 
             objectDespawnMessage.OnServerReceive += OnDespawnObject;
-            objectTeleportationRequest.OnServerReceive += OnObjectTeleportRequestServer;
-
             extractionCompleteRequest.OnServerReceive += OnExtractionComplete;
+
+            enemyTeleportationRequest.OnServerReceive += OnEnemyTeleportRequestServer;
+            valuableTeleportationRequest.OnServerReceive += OnValuableTeleportRequestServer;
         }
     }
 
@@ -158,7 +162,10 @@ internal class ObjectManager : ImpLifecycleObject
     internal void DespawnObject(ObjectDespawnRequest request) => objectDespawnMessage.DispatchToServer(request);
 
     [ImpAttributes.RemoteMethod]
-    internal void TeleportObject(ObjectTeleportRequest request) => objectTeleportationRequest.DispatchToServer(request);
+    internal void TeleportEnemy(EnemyTeleportRequest request) => enemyTeleportationRequest.DispatchToServer(request);
+
+    [ImpAttributes.RemoteMethod]
+    internal void TeleportValuable(ValuableTeleportRequest request) => valuableTeleportationRequest.DispatchToServer(request);
 
     [ImpAttributes.RemoteMethod]
     internal void CompleteExtraction(ExtractionCompleteRequest request)
@@ -385,7 +392,7 @@ internal class ObjectManager : ImpLifecycleObject
         for (var i = 0; i < request.Amount; i++)
         {
             var obj = NetworkPrefabs.SpawnNetworkPrefab(prefabId, request.SpawnPosition, Quaternion.identity);
-            if (obj == null)
+            if (!obj)
             {
                 Imperium.IO.LogError($"[SPAWN] Failed to spawn valuable '{request.Name}'.");
                 return;
@@ -410,41 +417,35 @@ internal class ObjectManager : ImpLifecycleObject
     }
 
     [ImpAttributes.HostOnly]
-    private void OnObjectTeleportRequestServer(ObjectTeleportRequest request, ulong clientId)
+    private void OnValuableTeleportRequestServer(ValuableTeleportRequest request, ulong clientId)
     {
-        objectTeleportationRequest.DispatchToClients(request);
+        var obj = CurrentLevelValuables.Value.FirstOrDefault(
+            obj => obj.photonView.ViewID == request.ViewId
+        );
+
+        if (!obj)
+        {
+            Imperium.IO.LogInfo($"[OBJ] Failed to find object to teleport with ID '{request.ViewId}'");
+            return;
+        }
+
+        obj.transform.position = request.Destination;
     }
 
-    [ImpAttributes.LocalMethod]
-    private void OnObjectTeleportRequestClient(ObjectTeleportRequest request)
+    [ImpAttributes.HostOnly]
+    private void OnEnemyTeleportRequestServer(EnemyTeleportRequest request, ulong senderId)
     {
-        // if (!CurrentLevelObjects.TryGetValue(request.NetworkId, out var obj) || !obj)
-        // {
-        //     Imperium.IO.LogError($"[NET] Failed to teleport object item with net ID {request.NetworkId}");
-        //     return;
-        // }
-        //
-        // if (obj.TryGetComponent<GrabbableObject>(out var item))
-        // {
-        //     var itemTransform = item.transform;
-        //     itemTransform.position = request.Destination + Vector3.up;
-        //     item.startFallingPosition = itemTransform.position;
-        //     if (item.transform.parent)
-        //     {
-        //         item.startFallingPosition = item.transform.parent.InverseTransformPoint(item.startFallingPosition);
-        //     }
-        //
-        //     item.FallToGround();
-        //     item.PlayDropSFX();
-        // }
-        // else if (obj.TryGetComponent<Landmine>(out _))
-        // {
-        //     obj.transform.parent.position = request.Destination;
-        // }
-        // else
-        // {
-        //     obj.transform.position = request.Destination;
-        // }
+        var enemy = CurrentLevelEntities.Value.FirstOrDefault(
+            enemy => enemy.photonView.ViewID == request.ViewId
+        );
+
+        if (!enemy)
+        {
+            Imperium.IO.LogInfo($"[OBJ] Failed to find enemy to teleport with ID '{request.ViewId}'");
+            return;
+        }
+
+        enemy.Enemy.EnemyTeleported(request.Destination);
     }
 
     [ImpAttributes.HostOnly]

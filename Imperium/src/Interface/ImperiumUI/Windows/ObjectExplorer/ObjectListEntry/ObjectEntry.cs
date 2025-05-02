@@ -53,7 +53,6 @@ internal class ObjectEntry : MonoBehaviour
         IsObjectActive = new ImpBinding<bool>(true);
         Imperium.ObjectManager.DisabledObjects.onUpdate += disabledObjects =>
         {
-            Imperium.IO.LogInfo("Disabled objects update");
             if (!ObjectEntryGenerator.CanToggle(this)) return;
             ObjectEntryGenerator.ToggleObject(this, !disabledObjects.Contains(View.ViewID));
             IsObjectActive.Set(!disabledObjects.Contains(View.ViewID), invokeSecondary: false);
