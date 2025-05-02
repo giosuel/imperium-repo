@@ -61,7 +61,7 @@ internal class PreferencesWindow : ImperiumWindow
             hosting,
             Imperium.Settings.Preferences.AllowClients,
             theme,
-            interactableBindings: new ImpBinding<bool>(PhotonNetwork.IsMasterClient),
+            interactableBindings: new ImpBinding<bool>(SemiFunc.IsMasterClientOrSingleplayer()),
             tooltipDefinition: new TooltipDefinition
             {
                 Title = "Allow Imperium Clients",

@@ -50,27 +50,27 @@ public class ImpNetEvent : INetworkSubscribable
     internal void DispatchToServer()
     {
         Imperium.IO.LogDebug($"[NET] Client sends event {identifier} to server.");
-        ImpNetworking.SendPacket(identifier, null, NetworkDestination.HostOnly);
+        networking.SendPacket(identifier, null, NetworkDestination.HostOnly);
     }
 
     [ImpAttributes.HostOnly]
     internal void DispatchToClients()
     {
-        if (!PhotonNetwork.IsMasterClient)
+        if (!SemiFunc.IsMasterClientOrSingleplayer())
         {
             Imperium.IO.LogError("[NET] Trying to dispatch to clients from non-host. Blocked by Imperium policy.");
             return;
         }
 
         Imperium.IO.LogDebug($"[NET] Server sends event {identifier} to clients.");
-        ImpNetworking.SendPacket(identifier, null, NetworkDestination.ClientsOnly);
+        networking.SendPacket(identifier, null, NetworkDestination.ClientsOnly);
         OnClientReceived();
     }
 
     [ImpAttributes.HostOnly]
     internal void DispatchToClients(params ulong[] clientIds)
     {
-        if (!PhotonNetwork.IsMasterClient)
+        if (!SemiFunc.IsMasterClientOrSingleplayer())
         {
             Imperium.IO.LogError("[NET] Trying to dispatch to clients from non-host. Blocked by Imperium policy.");
             return;
@@ -78,7 +78,7 @@ public class ImpNetEvent : INetworkSubscribable
 
         Imperium.IO.LogDebug($"[NET] Server sends event {identifier} to clients: {clientIds}.");
 
-        ImpNetworking.SendPacket(
+        networking.SendPacket(
             identifier, null, NetworkDestination.PacketTarget,
             clientIds.Select(id => (SteamId)id).ToArray()
         );

@@ -20,7 +20,7 @@ public class LevelGeneration : ImpWidget
 {
     protected override void InitWidget()
     {
-        var disabledBinding = new ImpBinaryBinding(!PhotonNetwork.IsMasterClient);
+        var disabledBinding = new ImpBinaryBinding(!SemiFunc.IsMasterClientOrSingleplayer());
 
         ImpInput.Bind(
             "Numbers/LevelSize/Input",

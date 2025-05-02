@@ -10,35 +10,35 @@ namespace Imperium.Core.Settings;
 internal class RenderingSettings(ConfigFile config, IBinding<bool> isSceneLoaded, IBinding<bool> isEnabled)
     : SettingsContainer(config)
 {
-    internal readonly ImpConfig<float> FogStart = new(
-        config,
-        "Rendering.General",
-        "FogStart",
-        -1,
-        primaryUpdate: value =>
-        {
-            RenderSettings.fogStartDistance = value < 0
-                ? LevelGenerator.Instance.Level.FogStartDistance
-                : value;
-        }
-    );
-
-    internal readonly ImpConfig<float> FogEnd = new(
-        config,
-        "Rendering.General",
-        "FogEnd",
-        -1,
-        primaryUpdate: value =>
-        {
-            RenderSettings.fogEndDistance = value < 0
-                ? LevelGenerator.Instance.Level.FogEndDistance
-                : value;
-
-            EnvironmentDirector.Instance.MainCamera.farClipPlane = value < 0
-                ? LevelGenerator.Instance.Level.FogEndDistance + 1f
-                : value + 1f;
-        }
-    );
+    // internal readonly ImpConfig<float> FogStart = new(
+    //     config,
+    //     "Rendering.General",
+    //     "FogStart",
+    //     -1,
+    //     primaryUpdate: value =>
+    //     {
+    //         RenderSettings.fogStartDistance = value < 0
+    //             ? LevelGenerator.Instance.Level.FogStartDistance
+    //             : value;
+    //     }
+    // );
+    //
+    // internal readonly ImpConfig<float> FogEnd = new(
+    //     config,
+    //     "Rendering.General",
+    //     "FogEnd",
+    //     -1,
+    //     primaryUpdate: value =>
+    //     {
+    //         RenderSettings.fogEndDistance = value < 0
+    //             ? LevelGenerator.Instance.Level.FogEndDistance
+    //             : value;
+    //
+    //         EnvironmentDirector.Instance.MainCamera.farClipPlane = value < 0
+    //             ? LevelGenerator.Instance.Level.FogEndDistance + 1f
+    //             : value + 1f;
+    //     }
+    // );
 
     internal readonly ImpConfig<bool> PostMain = new(
         config,

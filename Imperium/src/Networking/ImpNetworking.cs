@@ -96,7 +96,7 @@ public class ImpNetworking
         };
     }
 
-    internal static void SendPacket(
+    internal void SendPacket(
         string channel,
         object data,
         NetworkDestination destination = NetworkDestination.Everyone,
@@ -115,13 +115,20 @@ public class ImpNetworking
         }
         else
         {
-            RepoSteamNetwork.SendPacket(packet, destination);
+            if (GameManager.Multiplayer())
+            {
+                RepoSteamNetwork.SendPacket(packet, destination);
+            }
+            else
+            {
+                OnPacketReceived(packet);
+            }
         }
     }
 
     internal void BindAllowClients(IBinding<bool> allowClientsBinding)
     {
-        if (PhotonNetwork.IsMasterClient)
+        if (SemiFunc.IsMasterClientOrSingleplayer())
         {
             allowClientsBinding.onUpdate += ToggleImperiumAccess;
         }
@@ -131,7 +138,7 @@ public class ImpNetworking
 
     internal void SendLog(NetworkNotification report)
     {
-        if (!PhotonNetwork.IsMasterClient) return;
+        if (!SemiFunc.IsMasterClientOrSingleplayer()) return;
 
         networkLog.DispatchToClients(report);
     }
@@ -210,13 +217,13 @@ public class ImpNetworking
         }
 
         // Request network values update from server if client is not host
-        if (!PhotonNetwork.IsMasterClient) clientRequestValues.DispatchToServer();
+        if (!SemiFunc.IsMasterClientOrSingleplayer()) clientRequestValues.DispatchToServer();
     }
 
     [ImpAttributes.LocalMethod]
     private static void OnDisableImperiumAccess()
     {
-        if (PhotonNetwork.IsMasterClient) return;
+        if (SemiFunc.IsMasterClientOrSingleplayer()) return;
 
         Imperium.IO.Send("Imperium access was revoked!", type: NotificationType.AccessControl, isWarning: true);
         Imperium.IO.LogInfo("[NET] Imperium access was revoked!");
@@ -226,7 +233,7 @@ public class ImpNetworking
     [ImpAttributes.LocalMethod]
     private void OnEnableImperiumAccess()
     {
-        if (PhotonNetwork.IsMasterClient) return;
+        if (SemiFunc.IsMasterClientOrSingleplayer()) return;
 
         Imperium.IO.Send("Imperium access was granted!", type: NotificationType.AccessControl);
         Imperium.IO.LogInfo("[NET] Imperium access was granted! Launching Imperium...");
@@ -238,8 +245,8 @@ public class ImpNetworking
         {
             if (!ImpUtils.RunSafe(Imperium.Launch, "Imperium startup failed")) Imperium.DisableImperium();
 
-            // Request network values update from server if client is not host
-            if (!PhotonNetwork.IsMasterClient) clientRequestValues.DispatchToServer();
+            // Request network values update from server
+            clientRequestValues.DispatchToServer();
         }
     }
 

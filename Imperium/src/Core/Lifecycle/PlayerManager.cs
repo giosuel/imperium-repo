@@ -62,7 +62,7 @@ internal class PlayerManager : ImpLifecycleObject
 
         Imperium.InputBindings.BaseMap.ToggleHUD.performed += ToggleHUD;
 
-        if (PhotonNetwork.IsMasterClient)
+        if (SemiFunc.IsMasterClientOrSingleplayer())
         {
             dropItemMessage.OnServerReceive += OnDropItemServer;
             killPlayerMessage.OnServerReceive += OnKillPlayerServer;
@@ -74,8 +74,9 @@ internal class PlayerManager : ImpLifecycleObject
     {
         TruckTPAnchor.Refresh();
 
-        // Load grabber settings as they are reset when the level is loaded
+        // Load grabber and render settings as they are reset when the level is loaded
         Imperium.Settings.Grabber.Load();
+        Imperium.Settings.Rendering.Load();
     }
 
     [ImpAttributes.RemoteMethod]

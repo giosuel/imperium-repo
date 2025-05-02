@@ -128,7 +128,7 @@ internal class ObjectManager : ImpLifecycleObject
         objectsChangedEvent.OnClientRecive += RefreshLevelObjects;
         objectTeleportationRequest.OnClientRecive += OnObjectTeleportRequestClient;
 
-        if (PhotonNetwork.IsMasterClient)
+        if (SemiFunc.IsMasterClientOrSingleplayer())
         {
             entitySpawnMessage.OnServerReceive += OnSpawnEntity;
             itemSpawnMessage.OnServerReceive += OnSpawnItem;

@@ -61,7 +61,7 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
         networking.SubscribeChannel(this.identifier, OnPacketReceived, allowUnauthenticated);
         networking.RegisterSubscriber(this);
 
-        if (masterBinding != null && PhotonNetwork.IsMasterClient) Set(masterBinding.Value);
+        if (masterBinding != null && SemiFunc.IsMasterClientOrSingleplayer()) Set(masterBinding.Value);
     }
 
     private void OnPacketReceived(ImpPacket packet)
@@ -96,7 +96,7 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
         // Invoke optional custom binding (e.g. Calls to vanilla client RPCs)
         // if (request.InvokeServerUpdate) onUpdateServer?.Invoke(request.Payload);
 
-        ImpNetworking.SendPacket(identifier, request, NetworkDestination.ClientsOnly);
+        networking.SendPacket(identifier, request, NetworkDestination.ClientsOnly);
         OnClientReceived(request);
     }
 
@@ -122,7 +122,7 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
     private void SyncedSet(T updatedValue, bool invokeUpdate, bool invokeServerUpdate)
     {
         Value = updatedValue;
-        if (masterBinding != null && PhotonNetwork.IsMasterClient) masterBinding.Set(updatedValue);
+        if (masterBinding != null && SemiFunc.IsMasterClientOrSingleplayer()) masterBinding.Set(updatedValue);
 
         if (invokeUpdate)
         {
@@ -130,7 +130,7 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
             onTriggerSecondary?.Invoke();
         }
 
-        ImpNetworking.SendPacket(identifier, new BindingUpdateRequest<T>
+        networking.SendPacket(identifier, new BindingUpdateRequest<T>
         {
             Payload = updatedValue,
             InvokeUpdate = invokeUpdate,
@@ -155,9 +155,9 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
     [ImpAttributes.HostOnly]
     public void BroadcastToClient(ulong clientId)
     {
-        if (!PhotonNetwork.IsMasterClient) return;
+        if (!SemiFunc.IsMasterClientOrSingleplayer()) return;
 
-        ImpNetworking.SendPacket(identifier, new BindingUpdateRequest<T>
+        networking.SendPacket(identifier, new BindingUpdateRequest<T>
         {
             Payload = Value,
             InvokeUpdate = true

@@ -48,20 +48,20 @@ public class ImpNetMessage<T> : INetworkSubscribable
     internal void DispatchToServer(T data)
     {
         Imperium.IO.LogDebug($"[NET] Client sends message {identifier} to server.");
-        ImpNetworking.SendPacket(identifier, data, NetworkDestination.HostOnly);
+        networking.SendPacket(identifier, data, NetworkDestination.HostOnly);
     }
 
     [ImpAttributes.HostOnly]
     internal void DispatchToClients(T data)
     {
-        if (!PhotonNetwork.IsMasterClient)
+        if (!SemiFunc.IsMasterClientOrSingleplayer())
         {
             Imperium.IO.LogError("[NET] Trying to dispatch to clients from non-host. Blocked by Imperium policy.");
             return;
         }
 
         Imperium.IO.LogDebug($"[NET] Server sends message {identifier} to clients.");
-        ImpNetworking.SendPacket(identifier, data, NetworkDestination.ClientsOnly);
+        networking.SendPacket(identifier, data, NetworkDestination.ClientsOnly);
         OnClientReceived(data);
     }
 

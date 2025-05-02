@@ -124,6 +124,11 @@ internal class PlayerSettings(ConfigFile config, IBinding<bool> isSceneLoaded, I
         config,
         "Player",
         "NightVision",
-        0
+        0,
+        primaryUpdate: value =>
+        {
+            // We need to reset night vision here for some levels that don't do that (e.g. shop)
+            if (value == 0) RenderSettings.ambientLight = LevelGenerator.Instance.Level.FogColor;
+        }
     );
 }
