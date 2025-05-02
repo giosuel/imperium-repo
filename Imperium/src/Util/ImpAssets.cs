@@ -47,6 +47,7 @@ internal abstract class ImpAssets
     internal static Material FresnelYellow;
     internal static Material FresnelGreen;
     internal static Material FresnelRed;
+    internal static Material FresnelOrange;
     internal static Material WireframePurple;
     internal static Material WireframeOrange;
     internal static Material WireframeCyan;
@@ -133,6 +134,7 @@ internal abstract class ImpAssets
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_white.mat", out FresnelWhite),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_blue.mat", out FresnelBlue),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_red.mat", out FresnelRed),
+            LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_orange.mat", out FresnelOrange),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_green.mat", out FresnelGreen),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_yellow.mat", out FresnelYellow),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/wireframe_purple.mat", out WireframePurple),

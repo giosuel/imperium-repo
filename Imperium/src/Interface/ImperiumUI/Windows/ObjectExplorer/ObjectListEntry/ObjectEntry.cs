@@ -53,6 +53,7 @@ internal class ObjectEntry : MonoBehaviour
         IsObjectActive = new ImpBinding<bool>(true);
         Imperium.ObjectManager.DisabledObjects.onUpdate += disabledObjects =>
         {
+            Imperium.IO.LogInfo("Disabled objects update");
             if (!ObjectEntryGenerator.CanToggle(this)) return;
             ObjectEntryGenerator.ToggleObject(this, !disabledObjects.Contains(View.ViewID));
             IsObjectActive.Set(!disabledObjects.Contains(View.ViewID), invokeSecondary: false);
@@ -109,7 +110,12 @@ internal class ObjectEntry : MonoBehaviour
             transform,
             () => ObjectEntryGenerator.DespawnObject(this),
             theme,
-            isIconButton: true
+            isIconButton: true,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Title = "Despawn Enemy",
+                Tooltip = tooltip
+            }
         );
 
         // Spawn button
@@ -118,7 +124,12 @@ internal class ObjectEntry : MonoBehaviour
             transform,
             () => ObjectEntryGenerator.SpawnObject(this),
             theme,
-            isIconButton: true
+            isIconButton: true,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Title = "Spawn Enemy",
+                Tooltip = tooltip
+            }
         );
 
         // Drop button
@@ -127,7 +138,12 @@ internal class ObjectEntry : MonoBehaviour
             transform,
             () => ObjectEntryGenerator.CompleteObject(this),
             theme,
-            isIconButton: true
+            isIconButton: true,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Title = "Complete",
+                Tooltip = tooltip
+            }
         );
 
         // Kill button (Unthemes, as it is red in every theme)

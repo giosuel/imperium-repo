@@ -20,11 +20,18 @@ public class NoiseIndicator : MonoBehaviour
     private bool isDone;
 
     private GameObject normalSphere;
+    private GameObject spawnDecreaseSphere;
     private GameObject mutedSphere;
 
     internal void Awake()
     {
         normalSphere = Geometry.CreatePrimitive(
+            PrimitiveType.Sphere,
+            transform,
+            ImpAssets.FresnelOrange
+        );
+
+        spawnDecreaseSphere = Geometry.CreatePrimitive(
             PrimitiveType.Sphere,
             transform,
             ImpAssets.FresnelRed
@@ -46,9 +53,11 @@ public class NoiseIndicator : MonoBehaviour
 
         mutedSphere.transform.localScale = Vector3.one * radius;
         normalSphere.transform.localScale = Vector3.one * radius;
+        spawnDecreaseSphere.transform.localScale = Vector3.one * radius;
 
         mutedSphere.SetActive(isMuted);
-        normalSphere.SetActive(!isMuted);
+        normalSphere.SetActive(!isMuted && radius < 15);
+        spawnDecreaseSphere.SetActive(!isMuted && radius >= 15);
 
         gameObject.SetActive(true);
     }

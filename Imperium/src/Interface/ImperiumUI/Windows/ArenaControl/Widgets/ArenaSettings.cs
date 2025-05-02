@@ -19,7 +19,7 @@ public class ArenaSettings : ImpWidget
             tooltipDefinition: new TooltipDefinition
             {
                 Title = "Disable Game Over",
-                Description = "Prevents the game from ending when everyone died.",
+                Description = "Prevents the game from ending when everyone dies.",
                 Tooltip = tooltip
             }
         );

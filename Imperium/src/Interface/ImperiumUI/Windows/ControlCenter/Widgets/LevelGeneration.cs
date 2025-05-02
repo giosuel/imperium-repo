@@ -67,6 +67,15 @@ public class LevelGeneration : ImpWidget
         ImpButton.Bind(
             "ReloadLevel",
             transform,
+            () => RunManager.instance.ChangeLevel(_completedLevel: false, _levelFailed: false),
+            theme: theme,
+            interactableInvert: true,
+            interactableBindings: disabledBinding
+        );
+
+        ImpButton.Bind(
+            "AdvanceLevel",
+            transform,
             () => RunManager.instance.ChangeLevel(_completedLevel: true, _levelFailed: false),
             theme: theme,
             interactableInvert: true,

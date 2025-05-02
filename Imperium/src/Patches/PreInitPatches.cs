@@ -23,10 +23,13 @@ internal static class PreInitPatches
         if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu ||
             RunManager.instance.levelCurrent == RunManager.instance.levelLobbyMenu)
         {
+
+            Imperium.IO.LogInfo("Unloading Imperium");
             Imperium.Unload();
         }
         else if (!Imperium.IsImperiumLaunched)
         {
+            Imperium.IO.LogInfo("Launching imperium");
             Imperium.Networking.RequestImperiumAccess();
         }
     }

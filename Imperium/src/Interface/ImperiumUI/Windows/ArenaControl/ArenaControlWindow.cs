@@ -18,7 +18,7 @@ internal class ArenaControlWindow : ImperiumWindow
     {
         InitQuotaAndCredits();
 
-        RegisterWidget<ArenaSettings>(transform, "Right");
+        RegisterWidget<ArenaSettings>(transform, "Left");
     }
 
     protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
@@ -26,14 +26,14 @@ internal class ArenaControlWindow : ImperiumWindow
         ImpThemeManager.Style(
             themeUpdate,
             transform,
-            new StyleOverride("Right", Variant.DARKER)
+            new StyleOverride("Left", Variant.DARKER)
         );
     }
 
     private void InitQuotaAndCredits()
     {
         ImpInput.Bind(
-            "Left/GroupCurrency/Input",
+            "Right/GroupCurrency/Input",
             transform,
             Imperium.GameManager.GroupCurrency,
             min: 0,
@@ -41,7 +41,7 @@ internal class ArenaControlWindow : ImperiumWindow
         );
 
         ImpInput.Bind(
-            "Left/TotalHaul/Input",
+            "Right/TotalHaul/Input",
             transform,
             Imperium.GameManager.TotalHaul,
             min: 0,
@@ -49,14 +49,14 @@ internal class ArenaControlWindow : ImperiumWindow
         );
 
         ImpToggle.Bind(
-            "Left/LowHaul",
+            "Right/LowHaul",
             transform,
             Imperium.GameManager.LowHaul,
             theme
         );
 
         ImpButton.Bind(
-            "Left/ShopButtons/BuyItems",
+            "Right/ShopButtons/BuyItems",
             transform,
             () =>
             {

@@ -84,13 +84,23 @@ public abstract class ImpButton
         if (tooltipDefinition != null)
         {
             var interactable = buttonObject.gameObject.AddComponent<ImpInteractable>();
-            interactable.onOver += position => tooltipDefinition.Tooltip.SetPosition(
-                tooltipDefinition.Title,
-                tooltipDefinition.Description,
-                position,
-                tooltipDefinition.HasAccess
-            );
-            interactable.onExit += () => tooltipDefinition.Tooltip.Deactivate();
+            interactable.onOver += position =>
+            {
+                if (!tooltipDefinition.Tooltip) return;
+
+                tooltipDefinition.Tooltip.SetPosition(
+                    tooltipDefinition.Title,
+                    tooltipDefinition.Description,
+                    position,
+                    tooltipDefinition.HasAccess
+                );
+            };
+            interactable.onExit += () =>
+            {
+                if (!tooltipDefinition.Tooltip) return;
+
+                tooltipDefinition.Tooltip.Deactivate();
+            };
         }
 
         if (theme != null)

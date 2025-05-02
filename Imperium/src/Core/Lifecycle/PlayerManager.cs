@@ -73,6 +73,9 @@ internal class PlayerManager : ImpLifecycleObject
     protected override void OnSceneLoad()
     {
         TruckTPAnchor.Refresh();
+
+        // Load grabber settings as they are reset when the level is loaded
+        Imperium.Settings.Grabber.Load();
     }
 
     [ImpAttributes.RemoteMethod]
@@ -115,6 +118,14 @@ internal class PlayerManager : ImpLifecycleObject
         // PlayerAvatar.instance.cursorTip.gameObject.SetActive(!isHidden);
         //
         // Imperium.HUDManager.HideHUD(isHidden);
+    }
+
+    private void Update()
+    {
+        if (!Mathf.Approximately(Imperium.Settings.Player.CustomFieldOfView.Value, 70))
+        {
+            Imperium.ActiveCamera.Value.fieldOfView = Imperium.Settings.Player.CustomFieldOfView.Value;
+        }
     }
 
     #region RPC Handlers

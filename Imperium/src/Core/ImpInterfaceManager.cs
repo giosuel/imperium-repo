@@ -201,8 +201,7 @@ internal class ImpInterfaceManager : MonoBehaviour
             return;
         }
 
-        if (controller.IsOpen || !controller.CanOpen()/* || PlayerAvatar.instance.isTypingChat*/) return;
-        // if (PlayerAvatar.instance.inTerminalMenu) Imperium.Terminal.QuitTerminal();
+        if (controller.IsOpen || !controller.CanOpen()) return;
 
         controller.OnUIOpen();
         imperiumDock.OnUIOpen();
@@ -212,8 +211,7 @@ internal class ImpInterfaceManager : MonoBehaviour
         // Close Unity Explorer menus
         UnityExplorerIntegration.CloseUI();
 
-        // Disable opening UIs when user is currently using terminal due to input selection overwrite
-        // PlayerAvatar.instance.quickMenuManager.CloseQuickMenu();
+        MenuManager.instance.PageCloseAll();
 
         if (closeOthers)
         {
