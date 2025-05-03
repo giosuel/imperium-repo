@@ -1,4 +1,4 @@
-![Imperium Logo](https://github.com/giosuel/imperium-repo/blob/development/assets/imperium-repo_full_alpha.png?raw=true)
+![Imperium Logo](https://raw.githubusercontent.com/giosuel/imperium-repo/refs/heads/main/assets/imperium-repo_full_alpha.png)
 
 # Imperium Repo
 
@@ -11,7 +11,7 @@ This is the official R.E.P.O. port of the original [Imperium for Lethal Company]
 >
 > Imperium fully supports multiplayer as long as the host has it installed. I strongly stand against cheating and trolling in public lobbies. If you really want to cheat, at least put some effort into making your own hacked client!
 
-![Imperium UI](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/imperium.png?raw=true)
+![Imperium UI](https://raw.githubusercontent.com/giosuel/imperium-repo/refs/heads/main/assets/screenshots/imperium.png)
 
 ## Features
 

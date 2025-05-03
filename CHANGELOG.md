@@ -1,5 +1,15 @@
 # Changelog
 
+## Imperium v0.1.2 - Hotfix
+
+### Bug Fixes
+
+-  Fixed a bug that made it so levels would generate with only one module.
+
+### Compatibility
+
+Compatible with REPO release version  `v0.1.2` and beta version `v0.1.2.21_beta`.
+
 ## Imperium v0.1.1 - Hotfix
 
 ### Changes

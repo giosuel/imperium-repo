@@ -49,12 +49,7 @@ internal class MinimapOverlay : BaseUI
         var baseCanvasScale = canvas.scaleFactor;
         Imperium.Settings.Map.MinimapScale.onUpdate += value => InitMapScale(baseCanvasScale * value);
 
-        // InitMapScale(baseCanvasScale * Imperium.Settings.Map.MinimapScale.Value);
         InitCompass();
-
-        var mapToolController = FindObjectOfType<MapToolController>(true);
-        textureFrame.material = mapToolController.DisplayMaterial;
-        textureFrame.texture = mapToolController.DisplayMaterial.mainTexture;
     }
 
     protected override void OnOpen(bool wasOpen)
@@ -66,18 +61,6 @@ internal class MinimapOverlay : BaseUI
     private void InitMapScale(float scaleFactor)
     {
         canvas.scaleFactor = scaleFactor;
-        //
-        // var mapBorderPosition = mapBorder.gameObject.GetComponent<RectTransform>().position;
-        // var mapBorderSize = mapBorder.gameObject.GetComponent<RectTransform>().sizeDelta;
-        // var mapContainerWidth = mapBorderSize.x * canvas.scaleFactor - BorderThickness * 2;
-        // var mapContainerHeight = mapBorderSize.y * canvas.scaleFactor - BorderThickness * 2;
-        //
-        // CameraRect = new Rect(
-        //     (mapBorderPosition.x + BorderThickness) / Screen.width,
-        //     (mapBorderPosition.y + BorderThickness) / Screen.height,
-        //     mapContainerWidth / Screen.width,
-        //     mapContainerHeight / Screen.height
-        // );
     }
 
     protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
