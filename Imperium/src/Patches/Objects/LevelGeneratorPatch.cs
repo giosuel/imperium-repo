@@ -25,9 +25,10 @@ internal static class LevelGeneratorPatch
             __instance.DebugModule = customModule.gameObject;
         }
 
-        LevelGenerator.Instance.DebugLevelSize = Imperium.GameManager.CustomLevelSize.Value >= 0
+        LevelGenerator.Instance.DebugLevelSize = Imperium.GameManager.CustomLevelSize.Value > 0
             ? Imperium.GameManager.CustomLevelSize.Value
-            : -1;
+            : 1;
+        
         LevelGenerator.Instance.DebugAmount = Imperium.GameManager.CustomModuleAmount.Value;
     }
 }
