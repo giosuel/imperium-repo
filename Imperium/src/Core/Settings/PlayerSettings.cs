@@ -92,8 +92,9 @@ internal class PlayerSettings(ConfigFile config, IBinding<bool> isSceneLoaded, I
             PlayerController.instance.playerOriginalMoveSpeed = value;
 
             // The ratio between the default move speed and sprint speed is 2.5
-            PlayerController.instance.SprintSpeed = value * 2.5f;
-            PlayerController.instance.playerOriginalSprintSpeed = value * 2.5f;
+            var sprintSpeed = value * 2.5f + StatsManager.instance.playerUpgradeSpeed[Imperium.Player.steamID];
+            PlayerController.instance.SprintSpeed = sprintSpeed;
+            PlayerController.instance.playerOriginalSprintSpeed = sprintSpeed;
 
             // The ratio between the default move speed and crouch speed is 0.5
             PlayerController.instance.CrouchSpeed = value * 0.5f;
