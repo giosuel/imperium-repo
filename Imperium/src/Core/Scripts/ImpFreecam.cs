@@ -120,7 +120,6 @@ public class ImpFreecam : ImpScript
     {
         if (IsFreecamEnabled.Value) IsFreecamEnabled.SetFalse();
 
-        PlayerManager.ToggleHUD(true);
         camera.enabled = true;
         camera.rect = minicamRect;
 
@@ -129,9 +128,6 @@ public class ImpFreecam : ImpScript
 
     private void OnMinicamDisable()
     {
-        // Hide UI if view is not switching from minicam to freecam
-        if (!IsFreecamEnabled.Value) PlayerManager.ToggleHUD(false);
-
         camera.enabled = false;
 
         camera.rect = new Rect(0, 0, 1, 1);
@@ -147,7 +143,6 @@ public class ImpFreecam : ImpScript
 
         if (IsMinicamEnabled.Value) IsMinicamEnabled.SetFalse();
 
-        PlayerManager.ToggleHUD(true);
         Imperium.InputBindings.FreecamMap.Enable();
         camera.enabled = true;
         enabled = true;
@@ -171,9 +166,6 @@ public class ImpFreecam : ImpScript
         if (!camera) return;
 
         layerSelector.OnUIClose();
-
-        // Hide UI if view is not switching to minimap state
-        if (!IsMinicamEnabled.Value) PlayerManager.ToggleHUD(false);
 
         Imperium.InputBindings.FreecamMap.Disable();
         camera.enabled = false;

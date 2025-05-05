@@ -87,8 +87,8 @@ internal class ObjectExplorerWindow : ImperiumWindow
         PlayersCollapsed.onTrigger += RefreshEntries;
         ExtractionPointsCollapsed.onTrigger += RefreshEntries;
         EntitiesCollapsed.onTrigger += RefreshEntries;
-        ItemsCollapsed.onTrigger += RefreshEntries;
         ValuablesCollapsed.onTrigger += RefreshEntries;
+        ItemsCollapsed.onTrigger += RefreshEntries;
 
         Imperium.ObjectManager.CurrentLevelObjectsChanged += RefreshEntries;
 

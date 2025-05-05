@@ -1,5 +1,6 @@
 #region
 
+using Imperium.Extensions;
 using Imperium.Types;
 using Imperium.Util;
 using TMPro;
@@ -114,6 +115,8 @@ internal class MinimapOverlay : BaseUI
         // Automatically open this UI when nothing else is open
         if (!Imperium.Settings.Map.MinimapEnabled.Value
             || Imperium.Interface.IsOpen()
+            || MenuManager.instance.IsOpen()
+            || ChatManager.instance.IsOpen()
             || Imperium.Freecam.IsFreecamEnabled.Value
             || !Imperium.IsImperiumEnabled.Value
             || Imperium.GameManager.IsGameLoading

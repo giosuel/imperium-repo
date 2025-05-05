@@ -1,5 +1,21 @@
 # Changelog
 
+## Imperium v0.1.4 - Hotfix
+
+### Changes
+
+- Made it so invalid level point connections are highlighted in red.
+- Added the `Z` keybind to toggle cinematic mode.
+- Made it so the NavMesh visualizer automatically updates with the NavMesh.
+
+### Bug Fixes
+
+-  Fixed a bug that made it so the minimap toggles when using the chat.
+
+### Compatibility
+
+Compatible with REPO release version  `v0.1.2` and beta version `v0.1.2.21_beta`.
+
 ## Imperium v0.1.3 - Hotfix
 
 ### Bug Fixes

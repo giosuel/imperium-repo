@@ -11,7 +11,8 @@ public class ArenaSettings : ImpWidget
     protected override void InitWidget()
     {
         ImpToggle.Bind(
-            "ArenaSettings/DisableGameOver",
+            "ArenaSettings/" +
+            "DisableGameOver",
             transform,
             Imperium.ArenaManager.DisableGameOver,
             theme: theme,
