@@ -36,7 +36,7 @@ internal class EnemyGizmos : BaseVisualizer<IReadOnlyCollection<EnemyParent>, En
             EntityInfoConfigs[entity.EnemyName] = new EntityGizmoConfig(entity.EnemyName, config);
         }
 
-        isArenaLoaded.onTrigger += () => HardRefresh(objectsBinding.Value);
+        isArenaLoaded.OnTrigger += () => HardRefresh(objectsBinding.Value);
     }
 
     protected override void OnRefresh(IReadOnlyCollection<EnemyParent> objects)

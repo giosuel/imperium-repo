@@ -1,6 +1,7 @@
 #region
 
 using System.Collections.Generic;
+using Imperium.API.Types;
 using Librarium.Binding;
 
 #endregion

@@ -14,7 +14,7 @@ internal class Visualization
 {
     internal readonly StaticVisualizers StaticVisualizers;
 
-    internal readonly PlayerGizmos PlayerGizmos;
+    // internal readonly PlayerGizmos PlayerGizmos;
     internal readonly EnemyGizmos EnemyGizmos;
 
     internal readonly ObjectInsights ObjectInsights;
@@ -38,7 +38,7 @@ internal class Visualization
             Imperium.Settings.Visualization.LevelPoints
         );
 
-        PlayerGizmos = new PlayerGizmos(visualizerParent.transform, objectManager.CurrentPlayers, config);
+        // PlayerGizmos = new PlayerGizmos(visualizerParent.transform, objectManager.CurrentPlayers, config);
         EnemyGizmos = new EnemyGizmos(
             visualizerParent.transform,
             objectManager.CurrentLevelEntities,
@@ -49,8 +49,8 @@ internal class Visualization
         NoiseIndicators = ImpScript.Create<NoiseIndicators>(visualizerParent.transform);
         StaticVisualizers = ImpScript.Create<StaticVisualizers>(visualizerParent.transform);
 
-        Imperium.IsArenaLoaded.onTrigger += ObjectInsights.Refresh;
-        Imperium.IsArenaLoaded.onTrigger += () => StaticVisualizers.Refresh(true);
+        Imperium.IsArenaLoaded.OnTrigger += ObjectInsights.Refresh;
+        Imperium.IsArenaLoaded.OnTrigger += () => StaticVisualizers.Refresh(true);
 
         Imperium.ObjectManager.CurrentLevelObjectsChanged += ObjectInsights.Refresh;
         Imperium.ObjectManager.CurrentLevelObjectsChanged += () => StaticVisualizers.Refresh();

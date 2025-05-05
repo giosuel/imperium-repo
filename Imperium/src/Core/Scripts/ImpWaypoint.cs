@@ -56,8 +56,8 @@ public class ImpWaypoint : MonoBehaviour
         beacon = beaconObj.transform.Find("Beacon").gameObject;
         beacon.transform.localScale = Vector3.one * 0.6f;
 
-        Imperium.Settings.Waypoint.EnableBeacons.onUpdate += beacon.SetActive;
-        Imperium.Settings.Waypoint.EnableOverlay.onUpdate += indicatorObj.SetActive;
+        Imperium.Settings.Waypoint.EnableBeacons.OnUpdate += beacon.SetActive;
+        Imperium.Settings.Waypoint.EnableOverlay.OnUpdate += indicatorObj.SetActive;
 
         var lineStart = transform.position with { y = -1000 };
         var lineEnd = transform.position with { y = 1000 };
@@ -69,7 +69,7 @@ public class ImpWaypoint : MonoBehaviour
         waypoint = waypointData;
         onHover = onHoverCallback;
 
-        waypointData.IsShown.onUpdate += gameObject.SetActive;
+        waypointData.IsShown.OnUpdate += gameObject.SetActive;
 
         transform.position = waypointData.BeaconPosition;
         var floorPosition = CalculateFloorPosition(waypointData.BeaconPosition);

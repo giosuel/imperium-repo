@@ -20,7 +20,7 @@ internal class ArenaControlWindow : ImperiumWindow
         RegisterWidget<ArenaSettings>(transform, "Left");
     }
 
-    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
+    protected override void OnThemeUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,
@@ -62,7 +62,13 @@ internal class ArenaControlWindow : ImperiumWindow
                 StatsManager.instance.BuyAllItems();
                 SemiFunc.StatSyncAll();
             },
-            theme
+            theme,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Title = "Buy All Items",
+                Description = "Caution! Requires a level reload.",
+                Tooltip = tooltip
+            }
         );
     }
 }

@@ -18,6 +18,9 @@ jobs:
           fetch-depth: 0
           filter: tree:0
 
+      - name: Init Submodules
+        uses: snickerbockers/submodules-init@v4
+
       - name: Setup Dotnet
         uses: actions/setup-dotnet@v4
         with:

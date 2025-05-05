@@ -45,12 +45,12 @@ internal class PlayerManager : ImpLifecycleObject
     {
         teleportPlayerMessage.OnClientRecive += OnTeleportPlayerClient;
 
-        Imperium.Settings.Player.Invisibility.onUpdate += isInvisible =>
+        Imperium.Settings.Player.Invisibility.OnUpdate += isInvisible =>
         {
             ImpUtils.Bindings.ToggleSet(InvisiblePlayers, PlayerAvatar.instance.GetSteamId(), isInvisible);
         };
 
-        Imperium.Settings.Player.Muted.onUpdate += isMuted =>
+        Imperium.Settings.Player.Muted.OnUpdate += isMuted =>
         {
             ImpUtils.Bindings.ToggleSet(MutedPlayers, PlayerAvatar.instance.GetSteamId(), isMuted);
         };
@@ -100,20 +100,21 @@ internal class PlayerManager : ImpLifecycleObject
 
     private static void ToggleHUD(InputAction.CallbackContext callbackContext)
     {
-        // if (PlayerAvatar.instance.quickMenuManager.isMenuOpen ||
-        //     PlayerAvatar.instance.inTerminalMenu ||
-        //     PlayerAvatar.instance.isTypingChat ||
-        //     Imperium.ShipBuildModeManager.InBuildMode) return;
-        //
-        // ToggleHUD(!Imperium.HUDManager.hudHidden);
+        GameDirector.instance.CommandRecordingDirectorToggle();
     }
 
     internal static void ToggleHUD(bool isHidden)
     {
-        // PlayerAvatar.instance.cursorIcon.gameObject.SetActive(!isHidden);
-        // PlayerAvatar.instance.cursorTip.gameObject.SetActive(!isHidden);
-        //
-        // Imperium.HUDManager.HideHUD(isHidden);
+        switch (isHidden)
+        {
+            case true when RecordingDirector.instance != null:
+                Destroy(RecordingDirector.instance.gameObject);
+                FlashlightController.Instance.hideFlashlight = false;
+                break;
+            case false:
+                Instantiate(Resources.Load("Recording Director"));
+                break;
+        }
     }
 
     private void Update()

@@ -122,9 +122,9 @@ internal class ObjectVisualizers : ImpWidget
 
         Refresh();
 
-        Imperium.ObjectManager.LoadedEntities.onTrigger += Refresh;
-        Imperium.ObjectManager.CurrentPlayers.onTrigger += Refresh;
-        Imperium.Visualization.ObjectInsights.InsightVisibilityBindings.onTrigger += Refresh;
+        Imperium.ObjectManager.LoadedEntities.OnTrigger += Refresh;
+        Imperium.ObjectManager.CurrentPlayers.OnTrigger += Refresh;
+        Imperium.Visualization.ObjectInsights.InsightVisibilityBindings.OnTrigger += Refresh;
     }
 
     protected override void OnThemeUpdate(ImpTheme themeUpdate)
@@ -144,20 +144,20 @@ internal class ObjectVisualizers : ImpWidget
         );
     }
 
-    private static void TogglePlayerConfigs(Func<PlayerGizmoConfig, ImpBinding<bool>> configGetter)
-    {
-        var total = Imperium.Visualization.PlayerGizmos.PlayerInfoConfigs.Count;
-        var activated = Imperium.Visualization.PlayerGizmos.PlayerInfoConfigs.Values.Count(
-            config => configGetter(config).Value
-        );
-
-        // Set all active if at least half are inactive and vice-versa
-        var setActive = activated < total / 2;
-        foreach (var playerInfoConfig in Imperium.Visualization.PlayerGizmos.PlayerInfoConfigs.Values)
-        {
-            configGetter(playerInfoConfig).Set(setActive);
-        }
-    }
+    // private static void TogglePlayerConfigs(Func<PlayerGizmoConfig, ImpBinding<bool>> configGetter)
+    // {
+    //     var total = Imperium.Visualization.PlayerGizmos.PlayerInfoConfigs.Count;
+    //     var activated = Imperium.Visualization.PlayerGizmos.PlayerInfoConfigs.Values.Count(
+    //         config => configGetter(config).Value
+    //     );
+    //
+    //     // Set all active if at least half are inactive and vice-versa
+    //     var setActive = activated < total / 2;
+    //     foreach (var playerInfoConfig in Imperium.Visualization.PlayerGizmos.PlayerInfoConfigs.Values)
+    //     {
+    //         configGetter(playerInfoConfig).Set(setActive);
+    //     }
+    // }
 
     private static void ToggleEntityConfigs(Func<EntityGizmoConfig, ImpBinding<bool>> configGetter)
     {

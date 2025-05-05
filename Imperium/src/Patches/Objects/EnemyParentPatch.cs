@@ -2,6 +2,8 @@
 
 using System.Reflection;
 using HarmonyLib;
+using Imperium.API.Types;
+using Librarium;
 using MonoMod.Utils;
 
 #endregion
@@ -37,7 +39,7 @@ internal static class EnemyParentPatch
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch("Despawn")]
+    [HarmonyPatch("DespawnRPC")]
     private static void DespawnRPCPatch(EnemyParent __instance)
     {
         Imperium.EventLog.EntityEvents.Despawn(__instance);

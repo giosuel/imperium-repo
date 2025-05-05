@@ -25,14 +25,14 @@ public abstract class BaseVisualizer<T, R> where R : Component
 
         if (objectsBinding != null)
         {
-            objectsBinding.onUpdate += objects =>
+            objectsBinding.OnUpdate += objects =>
             {
                 OnRefresh(objects);
                 if (visibilityBinding != null) OnVisibilityUpdate(visibilityBinding.Value);
             };
         }
 
-        if (visibilityBinding != null) visibilityBinding.onUpdate += OnVisibilityUpdate;
+        if (visibilityBinding != null) visibilityBinding.OnUpdate += OnVisibilityUpdate;
     }
 
     /// <summary>

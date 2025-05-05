@@ -106,7 +106,7 @@ internal class LayerSelector : BaseUI
 
         if (controlBorder && Freecam)
         {
-            Freecam.IsFreehandModeEnabled.onUpdate += isEnabled => controlBorder.gameObject.SetActive(isEnabled);
+            Freecam.IsFreehandModeEnabled.OnUpdate += isEnabled => controlBorder.gameObject.SetActive(isEnabled);
             controlBorder.gameObject.SetActive(false);
         }
     }

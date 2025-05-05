@@ -7,18 +7,8 @@ internal static class APIHelpers
     /// </summary>
     internal static void AssertImperiumReady()
     {
-        if (Imperium.IsImperiumLaunched) return;
+        if (Imperium.IsImperiumEnabled.Value) return;
 
-        throw new ImperiumAPIException("Failed to execute API call. Imperium has not yet been initialized.");
-    }
-
-    /// <summary>
-    ///     Throws an <see cref="ImperiumAPIException" /> when the game arena is current not loaded.
-    /// </summary>
-    internal static void AssertArenaLoaded()
-    {
-        if (Imperium.IsArenaLoaded) return;
-
-        throw new ImperiumAPIException("The game arena has not yet been loaded.");
+        throw new ImperiumAPIException("Failed to execute API call. Imperium has not yet been enabled.");
     }
 }

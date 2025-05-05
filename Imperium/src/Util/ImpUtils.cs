@@ -199,7 +199,7 @@ public abstract class ImpUtils
             var arrow = parent.Find("Dropdown/Arrow")?.GetComponent<Image>();
             if (arrow) ToggleImageActive(arrow, inverted ? !binding.Value : binding.Value);
 
-            binding.onUpdate += isActive =>
+            binding.OnUpdate += isActive =>
             {
                 dropdown.interactable = inverted ? !isActive : isActive;
 
@@ -214,6 +214,12 @@ public abstract class ImpUtils
          */
         internal static void BindInputInteractable(IBinding<bool> binding, Transform parent, bool inverted = false)
         {
+            if (!parent)
+            {
+                Imperium.IO.LogWarning("Failed to bind input interactable for parent. Ignoring.");
+                return;
+            }
+
             var input = parent.Find("Input").GetComponent<TMP_InputField>();
             input.interactable = inverted ? !binding.Value : binding.Value;
 
@@ -223,7 +229,7 @@ public abstract class ImpUtils
             var text = parent.Find("Input/Text Area/Text")?.GetComponent<TMP_Text>();
             if (text) ToggleTextActive(text, inverted ? !binding.Value : binding.Value);
 
-            binding.onUpdate += isActive =>
+            binding.OnUpdate += isActive =>
             {
                 input.interactable = inverted ? !isActive : isActive;
 

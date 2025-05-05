@@ -14,6 +14,8 @@ internal class GameManager : ImpLifecycleObject
 
     internal readonly ImpNetworkBinding<float> CustomLevelSize = new("CustomMapSize", Imperium.Networking, -1);
     internal readonly ImpNetworkBinding<int> CustomModuleAmount = new("CustomModuleAmount", Imperium.Networking, -1);
+    internal readonly ImpNetworkBinding<int> CustomLevelNumber = new("CustomLevelNumber", Imperium.Networking, -1);
+    internal readonly ImpNetworkBinding<int> OverrideModuleType = new("OverrideModuleType", Imperium.Networking);
 
     internal readonly ImpNetworkBinding<int> GroupCurrency = new(
         "GroupCurrency",
@@ -37,7 +39,7 @@ internal class GameManager : ImpLifecycleObject
 
     protected override void Init()
     {
-        LevelOverride.onUpdate += OnLevelOverrideUpdate;
+        LevelOverride.OnUpdate += OnLevelOverrideUpdate;
     }
 
     protected override void OnSceneLoad()

@@ -21,10 +21,10 @@ public abstract class ImpLifecycleObject : MonoBehaviour
 
     private void Init(ImpBinaryBinding sceneLoaded, IBinding<int> playersConnected)
     {
-        sceneLoaded.onTrue += OnSceneLoad;
-        sceneLoaded.onFalse += OnSceneUnload;
+        sceneLoaded.OnTrue += OnSceneLoad;
+        sceneLoaded.OnFalse += OnSceneUnload;
 
-        playersConnected.onUpdate += OnPlayersUpdate;
+        playersConnected.OnUpdate += OnPlayersUpdate;
 
         Init();
     }

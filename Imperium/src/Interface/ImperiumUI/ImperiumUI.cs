@@ -7,7 +7,7 @@ using Imperium.Interface.Common;
 using Imperium.Interface.ImperiumUI.Windows.ArenaControl;
 using Imperium.Interface.ImperiumUI.Windows.ControlCenter;
 using Imperium.Interface.ImperiumUI.Windows.EventLog;
-using Imperium.Interface.ImperiumUI.Windows.GrabberControl;
+using Imperium.Interface.ImperiumUI.Windows.LevelGeneration;
 using Imperium.Interface.ImperiumUI.Windows.ObjectExplorer;
 using Imperium.Interface.ImperiumUI.Windows.Preferences;
 using Imperium.Interface.ImperiumUI.Windows.Rendering;
@@ -64,10 +64,10 @@ public class ImperiumUI : BaseUI
             keybind: Imperium.InputBindings.InterfaceMap.TeleportWindow,
             canOpenBindings: Imperium.IsArenaLoaded
         );
-        RegisterImperiumWindow<GrabberControlWindow>(
-            ImpAssets.GrabberControlWindowObject,
-            "Center/GrabberControl",
-            "Grabber Control",
+        RegisterImperiumWindow<LevelGeneration>(
+            ImpAssets.LevelGenerationWindowObject,
+            "Center/LevelGeneration",
+            "Level Generation",
             canOpenBindings: Imperium.IsArenaLoaded
         );
         RegisterImperiumWindow<ArenaControlWindow>(
@@ -185,7 +185,7 @@ public class ImperiumUI : BaseUI
 
         var buttonImage = button.GetComponent<Image>();
         buttonImage.enabled = buttonBinding.Value;
-        buttonBinding.onUpdate += isOn =>
+        buttonBinding.OnUpdate += isOn =>
         {
             if (!buttonImage)
             {

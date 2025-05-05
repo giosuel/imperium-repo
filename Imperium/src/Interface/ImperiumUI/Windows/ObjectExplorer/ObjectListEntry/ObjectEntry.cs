@@ -34,7 +34,7 @@ internal class ObjectEntry : MonoBehaviour
     internal GameObject containerObject { get; private set; }
     internal Component component { get; private set; }
 
-    internal PhotonView View { get; private set; }
+    internal int UniqueId { get; private set; }
 
     internal ImpBinding<bool> IsObjectActive { get; private set; }
 
@@ -51,11 +51,11 @@ internal class ObjectEntry : MonoBehaviour
         rect = gameObject.GetComponent<RectTransform>();
 
         IsObjectActive = new ImpBinding<bool>(true);
-        Imperium.ObjectManager.DisabledObjects.onUpdate += disabledObjects =>
+        Imperium.ObjectManager.DisabledObjects.OnUpdate += disabledObjects =>
         {
             if (!ObjectEntryGenerator.CanToggle(this)) return;
-            ObjectEntryGenerator.ToggleObject(this, !disabledObjects.Contains(View.ViewID));
-            IsObjectActive.Set(!disabledObjects.Contains(View.ViewID), invokeSecondary: false);
+            ObjectEntryGenerator.ToggleObject(this, !disabledObjects.Contains(UniqueId));
+            IsObjectActive.Set(!disabledObjects.Contains(UniqueId), invokeSecondary: false);
         };
 
         objectNameText = transform.Find("Name").GetComponent<TMP_Text>();
@@ -64,9 +64,9 @@ internal class ObjectEntry : MonoBehaviour
         // IsObjectActive.onUpdate += isOn => ObjectEntryGenerator.ToggleObject(this, isOn);
 
         // We subscribe to secondary here to be able to skip feedback loop from DisabledObject.onUpdate() above.
-        IsObjectActive.onTriggerSecondary += () =>
+        IsObjectActive.OnTriggerSecondary += () =>
         {
-            Imperium.ObjectManager.DisabledObjects.Set(Imperium.ObjectManager.DisabledObjects.Value.Toggle(View.ViewID));
+            Imperium.ObjectManager.DisabledObjects.Set(Imperium.ObjectManager.DisabledObjects.Value.Toggle(UniqueId));
         };
 
         // Teleport to button
@@ -188,16 +188,18 @@ internal class ObjectEntry : MonoBehaviour
         containerObject = ObjectEntryGenerator.GetContainerObject(this);
         objectNameText.text = objectName;
 
-        View = containerObject.gameObject.GetComponent<PhotonView>();
+        UniqueId = SemiFunc.IsMultiplayer()
+            ? containerObject.GetComponent<PhotonView>().ViewID
+            : containerObject.GetInstanceID();
 
         // Silently change binding to be consistent with the new object's active status
-        if (IsObjectActive.Value == Imperium.ObjectManager.DisabledObjects.Value.Contains(View.ViewID))
+        if (IsObjectActive.Value == Imperium.ObjectManager.DisabledObjects.Value.Contains(UniqueId))
         {
-            IsObjectActive.Set(!Imperium.ObjectManager.DisabledObjects.Value.Contains(View.ViewID), false);
+            IsObjectActive.Set(!Imperium.ObjectManager.DisabledObjects.Value.Contains(UniqueId), false);
         }
 
-        teleportToButton.gameObject.SetActive(true);
-        teleportHereButton.gameObject.SetActive(true);
+        teleportToButton.gameObject.SetActive(ObjectEntryGenerator.CanTeleportTo(this));
+        teleportHereButton.gameObject.SetActive(ObjectEntryGenerator.CanTeleportHere(this));
         destroyButton.gameObject.SetActive(ObjectEntryGenerator.CanDestroy(this));
         activeToggle.gameObject.SetActive(ObjectEntryGenerator.CanToggle(this));
         despawnButton.gameObject.SetActive(ObjectEntryGenerator.CanDespawn(this));

@@ -74,8 +74,8 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
             fadeAnimation = StartCoroutine(hideAnimation());
         };
 
-        theme.onUpdate += OnThemePrimaryUpdate;
-        theme.onUpdate += value =>
+        theme.OnUpdate += OnThemeUpdate;
+        theme.OnUpdate += value =>
         {
             ImpThemeManager.Style(
                 value,
@@ -104,7 +104,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         InitWindow();
 
         // Style UI with the current theme
-        OnThemePrimaryUpdate(theme.Value);
+        OnThemeUpdate(theme.Value);
 
         windowGroup.alpha = 0;
         windowGroup.interactable = false;
@@ -380,7 +380,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
 
     protected void CloseParent() => parent.Close();
 
-    protected virtual void OnThemePrimaryUpdate(ImpTheme themeUpdated)
+    protected virtual void OnThemeUpdate(ImpTheme themeUpdated)
     {
     }
 

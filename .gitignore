@@ -24,3 +24,5 @@ Imperium/resources/assets/imperium_assets.manifest
 artifacts/
 
 *.blend1
+
+.vscode/

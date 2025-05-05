@@ -11,8 +11,12 @@ nav:
  - Quick Start: 'quick-start.md'
  - Imperium API:
     - 'api/index.md'
-    - Insights: 'api/insights.md'
-    - Visualizers: 'api/visualizers.md'
+    - Visualization:
+      - Static Visualizers: 'api/visualization/static.md'
+      - Insights: 'api/visualization/insights.md'
+    - Event Logging: 'api/event-log.md'
+    - Interaction: 'api/interaction.md'
+    - World: 'api/world.md'
  - Issues: 'https://github.com/giosuel/imperium-repo/issues/'
 
 theme:

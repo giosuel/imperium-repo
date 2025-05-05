@@ -5,6 +5,7 @@ using Imperium.Interface.Common;
 using Imperium.Interface.ImperiumUI.Windows.ControlCenter.Widgets;
 using Imperium.Types;
 using Imperium.Util;
+using Librarium;
 using TMPro;
 using UnityEngine;
 
@@ -21,24 +22,19 @@ internal class ControlCenterWindow : ImperiumWindow
         content = transform.Find("Content");
 
         InitPlayerSettings();
-        InitGameSettings();
 
-        RegisterWidget<LevelGeneration>(content, "Left/Generation");
+        RegisterWidget<GrabberControl>(content, "Left");
 
         if (Random.Range(0, 100) >= 99) titleBox.Find("Title").GetComponent<TMP_Text>().text = "Emporium Control Panel";
     }
 
-    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
+    protected override void OnThemeUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,
             transform,
             new StyleOverride("Separator", Variant.DARKER)
         );
-    }
-
-    private void InitGameSettings()
-    {
     }
 
     private void InitPlayerSettings()

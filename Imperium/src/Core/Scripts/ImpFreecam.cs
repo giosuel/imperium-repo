@@ -50,17 +50,17 @@ public class ImpFreecam : ImpScript
         layerSelector.InitUI(Imperium.Interface.Theme);
         layerSelector.Bind(Imperium.Settings.Freecam.LayerSelector, Imperium.Settings.Freecam.FreecamLayerMask);
 
-        IsFreecamEnabled.onTrue += OnFreecamEnable;
-        IsFreecamEnabled.onFalse += OnFreecamDisable;
+        IsFreecamEnabled.OnTrue += OnFreecamEnable;
+        IsFreecamEnabled.OnFalse += OnFreecamDisable;
 
-        IsMinicamEnabled.onTrue += OnMinicamEnable;
-        IsMinicamEnabled.onFalse += OnMinicamDisable;
+        IsMinicamEnabled.OnTrue += OnMinicamEnable;
+        IsMinicamEnabled.OnFalse += OnMinicamDisable;
 
-        IsFreehandModeEnabled.onTrue += OnFreehandModeEnable;
-        IsFreehandModeEnabled.onFalse += OnFreehandModeDisable;
+        IsFreehandModeEnabled.OnTrue += OnFreehandModeEnable;
+        IsFreehandModeEnabled.OnFalse += OnFreehandModeDisable;
 
-        IsMinicamFullscreenEnabled.onTrue += OnMinicamFullscreenEnable;
-        IsMinicamFullscreenEnabled.onFalse += OnMinicamFullscreenDisable;
+        IsMinicamFullscreenEnabled.OnTrue += OnMinicamFullscreenEnable;
+        IsMinicamFullscreenEnabled.OnFalse += OnMinicamFullscreenDisable;
 
         Imperium.InputBindings.BaseMap.Freecam.performed += OnFreecamToggle;
         Imperium.InputBindings.BaseMap.Minicam.performed += OnMinicamToggle;
@@ -68,12 +68,12 @@ public class ImpFreecam : ImpScript
         Imperium.InputBindings.BaseMap.Reset.performed += OnFreecamReset;
         Imperium.InputBindings.FreecamMap.FreehandMode.performed += OnToggleFreehandMode;
         Imperium.InputBindings.FreecamMap.LayerSelector.performed += OnToggleLayerSelector;
-        Imperium.Settings.Freecam.FreecamLayerMask.onUpdate += value => camera.cullingMask = value;
+        Imperium.Settings.Freecam.FreecamLayerMask.OnUpdate += value => camera.cullingMask = value;
 
         // Disable freecam whenever the scene is reloaded
-        Imperium.IsArenaLoaded.onTrigger += IsFreecamEnabled.SetFalse;
+        Imperium.IsArenaLoaded.OnTrigger += IsFreecamEnabled.SetFalse;
 
-        Imperium.Settings.Rendering.AvatarInFreecam.onUpdate += value =>
+        Imperium.Settings.Rendering.AvatarInFreecam.OnUpdate += value =>
         {
             if (!IsFreecamEnabled.Value) return;
             PlayerManager.ToggleLocalAvatar(value);
@@ -120,7 +120,6 @@ public class ImpFreecam : ImpScript
     {
         if (IsFreecamEnabled.Value) IsFreecamEnabled.SetFalse();
 
-        PlayerManager.ToggleHUD(true);
         camera.enabled = true;
         camera.rect = minicamRect;
 
@@ -129,9 +128,6 @@ public class ImpFreecam : ImpScript
 
     private void OnMinicamDisable()
     {
-        // Hide UI if view is not switching from minicam to freecam
-        if (!IsFreecamEnabled.Value) PlayerManager.ToggleHUD(false);
-
         camera.enabled = false;
 
         camera.rect = new Rect(0, 0, 1, 1);
@@ -147,7 +143,6 @@ public class ImpFreecam : ImpScript
 
         if (IsMinicamEnabled.Value) IsMinicamEnabled.SetFalse();
 
-        PlayerManager.ToggleHUD(true);
         Imperium.InputBindings.FreecamMap.Enable();
         camera.enabled = true;
         enabled = true;
@@ -172,9 +167,6 @@ public class ImpFreecam : ImpScript
 
         layerSelector.OnUIClose();
 
-        // Hide UI if view is not switching to minimap state
-        if (!IsMinicamEnabled.Value) PlayerManager.ToggleHUD(false);
-
         Imperium.InputBindings.FreecamMap.Disable();
         camera.enabled = false;
         enabled = false;
@@ -195,18 +187,24 @@ public class ImpFreecam : ImpScript
         Imperium.Settings.Freecam.FreecamFieldOfView.Set(ImpConstants.DefaultFOV);
     }
 
-    private void OnFreehandModeEnable()
+    private static void OnFreehandModeEnable()
     {
         InputManager.instance.inputActions[InputKey.Movement].Enable();
         InputManager.instance.inputActions[InputKey.MouseDelta].Enable();
         InputManager.instance.inputActions[InputKey.MouseInput].Enable();
+        InputManager.instance.inputActions[InputKey.Crouch].Enable();
+        InputManager.instance.inputActions[InputKey.Jump].Enable();
+        InputManager.instance.inputActions[InputKey.Tumble].Enable();
     }
 
-    private void OnFreehandModeDisable()
+    private static void OnFreehandModeDisable()
     {
         InputManager.instance.inputActions[InputKey.Movement].Disable();
         InputManager.instance.inputActions[InputKey.MouseDelta].Disable();
         InputManager.instance.inputActions[InputKey.MouseInput].Disable();
+        InputManager.instance.inputActions[InputKey.Crouch].Disable();
+        InputManager.instance.inputActions[InputKey.Jump].Disable();
+        InputManager.instance.inputActions[InputKey.Tumble].Disable();
     }
 
     private void OnToggleFreehandMode(InputAction.CallbackContext callbackContext) => IsFreehandModeEnabled.Toggle();

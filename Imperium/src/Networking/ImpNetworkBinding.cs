@@ -14,11 +14,11 @@ namespace Imperium.Networking;
 
 public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
 {
-    public event Action<T> onUpdate;
-    public event Action<T> onUpdateSecondary;
+    public event Action<T> OnUpdate;
+    public event Action<T> OnUpdateSecondary;
 
-    public event Action onTrigger;
-    public event Action onTriggerSecondary;
+    public event Action OnTrigger;
+    public event Action OnTriggerSecondary;
 
     private readonly Action<T> onUpdateServer;
 
@@ -53,7 +53,7 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
                 ? defaultValue
                 : currentValue;
 
-        onUpdate += onUpdateClient;
+        OnUpdate += onUpdateClient;
         this.onUpdateServer = onUpdateServer;
         this.masterBinding = masterBinding;
 
@@ -103,8 +103,8 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
 
         if (updatedValue.InvokeUpdate)
         {
-            onUpdate?.Invoke(Value);
-            onTrigger?.Invoke();
+            OnUpdate?.Invoke(Value);
+            OnTrigger?.Invoke();
         }
     }
 
@@ -122,8 +122,8 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
 
         if (invokeUpdate)
         {
-            onUpdateSecondary?.Invoke(updatedValue);
-            onTriggerSecondary?.Invoke();
+            OnUpdateSecondary?.Invoke(updatedValue);
+            OnTriggerSecondary?.Invoke();
         }
 
         networking.SendPacket(identifier, new BindingUpdateRequest<T>

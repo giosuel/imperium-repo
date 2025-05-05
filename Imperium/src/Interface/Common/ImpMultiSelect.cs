@@ -55,7 +55,7 @@ public abstract class ImpMultiSelect
 
         if (placeholder && !string.IsNullOrEmpty(emptyPlaceholder)) placeholder.text = emptyPlaceholder;
 
-        items.onUpdate += updatedItems =>
+        items.OnUpdate += updatedItems =>
         {
             foreach (var item in listEntries) Object.Destroy(item);
             listEntries.Clear();
@@ -91,7 +91,7 @@ public abstract class ImpMultiSelect
 
         if (theme != null)
         {
-            theme.onUpdate += updatedTheme => OnThemeUpdate(updatedTheme, viewContainer.transform);
+            theme.OnUpdate += updatedTheme => OnThemeUpdate(updatedTheme, viewContainer.transform);
             OnThemeUpdate(theme.Value, viewContainer.transform);
         }
     }

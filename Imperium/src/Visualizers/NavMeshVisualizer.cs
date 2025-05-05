@@ -22,7 +22,7 @@ internal class NavMeshVisualizer : BaseVisualizer<bool, Component>
         navMeshParent.transform.SetParent(parent);
     }
 
-    protected override void OnRefresh(bool isSceneLoaded)
+    protected override void OnRefresh(bool _)
     {
         ClearObjects();
 
@@ -43,4 +43,6 @@ internal class NavMeshVisualizer : BaseVisualizer<bool, Component>
             index++;
         }
     }
+
+    internal void Refresh() => OnRefresh(true);
 }

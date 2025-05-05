@@ -45,9 +45,9 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
         RegisterDefaultInsights();
         Refresh();
 
-        foreach (var (_, binding) in InsightVisibilityBindings.Value) binding.onTrigger += Refresh;
+        foreach (var (_, binding) in InsightVisibilityBindings.Value) binding.OnTrigger += Refresh;
 
-        registeredInsights.onTrigger += Refresh;
+        registeredInsights.OnTrigger += Refresh;
     }
 
     internal void Refresh()
@@ -139,8 +139,8 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
         InsightsFor<ExtractionPoint>()
             .SetNameGenerator(_ => "Extraction Point")
             .RegisterInsight("Current State", point => point.currentState.ToString())
-            .RegisterInsight("Haul Goal", point => $"${SemiFunc.DollarGetString(point.haulGoal)}")
-            .RegisterInsight("Haul Current", point => $"${SemiFunc.DollarGetString(point.haulCurrent)}")
+            .RegisterInsight("Haul Goal", point => SemiFunc.DollarGetString(point.haulGoal))
+            .RegisterInsight("Haul Current", point => SemiFunc.DollarGetString(point.haulCurrent))
             .RegisterInsight("In Start Room", point => $"{point.inStartRoom}")
             .SetPositionOverride(DefaultPositionOverride)
             .SetConfigKey("Extraction Points");
@@ -149,12 +149,12 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .SetNameGenerator(valuable => valuable.name.Replace("Valuable ", "").Replace("(Clone)", ""))
             .RegisterInsight(
                 "Value",
-                valuable => $"{SemiFunc.DollarGetString(Mathf.RoundToInt(valuable.dollarValueCurrent))}"
+                valuable => $"${SemiFunc.DollarGetString(Mathf.RoundToInt(valuable.dollarValueCurrent))}"
             )
-            .RegisterInsight("Is Discovered", valuable => $"${valuable.discovered}")
-            .RegisterInsight("Durability", valuable => $"${valuable.durabilityPreset.durability}")
+            .RegisterInsight("Is Discovered", valuable => $"{valuable.discovered}")
+            .RegisterInsight("Durability", valuable => $"{valuable.durabilityPreset.durability}")
             .RegisterInsight("Discovered Timer", valuable => $"{valuable.discoveredReminderTimer:0}s")
-            .SetPositionOverride(DefaultPositionOverride)
+            .SetPositionOverride(valuable => valuable.transform.position)
             .SetConfigKey("Valuables");
     }
 

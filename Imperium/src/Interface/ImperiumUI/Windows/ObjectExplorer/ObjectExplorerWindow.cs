@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using Imperium.Interface.Common;
 using Imperium.Interface.ImperiumUI.Windows.ObjectExplorer.ObjectListEntry;
 using Imperium.Types;
@@ -84,11 +85,11 @@ internal class ObjectExplorerWindow : ImperiumWindow
         ImpButton.CreateCollapse("ItemListTitle/Arrow", contentRect, stateBinding: ItemsCollapsed);
         ImpButton.CreateCollapse("ValuableListTitle/Arrow", contentRect, stateBinding: ValuablesCollapsed);
 
-        PlayersCollapsed.onTrigger += RefreshEntries;
-        ExtractionPointsCollapsed.onTrigger += RefreshEntries;
-        EntitiesCollapsed.onTrigger += RefreshEntries;
-        ItemsCollapsed.onTrigger += RefreshEntries;
-        ValuablesCollapsed.onTrigger += RefreshEntries;
+        PlayersCollapsed.OnTrigger += RefreshEntries;
+        ExtractionPointsCollapsed.OnTrigger += RefreshEntries;
+        EntitiesCollapsed.OnTrigger += RefreshEntries;
+        ValuablesCollapsed.OnTrigger += RefreshEntries;
+        ItemsCollapsed.OnTrigger += RefreshEntries;
 
         Imperium.ObjectManager.CurrentLevelObjectsChanged += RefreshEntries;
 
@@ -112,14 +113,14 @@ internal class ObjectExplorerWindow : ImperiumWindow
             ObjectCategory.Players,
             ObjectCategory.ExtractionPoints,
             ObjectCategory.Entities,
-            ObjectCategory.Valuables,
             ObjectCategory.Items,
+            ObjectCategory.Valuables,
         ];
 
         InitEntryEngine();
     }
 
-    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
+    protected override void OnThemeUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,

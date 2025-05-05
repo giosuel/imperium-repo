@@ -1,5 +1,6 @@
 #region
 
+using System;
 using System.Linq;
 using HarmonyLib;
 
@@ -23,6 +24,22 @@ internal static class LevelGeneratorPatch
             var customModule = Imperium.ObjectManager.LoadedModules.Value
                 .First(module => module.name == Imperium.GameManager.ModuleOverride.Value);
             __instance.DebugModule = customModule.gameObject;
+
+            switch ((Module.Type)Imperium.GameManager.OverrideModuleType.Value)
+            {
+                case Module.Type.Normal:
+                    LevelGenerator.Instance.DebugNormal = true;
+                    break;
+                case Module.Type.Passage:
+                    LevelGenerator.Instance.DebugPassage = true;
+                    break;
+                case Module.Type.DeadEnd:
+                case Module.Type.Extraction:
+                    LevelGenerator.Instance.DebugDeadEnd = true;
+                    break;
+                default:
+                    break;
+            }
         }
 
         LevelGenerator.Instance.DebugLevelSize = Imperium.GameManager.CustomLevelSize.Value > 0
