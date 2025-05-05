@@ -12,6 +12,17 @@ namespace Imperium.Interface.ImperiumUI.Windows.ObjectExplorer.ObjectListEntry;
 
 internal static class ObjectEntryGenerator
 {
+    internal static bool CanTeleportTo(ObjectEntry entry) => entry.Type switch
+    {
+        _ => true
+    };
+
+    internal static bool CanTeleportHere(ObjectEntry entry) => entry.Type switch
+    {
+        ObjectType.ExtractionPoint => false,
+        _ => true
+    };
+
     internal static bool CanDestroy(ObjectEntry entry) => entry.Type switch
     {
         ObjectType.Player => false,
@@ -64,7 +75,7 @@ internal static class ObjectEntryGenerator
             case ObjectType.Entity:
                 Imperium.ObjectManager.DespawnObject(new ObjectDespawnRequest
                 {
-                    ViewId = entry.View.ViewID
+                    ObjectId = entry.UniqueId
                 });
                 break;
             default:
@@ -111,7 +122,7 @@ internal static class ObjectEntryGenerator
             case ObjectType.ExtractionPoint:
                 Imperium.ObjectManager.CompleteExtraction(new ExtractionCompleteRequest
                 {
-                    ViewId = ((ExtractionPoint)entry.component).photonView.ViewID
+                    ObjectId = ((ExtractionPoint)entry.component).photonView.ViewID
                 });
                 break;
             default:
@@ -180,7 +191,7 @@ internal static class ObjectEntryGenerator
                     Imperium.ObjectManager.TeleportEnemy(new EnemyTeleportRequest
                     {
                         Destination = position,
-                        ViewId = entry.View.ViewID
+                        ObjectId = entry.UniqueId
                     });
                 }, castGround: false);
                 break;
@@ -190,12 +201,21 @@ internal static class ObjectEntryGenerator
                     Imperium.ObjectManager.TeleportValuable(new ValuableTeleportRequest
                     {
                         Destination = position,
-                        ViewId = entry.View.ViewID
+                        ObjectId = entry.UniqueId
+                    });
+                }, castGround: true);
+                break;
+            case ObjectType.Item:
+                Imperium.PositionIndicator.Activate(position =>
+                {
+                    Imperium.ObjectManager.TeleportItem(new ItemTeleportRequest
+                    {
+                        Destination = position,
+                        ObjectId = entry.UniqueId
                     });
                 }, castGround: true);
                 break;
             case ObjectType.ExtractionPoint:
-            case ObjectType.Item:
                 break;
             default:
                 throw new ArgumentOutOfRangeException();

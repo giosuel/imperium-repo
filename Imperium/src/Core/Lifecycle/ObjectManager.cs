@@ -88,7 +88,7 @@ internal class ObjectManager : ImpLifecycleObject
         "DisabledObjects", Imperium.Networking, []
     );
 
-    // Used by the server to execute a despawn request from a client via network ID
+    // Used by the server to execute a despawn request from a client via View ID in multiplayer and Instance ID in singleplayer
     private readonly Dictionary<int, GameObject> CurrentLevelObjects = [];
 
     private readonly ImpNetMessage<EntitySpawnRequest> entitySpawnMessage = new("SpawnEntity", Imperium.Networking);
@@ -103,6 +103,10 @@ internal class ObjectManager : ImpLifecycleObject
         "TeleportValuable", Imperium.Networking
     );
 
+    private readonly ImpNetMessage<ItemTeleportRequest> itemTeleportationRequest = new(
+        "TeleportItem", Imperium.Networking
+    );
+
     private readonly ImpNetMessage<ObjectDespawnRequest> objectDespawnMessage = new("DespawnObject", Imperium.Networking);
 
     private readonly ImpNetMessage<ExtractionCompleteRequest> extractionCompleteRequest = new(
@@ -110,8 +114,6 @@ internal class ObjectManager : ImpLifecycleObject
     );
 
     private readonly ImpNetEvent objectsChangedEvent = new("ObjectsChanged", Imperium.Networking);
-
-    private readonly HashSet<int> SpawnedEntityIds = [];
 
     protected override void Init()
     {
@@ -136,6 +138,7 @@ internal class ObjectManager : ImpLifecycleObject
 
             enemyTeleportationRequest.OnServerReceive += OnEnemyTeleportRequestServer;
             valuableTeleportationRequest.OnServerReceive += OnValuableTeleportRequestServer;
+            itemTeleportationRequest.OnServerReceive += OnItemTeleportRequestServer;
         }
     }
 
@@ -161,6 +164,9 @@ internal class ObjectManager : ImpLifecycleObject
     [ImpAttributes.RemoteMethod]
     internal void TeleportValuable(ValuableTeleportRequest request) =>
         valuableTeleportationRequest.DispatchToServer(request);
+
+    [ImpAttributes.RemoteMethod]
+    internal void TeleportItem(ItemTeleportRequest request) => itemTeleportationRequest.DispatchToServer(request);
 
     [ImpAttributes.RemoteMethod]
     internal void CompleteExtraction(ExtractionCompleteRequest request)
@@ -245,25 +251,41 @@ internal class ObjectManager : ImpLifecycleObject
         foreach (var enemy in FindObjectsByType<EnemyParent>(FindObjectsSortMode.None))
         {
             currentLevelEntities.Add(enemy);
-            CurrentLevelObjects[enemy.photonView.ViewID] = enemy.gameObject;
+
+            var uniqueId = SemiFunc.IsMultiplayer()
+                ? enemy.photonView.ViewID
+                : enemy.gameObject.GetInstanceID();
+            CurrentLevelObjects[uniqueId] = enemy.gameObject;
         }
 
         foreach (var item in FindObjectsByType<ItemAttributes>(FindObjectsSortMode.None))
         {
             currentLevelItems.Add(item);
-            CurrentLevelObjects[item.photonView.ViewID] = item.gameObject;
+
+            var uniqueId = SemiFunc.IsMultiplayer()
+                ? item.photonView.ViewID
+                : item.gameObject.GetInstanceID();
+            CurrentLevelObjects[uniqueId] = item.gameObject;
         }
 
         foreach (var valuable in FindObjectsByType<ValuableObject>(FindObjectsSortMode.None))
         {
             currentLevelValuables.Add(valuable);
-            CurrentLevelObjects[valuable.photonView.ViewID] = valuable.gameObject;
+
+            var uniqueId = SemiFunc.IsMultiplayer()
+                ? valuable.photonView.ViewID
+                : valuable.gameObject.GetInstanceID();
+            CurrentLevelObjects[uniqueId] = valuable.gameObject;
         }
 
         foreach (var extractionPoint in FindObjectsByType<ExtractionPoint>(FindObjectsSortMode.None))
         {
             currentLevelExtractionPoints.Add(extractionPoint);
-            CurrentLevelObjects[extractionPoint.photonView.ViewID] = extractionPoint.gameObject;
+
+            var uniqueId = SemiFunc.IsMultiplayer()
+                ? extractionPoint.photonView.ViewID
+                : extractionPoint.gameObject.GetInstanceID();
+            CurrentLevelObjects[uniqueId] = extractionPoint.gameObject;
         }
 
         CurrentLevelItems.Set(currentLevelItems);
@@ -303,17 +325,12 @@ internal class ObjectManager : ImpLifecycleObject
 
             var prefabId = ResourcesHelper.GetEnemyPrefabPath(spawnObject);
             var obj = NetworkPrefabs.SpawnNetworkPrefab(prefabId, request.SpawnPosition, Quaternion.identity);
-            if (obj == null || !obj.TryGetComponent(out EnemyParent enemyParent)) continue;
+            if (!obj || !obj.TryGetComponent(out EnemyParent enemyParent)) continue;
 
             enemyParent.SetupDone = true;
 
             var enemy = obj.GetComponentInChildren<Enemy>();
-            if (enemy != null)
-            {
-                CurrentLevelObjects[enemy.photonView.ViewID] = obj;
-                SpawnedEntityIds.Add(enemy.photonView.ViewID);
-                enemy.EnemyTeleported(request.SpawnPosition);
-            }
+            if (enemy) enemy.EnemyTeleported(request.SpawnPosition);
         }
 
         if (request.SendNotification)
@@ -347,13 +364,11 @@ internal class ObjectManager : ImpLifecycleObject
         for (var i = 0; i < request.Amount; i++)
         {
             var obj = NetworkPrefabs.SpawnNetworkPrefab(prefabId, request.SpawnPosition, Quaternion.identity);
-            if (obj == null)
+            if (!obj)
             {
                 Imperium.IO.LogError($"[SPAWN] Failed to spawn item '{request.Name}'.");
                 return;
             }
-
-            SpawnedEntityIds.Add(obj.GetComponent<PhotonView>().ViewID);
         }
 
         var mountString = request.Amount == 1 ? "A" : $"{request.Amount.ToString()}x";
@@ -392,8 +407,6 @@ internal class ObjectManager : ImpLifecycleObject
                 Imperium.IO.LogError($"[SPAWN] Failed to spawn valuable '{request.Name}'.");
                 return;
             }
-
-            SpawnedEntityIds.Add(obj.GetComponent<PhotonView>().ViewID);
         }
 
         var mountString = request.Amount == 1 ? "A" : $"{request.Amount.ToString()}x";
@@ -412,31 +425,53 @@ internal class ObjectManager : ImpLifecycleObject
     }
 
     [ImpAttributes.HostOnly]
-    private void OnValuableTeleportRequestServer(ValuableTeleportRequest request, ulong clientId)
+    private void OnItemTeleportRequestServer(ItemTeleportRequest request, ulong clientId)
     {
-        var obj = CurrentLevelValuables.Value.FirstOrDefault(
-            obj => obj.photonView.ViewID == request.ViewId
-        );
-
-        if (!obj)
+        if (!CurrentLevelObjects.TryGetValue(request.ObjectId, out var obj))
         {
-            Imperium.IO.LogInfo($"[OBJ] Failed to find object to teleport with ID '{request.ViewId}'");
+            Imperium.IO.LogInfo($"[OBJ] Failed to find item to teleport with ID '{request.ObjectId}'");
             return;
         }
 
-        obj.transform.position = request.Destination;
+        if (!obj.TryGetComponent<ItemAttributes>(out var item))
+        {
+            Imperium.IO.LogInfo($"[OBJ] Failed to find ItemAttributes component on object with ID '{request.ObjectId}'");
+            return;
+        }
+
+        item.gameObject.transform.position = request.Destination;
+    }
+
+    [ImpAttributes.HostOnly]
+    private void OnValuableTeleportRequestServer(ValuableTeleportRequest request, ulong clientId)
+    {
+        if (!CurrentLevelObjects.TryGetValue(request.ObjectId, out var obj))
+        {
+            Imperium.IO.LogInfo($"[OBJ] Failed to find valuable to teleport with ID '{request.ObjectId}'");
+            return;
+        }
+
+        if (!obj.TryGetComponent<ValuableObject>(out var valuableObject))
+        {
+            Imperium.IO.LogInfo($"[OBJ] Failed to find ValuableObject component on object with ID '{request.ObjectId}'");
+            return;
+        }
+
+        valuableObject.gameObject.transform.position = request.Destination;
     }
 
     [ImpAttributes.HostOnly]
     private void OnEnemyTeleportRequestServer(EnemyTeleportRequest request, ulong senderId)
     {
-        var enemy = CurrentLevelEntities.Value.FirstOrDefault(
-            enemy => enemy.photonView.ViewID == request.ViewId
-        );
-
-        if (!enemy)
+        if (!CurrentLevelObjects.TryGetValue(request.ObjectId, out var obj))
         {
-            Imperium.IO.LogInfo($"[OBJ] Failed to find enemy to teleport with ID '{request.ViewId}'");
+            Imperium.IO.LogInfo($"[OBJ] Failed to find enemy to teleport with ID '{request.ObjectId}'");
+            return;
+        }
+
+        if (!obj.TryGetComponent<EnemyParent>(out var enemy))
+        {
+            Imperium.IO.LogInfo($"[OBJ] Failed to find EnemyParent component on object with ID '{request.ObjectId}'");
             return;
         }
 
@@ -446,13 +481,15 @@ internal class ObjectManager : ImpLifecycleObject
     [ImpAttributes.HostOnly]
     private void OnExtractionComplete(ExtractionCompleteRequest request, ulong senderId)
     {
-        var extractionPoint = CurrentLevelExtractionPoints.Value.FirstOrDefault(
-            point => point.photonView.ViewID == request.ViewId
-        );
-
-        if (!extractionPoint)
+        if (!CurrentLevelObjects.TryGetValue(request.ObjectId, out var obj))
         {
-            Imperium.IO.LogInfo($"[OBJ] Failed to find extraction point to complete with ID '{request.ViewId}'");
+            Imperium.IO.LogInfo($"[OBJ] Failed to find extraction point to complete with ID '{request.ObjectId}'");
+            return;
+        }
+
+        if (!obj.TryGetComponent<ExtractionPoint>(out var extractionPoint))
+        {
+            Imperium.IO.LogInfo($"[OBJ] Failed to find ExtractionPoint component on object with ID '{request.ObjectId}'");
             return;
         }
 
@@ -462,9 +499,9 @@ internal class ObjectManager : ImpLifecycleObject
     [ImpAttributes.HostOnly]
     private void OnDespawnObject(ObjectDespawnRequest request, ulong senderId)
     {
-        if (!CurrentLevelObjects.TryGetValue(request.ViewId, out var obj))
+        if (!CurrentLevelObjects.TryGetValue(request.ObjectId, out var obj))
         {
-            Imperium.IO.LogError($"[SPAWN] [R] Failed to despawn object with view ID {request.ViewId}");
+            Imperium.IO.LogError($"[SPAWN] [R] Failed to despawn object with view ID {request.ObjectId}");
             return;
         }
 

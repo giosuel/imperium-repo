@@ -36,23 +36,34 @@ public readonly struct ValuableSpawnRequest()
 
 public readonly struct ObjectDespawnRequest
 {
-    [SerializeField] public int ViewId { get; init; }
+    // ViewId in multiplayer and InstanceId in singleplayer
+    [SerializeField] public int ObjectId { get; init; }
 }
 
 public readonly struct ExtractionCompleteRequest
 {
-    [SerializeField] public int ViewId { get; init; }
+    // ViewId in multiplayer and InstanceId in singleplayer
+    [SerializeField] public int ObjectId { get; init; }
 }
 
-public readonly struct EnemyTeleportRequest()
+public readonly struct EnemyTeleportRequest
 {
-    [SerializeField] public int ViewId { get; init; } = 0;
+    // ViewId in multiplayer and InstanceId in singleplayer
+    [SerializeField] public int ObjectId { get; init; }
     [SerializeField] public Vector3 Destination { get; init; }
 }
 
-public readonly struct ValuableTeleportRequest()
+public readonly struct ValuableTeleportRequest
 {
-    [SerializeField] public int ViewId { get; init; } = 0;
+    // ViewId in multiplayer and InstanceId in singleplayer
+    [SerializeField] public int ObjectId { get; init; }
+    [SerializeField] public Vector3 Destination { get; init; }
+}
+
+public readonly struct ItemTeleportRequest
+{
+    // ViewId in multiplayer and InstanceId in singleplayer
+    [SerializeField] public int ObjectId { get; init; }
     [SerializeField] public Vector3 Destination { get; init; }
 }
 

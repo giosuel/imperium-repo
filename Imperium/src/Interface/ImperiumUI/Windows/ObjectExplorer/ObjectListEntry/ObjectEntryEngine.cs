@@ -49,22 +49,6 @@ internal class ObjectEntryEngine
         AddType(Imperium.ObjectManager.CurrentLevelItems, ObjectType.Item, ObjectCategory.Items);
         AddType(Imperium.ObjectManager.CurrentLevelValuables, ObjectType.Valuable, ObjectCategory.Valuables);
 
-        Imperium.IO.LogInfo($"Players: {Imperium.ObjectManager.CurrentPlayers.Value.Count}");
-        Imperium.IO.LogInfo($"Extraction Points: {Imperium.ObjectManager.CurrentLevelExtractionPoints.Value.Count}");
-        Imperium.IO.LogInfo($"Enemies: {Imperium.ObjectManager.CurrentLevelEntities.Value.Count}");
-        Imperium.IO.LogInfo($"Items: {Imperium.ObjectManager.CurrentLevelItems.Value.Count}");
-        Imperium.IO.LogInfo($"Valuables: {Imperium.ObjectManager.CurrentLevelValuables.Value.Count}");
-
-        foreach (var valuableObject in Imperium.ObjectManager.CurrentLevelValuables.Value)
-        {
-            Imperium.IO.LogInfo($"Valuable: {valuableObject.name}");
-        }
-
-        foreach (var item in Imperium.ObjectManager.CurrentLevelItems.Value)
-        {
-            Imperium.IO.LogInfo($"Item: {item.name}, {item.itemName}");
-        }
-
         incrementalCategoryCounts = GetIncrementalCategoryCounts();
         return (entries, categoryCounts, incrementalCategoryCounts);
     }

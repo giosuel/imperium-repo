@@ -8,11 +8,14 @@
 - Added the `Z` keybind to toggle cinematic mode.
 - Made it so the NavMesh visualizer automatically updates with the NavMesh.
 - Added an option to change the module override type to fix broken generation.
-- Added an option to override the level number.Bug Fixes
+- Added an option to override the level number.
+
+### Bug Fixes
 
 -  Fixed a bug that made it so the minimap toggles when using the chat.
 -  Fixed a bug that made it so the DisableGameOver option did nothing.
 -  Fixed some valuable's insight panels being deastically offset.
+-  Fixed a bug that messed up the object explorer in singleplayer.
 
 ### QoL Changes
 
@@ -21,6 +24,7 @@
 - Improved the materials and colors of the pathfinding visualizers.
 - Made it so the module override list is now sorted alphabetically.
 - Fixed the fonts used in insight panels to match the rest of Imperium.
+- Removed the "Teleport Here" button from extracton points in the object explorer
 
 ### Compatibility
 

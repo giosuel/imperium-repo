@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using Imperium.Interface.Common;
 using Imperium.Interface.ImperiumUI.Windows.ObjectExplorer.ObjectListEntry;
 using Imperium.Types;
@@ -112,8 +113,8 @@ internal class ObjectExplorerWindow : ImperiumWindow
             ObjectCategory.Players,
             ObjectCategory.ExtractionPoints,
             ObjectCategory.Entities,
-            ObjectCategory.Valuables,
             ObjectCategory.Items,
+            ObjectCategory.Valuables,
         ];
 
         InitEntryEngine();
