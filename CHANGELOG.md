@@ -1,22 +1,27 @@
 # Changelog
 
-## Imperium v0.1.4 - Hotfix
+## Imperium v0.1.4 - Bug fixes and QoL improvements
 
 ### Changes
 
 - Made it so invalid level point connections are highlighted in red.
 - Added the `Z` keybind to toggle cinematic mode.
 - Made it so the NavMesh visualizer automatically updates with the NavMesh.
+- Added an option to change the module override type to fix broken generation.
+- Added an option to override the level number.
 
 ### Bug Fixes
 
 -  Fixed a bug that made it so the minimap toggles when using the chat.
 -  Fixed a bug that made it so the DisableGameOver option did nothing.
+-  Fixed some valuable's insight panels being deastically offset.
 
 ### QoL Changes
 
 - Added various tooltips to the UI.
 - Fixed placeholders in the teleportation window.
+- Improved the materials and colors of the pathfinding visualizers.
+- Made it so the module override list is now sorted alphabetically.
 
 ### Compatibility
 

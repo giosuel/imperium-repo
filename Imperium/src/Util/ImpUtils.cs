@@ -214,6 +214,12 @@ public abstract class ImpUtils
          */
         internal static void BindInputInteractable(IBinding<bool> binding, Transform parent, bool inverted = false)
         {
+            if (!parent)
+            {
+                Imperium.IO.LogWarning("Failed to bind input interactable for parent. Ignoring.");
+                return;
+            }
+
             var input = parent.Find("Input").GetComponent<TMP_InputField>();
             input.interactable = inverted ? !binding.Value : binding.Value;
 

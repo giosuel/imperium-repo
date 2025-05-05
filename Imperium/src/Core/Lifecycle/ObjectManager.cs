@@ -224,7 +224,7 @@ internal class ObjectManager : ImpLifecycleObject
         var allLevels = Resources.FindObjectsOfTypeAll<Level>()
             .Where(level => !ImpConstants.LevelBlacklist.Contains(level.NarrativeName))
             .ToList();
-        var allModules = Resources.FindObjectsOfTypeAll<Module>().ToList();
+        var allModules = Resources.FindObjectsOfTypeAll<Module>().OrderBy(module => module.name).ToList();
 
         var allValuables = Valuables.GetValuables().Select(obj => obj.GetComponent<ValuableObject>()).ToHashSet();
 
@@ -235,7 +235,7 @@ internal class ObjectManager : ImpLifecycleObject
         LoadedValuables.Set(allValuables);
     }
 
-    internal void RefreshLevelObjects()
+    private void RefreshLevelObjects()
     {
         HashSet<EnemyParent> currentLevelEntities = [];
         HashSet<ItemAttributes> currentLevelItems = [];

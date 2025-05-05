@@ -52,7 +52,7 @@ The tape measure is a virtual tool to measure distances in the game. The tape me
 ## Global Keybinds
 
 !!! info "Customizable Keybinds"
-    Currently, no keybind rebinding mod exists for REPO. Due to this, all keybinds in Imperium are hard-coded and can't be changed as of right now.
+Currently, no keybind rebinding mod exists for REPO. Due to this, all keybinds in Imperium are hard-coded and can't be changed as of right now.
 
 | Keybind         | Description                                              |
 | --------------- | -------------------------------------------------------- |
@@ -64,6 +64,7 @@ The tape measure is a virtual tool to measure distances in the game. The tape me
 | `Keyboard / F`  | Toggles Imperium's freecam.                              |
 | `Keyboard / G`  | Shows the teleportation indicator.                       |
 | `Keyboard / O`  | Enables the tape measure tool.                           |
+| `Keyboard / Z`  | Toggles the in-game HUD.                                 |
 
 ## Freecam Keybinds
 

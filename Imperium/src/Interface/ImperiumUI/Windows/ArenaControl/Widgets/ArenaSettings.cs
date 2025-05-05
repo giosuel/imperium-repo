@@ -11,8 +11,7 @@ public class ArenaSettings : ImpWidget
     protected override void InitWidget()
     {
         ImpToggle.Bind(
-            "ArenaSettings/" +
-            "DisableGameOver",
+            "ArenaSettings/DisableGameOver",
             transform,
             Imperium.ArenaManager.DisableGameOver,
             theme: theme,
@@ -35,21 +34,39 @@ public class ArenaSettings : ImpWidget
             "EnemySettings/SpawnClose",
             transform,
             Imperium.ArenaManager.SpawnClose,
-            theme: theme
+            theme: theme,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Title = "Spawn Close",
+                Description = "Allows enemies to spawn even\nif a player is close.",
+                Tooltip = tooltip
+            }
         );
 
         ImpToggle.Bind(
             "EnemySettings/DespawnClose",
             transform,
             Imperium.ArenaManager.DespawnClose,
-            theme: theme
+            theme: theme,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Title = "Despawn Close",
+                Description = "Allows enemies to despawn even\nif a player is close.",
+                Tooltip = tooltip
+            }
         );
 
         ImpToggle.Bind(
             "EnemySettings/DisableVision",
             transform,
             Imperium.ArenaManager.DisableVision,
-            theme: theme
+            theme: theme,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Title = "Disable Vision",
+                Description = "Disables vision of all enemies in the level.",
+                Tooltip = tooltip
+            }
         );
 
         ImpToggle.Bind(

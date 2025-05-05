@@ -62,7 +62,13 @@ internal class ArenaControlWindow : ImperiumWindow
                 StatsManager.instance.BuyAllItems();
                 SemiFunc.StatSyncAll();
             },
-            theme
+            theme,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Title = "Buy All Items",
+                Description = "Caution! Requires a level reload.",
+                Tooltip = tooltip
+            }
         );
     }
 }

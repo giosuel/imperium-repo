@@ -14,7 +14,7 @@ internal class Visualization
 {
     internal readonly StaticVisualizers StaticVisualizers;
 
-    internal readonly PlayerGizmos PlayerGizmos;
+    // internal readonly PlayerGizmos PlayerGizmos;
     internal readonly EnemyGizmos EnemyGizmos;
 
     internal readonly ObjectInsights ObjectInsights;
@@ -38,7 +38,7 @@ internal class Visualization
             Imperium.Settings.Visualization.LevelPoints
         );
 
-        PlayerGizmos = new PlayerGizmos(visualizerParent.transform, objectManager.CurrentPlayers, config);
+        // PlayerGizmos = new PlayerGizmos(visualizerParent.transform, objectManager.CurrentPlayers, config);
         EnemyGizmos = new EnemyGizmos(
             visualizerParent.transform,
             objectManager.CurrentLevelEntities,
