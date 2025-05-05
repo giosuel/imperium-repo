@@ -154,7 +154,7 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .RegisterInsight("Is Discovered", valuable => $"${valuable.discovered}")
             .RegisterInsight("Durability", valuable => $"${valuable.durabilityPreset.durability}")
             .RegisterInsight("Discovered Timer", valuable => $"{valuable.discoveredReminderTimer:0}s")
-            .SetPositionOverride(DefaultPositionOverride)
+            .SetPositionOverride(valuable => valuable.transform.position)
             .SetConfigKey("Valuables");
     }
 
