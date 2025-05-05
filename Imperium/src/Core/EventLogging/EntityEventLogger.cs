@@ -1,6 +1,7 @@
 #region
 
-using Imperium.Util;
+using Imperium.API.Types;
+using Librarium;
 using UnityEngine;
 
 #endregion
@@ -33,12 +34,12 @@ internal class EntityEventLogger(ImpEventLog log)
             new EventLogDetail
             {
                 Title = "Spawned Timer",
-                Text = $"{Formatting.FormatSecondsMinutes(instance.SpawnedTimer)}"
+                Text = Formatting.FormatSecondsMinutes(instance.SpawnedTimer)
             },
             new EventLogDetail
             {
                 Title = "Spawned Pause Timer",
-                Text = $"{Formatting.FormatSecondsMinutes(instance.spawnedTimerPauseTimer)}"
+                Text = Formatting.FormatSecondsMinutes(instance.spawnedTimerPauseTimer)
             }
         );
     }
@@ -50,7 +51,7 @@ internal class EntityEventLogger(ImpEventLog log)
             new EventLogDetail
             {
                 Title = "Despawned Timer",
-                Text = $"{Formatting.FormatSecondsMinutes(instance.DespawnedTimer)}"
+                Text = Formatting.FormatSecondsMinutes(instance.DespawnedTimer)
             }
         );
     }
@@ -60,9 +61,10 @@ internal class EntityEventLogger(ImpEventLog log)
         LogEntityEvent(
             instance, "Enemy has teleported to a new location.", action: "Teleport",
             new EventLogDetail
+
             {
                 Title = "Destination",
-                Text = $"{Formatting.FormatVector(teleportPosition)}"
+                Text = Formatting.FormatVector(teleportPosition)
             }
         );
     }

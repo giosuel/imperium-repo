@@ -15,7 +15,7 @@ containsNsfwContent = false
 BepInEx-BepInExPack = "5.4.2100"
 Rune580-REPO_SteamNetworking_Lib = "0.1.0"
 Zehs-REPOLib = "2.1.0"
-giosuel-Librarium = "0.0.4"
+giosuel-Librarium = "0.0.5"
 DiFFoZ-BepInEx_MonoMod_Debug_Patcher = "1.1.1"
 
 [build]

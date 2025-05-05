@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Imperium.API.Types;
 using Imperium.Core.EventLogging;
 using Imperium.Interface.Common;
 using Imperium.Types;

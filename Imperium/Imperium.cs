@@ -4,6 +4,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using Imperium.API.Types;
 using Imperium.Core;
 using Imperium.Core.EventLogging;
 using Imperium.Core.Input;
@@ -207,11 +208,6 @@ public class Imperium : BaseUnityPlugin
         {
             DisableImperium();
         }
-
-        // We do the funni to allow for more network objects to spawn >:)
-        // typeof(PhotonNetwork)
-        //     .GetField("MAX_VIEW_IDS", BindingFlags.Static | BindingFlags.Public)!
-        //     .SetValue(null, 100000);
     }
 
     internal static void DisableImperium()

@@ -2,6 +2,8 @@
 
 #endregion
 
+using Imperium.API.Types;
+
 namespace Imperium.Core.EventLogging;
 
 internal class GameEventLogger(ImpEventLog log)

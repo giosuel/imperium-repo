@@ -8,9 +8,7 @@
 - Added the `Z` keybind to toggle cinematic mode.
 - Made it so the NavMesh visualizer automatically updates with the NavMesh.
 - Added an option to change the module override type to fix broken generation.
-- Added an option to override the level number.
-
-### Bug Fixes
+- Added an option to override the level number.Bug Fixes
 
 -  Fixed a bug that made it so the minimap toggles when using the chat.
 -  Fixed a bug that made it so the DisableGameOver option did nothing.
