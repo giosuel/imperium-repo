@@ -23,7 +23,7 @@ public class EnemyGizmo : MonoBehaviour
 
     private GameObject lastHeardNoiseDot;
 
-    private const int pathSegmentCount = 20;
+    private const int pathSegmentCount = 30;
 
     private LineRenderer pathLine;
     private readonly GameObject[] pathDots = new GameObject[pathSegmentCount];
@@ -51,9 +51,9 @@ public class EnemyGizmo : MonoBehaviour
         enemyVision = entity.Enemy.Vision;
 
         pathLine = Geometry.CreateLine(
-            transform, 0.1f, true,
-            startColor: new Color(0.58f, 1f, 0.6f),
-            endColor: new Color(0.58f, 1f, 0.6f),
+            transform, 0.04f, true,
+            startColor: new Color(1f, 0.67f, 0.03f),
+            endColor: new Color(1f, 0.67f, 0.03f),
             spawnDisabled: true
         );
 
@@ -61,7 +61,7 @@ public class EnemyGizmo : MonoBehaviour
         {
             pathDots[i] = Geometry.CreatePrimitive(
                 PrimitiveType.Sphere, transform,
-                color: new Color(1, 1, 1),
+                material: ImpAssets.WireframeYellow,
                 spawnDisabled: true
             );
         }
@@ -297,14 +297,7 @@ public class EnemyGizmo : MonoBehaviour
                 if (!isShown) continue;
 
                 pathDots[i].transform.position = corners[i];
-                if (i == corners.Length - 1)
-                {
-                    pathDots[i].transform.localScale = Vector3.one * 0.4f;
-                }
-                else
-                {
-                    pathDots[i].transform.localScale = Vector3.one * 0.2f;
-                }
+                pathDots[i].transform.localScale = Vector3.one * 0.15f;
             }
             else
             {
