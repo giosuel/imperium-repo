@@ -11,6 +11,12 @@
 ### Bug Fixes
 
 -  Fixed a bug that made it so the minimap toggles when using the chat.
+-  Fixed a bug that made it so the DisableGameOver option did nothing.
+
+### QoL Changes
+
+- Added various tooltips to the UI.
+- Fixed placeholders in the teleportation window.
 
 ### Compatibility
 
