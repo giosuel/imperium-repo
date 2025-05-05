@@ -84,11 +84,11 @@ internal class ObjectExplorerWindow : ImperiumWindow
         ImpButton.CreateCollapse("ItemListTitle/Arrow", contentRect, stateBinding: ItemsCollapsed);
         ImpButton.CreateCollapse("ValuableListTitle/Arrow", contentRect, stateBinding: ValuablesCollapsed);
 
-        PlayersCollapsed.onTrigger += RefreshEntries;
-        ExtractionPointsCollapsed.onTrigger += RefreshEntries;
-        EntitiesCollapsed.onTrigger += RefreshEntries;
-        ValuablesCollapsed.onTrigger += RefreshEntries;
-        ItemsCollapsed.onTrigger += RefreshEntries;
+        PlayersCollapsed.OnTrigger += RefreshEntries;
+        ExtractionPointsCollapsed.OnTrigger += RefreshEntries;
+        EntitiesCollapsed.OnTrigger += RefreshEntries;
+        ValuablesCollapsed.OnTrigger += RefreshEntries;
+        ItemsCollapsed.OnTrigger += RefreshEntries;
 
         Imperium.ObjectManager.CurrentLevelObjectsChanged += RefreshEntries;
 

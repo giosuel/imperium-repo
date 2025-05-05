@@ -156,7 +156,7 @@ public static class ImpThemeManager
             themeBinding = new ImpBinding<ImpTheme>(Themes[themeConfig.DefaultValue]);
         }
 
-        themeConfig.onUpdate += value => themeBinding.Set(Themes[value]);
+        themeConfig.OnUpdate += value => themeBinding.Set(Themes[value]);
 
         return themeBinding;
     }

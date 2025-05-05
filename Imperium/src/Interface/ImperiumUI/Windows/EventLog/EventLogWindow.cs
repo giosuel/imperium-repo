@@ -70,12 +70,12 @@ internal class EventLogWindow : ImperiumWindow
         ImpToggle.Bind("Footer/Game", transform, Imperium.Settings.EventLog.GameLogs, theme: theme);
         ImpToggle.Bind("Footer/Custom", transform, Imperium.Settings.EventLog.CustomLogs, theme: theme);
 
-        Imperium.Settings.EventLog.EntityLogs.onTrigger += OnTypeToggle;
-        Imperium.Settings.EventLog.PlayerLogs.onTrigger += OnTypeToggle;
-        Imperium.Settings.EventLog.GameLogs.onTrigger += OnTypeToggle;
-        Imperium.Settings.EventLog.CustomLogs.onTrigger += OnTypeToggle;
+        Imperium.Settings.EventLog.EntityLogs.OnTrigger += OnTypeToggle;
+        Imperium.Settings.EventLog.PlayerLogs.OnTrigger += OnTypeToggle;
+        Imperium.Settings.EventLog.GameLogs.OnTrigger += OnTypeToggle;
+        Imperium.Settings.EventLog.CustomLogs.OnTrigger += OnTypeToggle;
 
-        Imperium.EventLog.Log.onUpdate += OnLogPrimaryUpdate;
+        Imperium.EventLog.Log.OnUpdate += OnLogPrimaryUpdate;
     }
 
     protected override void OnThemePrimaryUpdate(ImpTheme themeUpdated)

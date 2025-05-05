@@ -105,7 +105,7 @@ public class LevelGeneration : ImpWidget
 
         // Module type should also be disabled if no override module is selected
         var noModuleOverride = new ImpBinaryBinding(true);
-        Imperium.GameManager.ModuleOverride.onUpdate += module => noModuleOverride.Set(module == "");
+        Imperium.GameManager.ModuleOverride.OnUpdate += module => noModuleOverride.Set(module == "");
 
         InitModuleType(ImpBinaryBinding.CreateOr([
             (disabledBinding, false),
@@ -131,7 +131,7 @@ public class LevelGeneration : ImpWidget
             Imperium.GameManager.LevelOverride.Set(customLevel.NarrativeName, invokeSecondary: false);
         });
 
-        Imperium.GameManager.LevelOverride.onUpdateSecondary += value =>
+        Imperium.GameManager.LevelOverride.OnUpdateSecondary += value =>
         {
             if (value == "")
             {
@@ -187,7 +187,7 @@ public class LevelGeneration : ImpWidget
             Imperium.GameManager.ModuleOverride.Set(customModule.name, invokeSecondary: false);
         });
 
-        Imperium.GameManager.ModuleOverride.onUpdateSecondary += value =>
+        Imperium.GameManager.ModuleOverride.OnUpdateSecondary += value =>
         {
             if (value == "")
             {
@@ -242,7 +242,7 @@ public class LevelGeneration : ImpWidget
             Imperium.GameManager.OverrideModuleType.Set(value, invokeSecondary: false);
         });
 
-        Imperium.GameManager.OverrideModuleType.onUpdateSecondary += value => dropdown.value = value;
+        Imperium.GameManager.OverrideModuleType.OnUpdateSecondary += value => dropdown.value = value;
         ImpUtils.Interface.BindDropdownInteractable(disabledBinding, transform.Find("ModuleType"), true);
 
         ImpButton.Bind(

@@ -69,7 +69,7 @@ internal class InfoWindow : ImperiumWindow
         mapObject = content.Find("Right/Spawning/MapObjectValue").GetComponent<TMP_Text>();
         mapHazard = content.Find("Right/Spawning/MapHazardValue").GetComponent<TMP_Text>();
 
-        Imperium.IsArenaLoaded.onUpdate += _ => OnSceneChange();
+        Imperium.IsArenaLoaded.OnUpdate += _ => OnSceneChange();
     }
 
     protected override void OnOpen()

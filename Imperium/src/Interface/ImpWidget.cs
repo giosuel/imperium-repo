@@ -22,7 +22,7 @@ public abstract class ImpWidget : MonoBehaviour
     {
         theme = themeBinding;
         tooltip = tooltipReference;
-        theme.onUpdate += OnThemeUpdate;
+        theme.OnUpdate += OnThemeUpdate;
 
         InitWidget();
     }

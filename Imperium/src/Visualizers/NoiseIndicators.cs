@@ -26,7 +26,7 @@ internal class NoiseIndicators : ImpScript
             noiseIndicators[i] = noiseIndicatorObj.AddComponent<NoiseIndicator>();
         }
 
-        Imperium.Settings.Visualization.NoiseIndicators.onUpdate += value =>
+        Imperium.Settings.Visualization.NoiseIndicators.OnUpdate += value =>
         {
             if (!value)
             {

@@ -122,9 +122,9 @@ internal class ObjectVisualizers : ImpWidget
 
         Refresh();
 
-        Imperium.ObjectManager.LoadedEntities.onTrigger += Refresh;
-        Imperium.ObjectManager.CurrentPlayers.onTrigger += Refresh;
-        Imperium.Visualization.ObjectInsights.InsightVisibilityBindings.onTrigger += Refresh;
+        Imperium.ObjectManager.LoadedEntities.OnTrigger += Refresh;
+        Imperium.ObjectManager.CurrentPlayers.OnTrigger += Refresh;
+        Imperium.Visualization.ObjectInsights.InsightVisibilityBindings.OnTrigger += Refresh;
     }
 
     protected override void OnThemeUpdate(ImpTheme themeUpdate)

@@ -45,12 +45,12 @@ internal class PlayerManager : ImpLifecycleObject
     {
         teleportPlayerMessage.OnClientRecive += OnTeleportPlayerClient;
 
-        Imperium.Settings.Player.Invisibility.onUpdate += isInvisible =>
+        Imperium.Settings.Player.Invisibility.OnUpdate += isInvisible =>
         {
             ImpUtils.Bindings.ToggleSet(InvisiblePlayers, PlayerAvatar.instance.GetSteamId(), isInvisible);
         };
 
-        Imperium.Settings.Player.Muted.onUpdate += isMuted =>
+        Imperium.Settings.Player.Muted.OnUpdate += isMuted =>
         {
             ImpUtils.Bindings.ToggleSet(MutedPlayers, PlayerAvatar.instance.GetSteamId(), isMuted);
         };

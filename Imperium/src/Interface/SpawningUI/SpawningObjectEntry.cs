@@ -46,7 +46,7 @@ public class SpawningObjectEntry : MonoBehaviour
         transform.Find("Type").GetComponent<TMP_Text>().text = typeDisplayNameMap.GetValueOrDefault(type, "");
 
         gameObject.AddComponent<ImpInteractable>().onOver += onHover;
-        themeBinding.onUpdate += OnThemePrimaryUpdate;
+        themeBinding.OnUpdate += OnThemePrimaryUpdate;
     }
 
     private void OnThemePrimaryUpdate(ImpTheme themeUpdate)

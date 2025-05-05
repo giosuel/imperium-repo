@@ -131,7 +131,7 @@ public class ImpNetworking
     {
         if (SemiFunc.IsMasterClientOrSingleplayer())
         {
-            allowClientsBinding.onUpdate += ToggleImperiumAccess;
+            allowClientsBinding.OnUpdate += ToggleImperiumAccess;
         }
     }
 

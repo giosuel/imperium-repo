@@ -39,7 +39,7 @@ internal class GameManager : ImpLifecycleObject
 
     protected override void Init()
     {
-        LevelOverride.onUpdate += OnLevelOverrideUpdate;
+        LevelOverride.OnUpdate += OnLevelOverrideUpdate;
     }
 
     protected override void OnSceneLoad()

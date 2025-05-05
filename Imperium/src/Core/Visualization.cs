@@ -49,8 +49,8 @@ internal class Visualization
         NoiseIndicators = ImpScript.Create<NoiseIndicators>(visualizerParent.transform);
         StaticVisualizers = ImpScript.Create<StaticVisualizers>(visualizerParent.transform);
 
-        Imperium.IsArenaLoaded.onTrigger += ObjectInsights.Refresh;
-        Imperium.IsArenaLoaded.onTrigger += () => StaticVisualizers.Refresh(true);
+        Imperium.IsArenaLoaded.OnTrigger += ObjectInsights.Refresh;
+        Imperium.IsArenaLoaded.OnTrigger += () => StaticVisualizers.Refresh(true);
 
         Imperium.ObjectManager.CurrentLevelObjectsChanged += ObjectInsights.Refresh;
         Imperium.ObjectManager.CurrentLevelObjectsChanged += () => StaticVisualizers.Refresh();

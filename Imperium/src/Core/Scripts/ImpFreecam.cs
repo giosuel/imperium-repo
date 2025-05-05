@@ -50,17 +50,17 @@ public class ImpFreecam : ImpScript
         layerSelector.InitUI(Imperium.Interface.Theme);
         layerSelector.Bind(Imperium.Settings.Freecam.LayerSelector, Imperium.Settings.Freecam.FreecamLayerMask);
 
-        IsFreecamEnabled.onTrue += OnFreecamEnable;
-        IsFreecamEnabled.onFalse += OnFreecamDisable;
+        IsFreecamEnabled.OnTrue += OnFreecamEnable;
+        IsFreecamEnabled.OnFalse += OnFreecamDisable;
 
-        IsMinicamEnabled.onTrue += OnMinicamEnable;
-        IsMinicamEnabled.onFalse += OnMinicamDisable;
+        IsMinicamEnabled.OnTrue += OnMinicamEnable;
+        IsMinicamEnabled.OnFalse += OnMinicamDisable;
 
-        IsFreehandModeEnabled.onTrue += OnFreehandModeEnable;
-        IsFreehandModeEnabled.onFalse += OnFreehandModeDisable;
+        IsFreehandModeEnabled.OnTrue += OnFreehandModeEnable;
+        IsFreehandModeEnabled.OnFalse += OnFreehandModeDisable;
 
-        IsMinicamFullscreenEnabled.onTrue += OnMinicamFullscreenEnable;
-        IsMinicamFullscreenEnabled.onFalse += OnMinicamFullscreenDisable;
+        IsMinicamFullscreenEnabled.OnTrue += OnMinicamFullscreenEnable;
+        IsMinicamFullscreenEnabled.OnFalse += OnMinicamFullscreenDisable;
 
         Imperium.InputBindings.BaseMap.Freecam.performed += OnFreecamToggle;
         Imperium.InputBindings.BaseMap.Minicam.performed += OnMinicamToggle;
@@ -68,12 +68,12 @@ public class ImpFreecam : ImpScript
         Imperium.InputBindings.BaseMap.Reset.performed += OnFreecamReset;
         Imperium.InputBindings.FreecamMap.FreehandMode.performed += OnToggleFreehandMode;
         Imperium.InputBindings.FreecamMap.LayerSelector.performed += OnToggleLayerSelector;
-        Imperium.Settings.Freecam.FreecamLayerMask.onUpdate += value => camera.cullingMask = value;
+        Imperium.Settings.Freecam.FreecamLayerMask.OnUpdate += value => camera.cullingMask = value;
 
         // Disable freecam whenever the scene is reloaded
-        Imperium.IsArenaLoaded.onTrigger += IsFreecamEnabled.SetFalse;
+        Imperium.IsArenaLoaded.OnTrigger += IsFreecamEnabled.SetFalse;
 
-        Imperium.Settings.Rendering.AvatarInFreecam.onUpdate += value =>
+        Imperium.Settings.Rendering.AvatarInFreecam.OnUpdate += value =>
         {
             if (!IsFreecamEnabled.Value) return;
             PlayerManager.ToggleLocalAvatar(value);

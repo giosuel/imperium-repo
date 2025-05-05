@@ -57,7 +57,7 @@ public class Teleportation : ImpWidget
 
         Imperium.InputBindings.BaseMap.Teleport.performed += OnInteractiveTeleport;
 
-        Imperium.IsArenaLoaded.onTrigger += OnOpen;
+        Imperium.IsArenaLoaded.OnTrigger += OnOpen;
 
         InitExtractionPoints();
     }
@@ -116,7 +116,7 @@ public class Teleportation : ImpWidget
         extractionPointTemplate = extractionPointContainer.Find("Template").gameObject;
         extractionPointTemplate.gameObject.SetActive(false);
 
-        Imperium.IsArenaLoaded.onTrigger += SetExtractionPoints;
+        Imperium.IsArenaLoaded.OnTrigger += SetExtractionPoints;
         SetExtractionPoints();
     }
 

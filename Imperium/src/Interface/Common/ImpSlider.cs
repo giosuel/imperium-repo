@@ -110,7 +110,7 @@ public class ImpSlider : MonoBehaviour
 
             impSlider.indicatorText.text = $"{options.Value[(int)valueBinding.Value]}{indicatorUnit}";
 
-            options.onUpdate += newOptions =>
+            options.OnUpdate += newOptions =>
             {
                 impSlider.Slider.minValue = 0;
                 impSlider.Slider.maxValue = newOptions.Count - 1;
@@ -149,7 +149,7 @@ public class ImpSlider : MonoBehaviour
         });
 
         // This has to be in local, so we can manually skip the click sound by disabling send local
-        valueBinding.onTriggerSecondary += () =>
+        valueBinding.OnTriggerSecondary += () =>
         {
             if (Imperium.Settings.Preferences.PlaySounds.Value && playClickSound)
             {
@@ -157,7 +157,7 @@ public class ImpSlider : MonoBehaviour
             }
         };
 
-        valueBinding.onUpdate += newValue =>
+        valueBinding.OnUpdate += newValue =>
         {
             var updatedValue = useLogarithmicScale ? (float)Math.Log10(newValue) : newValue;
             if (negativeIsDefault && updatedValue < 0)
@@ -205,7 +205,7 @@ public class ImpSlider : MonoBehaviour
                 theme
             );
 
-            overrideBinding.onUpdate += isOverridden =>
+            overrideBinding.OnUpdate += isOverridden =>
             {
                 valueBinding.Set(isOverridden ? impSlider.Slider.value : -1);
                 ToggleInteractable(impSlider.Slider, sliderArea, isOverridden, interactableInvert);
@@ -253,7 +253,7 @@ public class ImpSlider : MonoBehaviour
             );
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.onUpdate += value =>
+                interactableBinding.OnUpdate += value =>
                 {
                     ToggleInteractable(impSlider.Slider, sliderArea, value, interactableInvert);
                 };
@@ -262,7 +262,7 @@ public class ImpSlider : MonoBehaviour
 
         if (theme != null)
         {
-            theme.onUpdate += value => OnThemeUpdate(value, sliderObject);
+            theme.OnUpdate += value => OnThemeUpdate(value, sliderObject);
             OnThemeUpdate(theme.Value, sliderObject);
         }
 
