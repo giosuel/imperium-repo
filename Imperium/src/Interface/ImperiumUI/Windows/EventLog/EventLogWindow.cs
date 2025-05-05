@@ -78,7 +78,7 @@ internal class EventLogWindow : ImperiumWindow
         Imperium.EventLog.Log.OnUpdate += OnLogPrimaryUpdate;
     }
 
-    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdated)
+    protected override void OnThemeUpdate(ImpTheme themeUpdated)
     {
         ImpThemeManager.Style(
             themeUpdated,

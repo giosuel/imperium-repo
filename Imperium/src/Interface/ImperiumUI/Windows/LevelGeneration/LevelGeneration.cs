@@ -8,31 +8,36 @@ using Imperium.Util;
 using Librarium.Binding;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine;
 
 #endregion
 
-namespace Imperium.Interface.ImperiumUI.Windows.ControlCenter.Widgets;
+namespace Imperium.Interface.ImperiumUI.Windows.LevelGeneration;
 
-public class LevelGeneration : ImpWidget
+internal class LevelGeneration : ImperiumWindow
 {
-    protected override void InitWidget()
+    private Transform content;
+
+    protected override void InitWindow()
     {
+        content = transform.Find("Content");
+
         var disabledBinding = new ImpBinaryBinding(!SemiFunc.IsMasterClientOrSingleplayer());
 
         ImpInput.Bind(
             "Numbers/LevelSize/Input",
-            transform,
+            content,
             Imperium.GameManager.CustomLevelSize,
             theme: theme,
             interactableInvert: true,
             negativeIsEmpty: true,
             interactableBindings: disabledBinding
         );
-        ImpUtils.Interface.BindInputInteractable(disabledBinding, transform.Find("Numbers/LevelSize"), true);
+        ImpUtils.Interface.BindInputInteractable(disabledBinding, content.Find("Numbers/LevelSize"), true);
 
         ImpButton.Bind(
             "Numbers/LevelSize/Reset",
-            transform,
+            content,
             () => Imperium.GameManager.CustomLevelSize.Reset(),
             theme: theme,
             isIconButton: true,
@@ -42,18 +47,18 @@ public class LevelGeneration : ImpWidget
 
         ImpInput.Bind(
             "Numbers/ModuleAmount/Input",
-            transform,
+            content,
             Imperium.GameManager.CustomModuleAmount,
             theme: theme,
             interactableInvert: true,
             negativeIsEmpty: true,
             interactableBindings: disabledBinding
         );
-        ImpUtils.Interface.BindInputInteractable(disabledBinding, transform.Find("Numbers/ModuleAmount"), true);
+        ImpUtils.Interface.BindInputInteractable(disabledBinding, content.Find("Numbers/ModuleAmount"), true);
 
         ImpButton.Bind(
             "Numbers/ModuleAmount/Reset",
-            transform,
+            content,
             () => Imperium.GameManager.CustomModuleAmount.Reset(),
             theme: theme,
             isIconButton: true,
@@ -63,18 +68,18 @@ public class LevelGeneration : ImpWidget
 
         ImpInput.Bind(
             "LevelNumber/Input",
-            transform,
+            content,
             Imperium.GameManager.CustomLevelNumber,
             theme: theme,
             interactableInvert: true,
             negativeIsEmpty: true,
             interactableBindings: disabledBinding
         );
-        ImpUtils.Interface.BindInputInteractable(disabledBinding, transform.Find("LevelNumber"), true);
+        ImpUtils.Interface.BindInputInteractable(disabledBinding, content.Find("LevelNumber"), true);
 
         ImpButton.Bind(
             "LevelNumber/Reset",
-            transform,
+            content,
             () => Imperium.GameManager.CustomLevelNumber.Reset(),
             theme: theme,
             isIconButton: true,
@@ -84,7 +89,7 @@ public class LevelGeneration : ImpWidget
 
         ImpButton.Bind(
             "ReloadLevel",
-            transform,
+            content,
             () => RunManager.instance.ChangeLevel(_completedLevel: false, _levelFailed: false),
             theme: theme,
             interactableInvert: true,
@@ -93,7 +98,7 @@ public class LevelGeneration : ImpWidget
 
         ImpButton.Bind(
             "AdvanceLevel",
-            transform,
+            content,
             () => RunManager.instance.ChangeLevel(_completedLevel: true, _levelFailed: false),
             theme: theme,
             interactableInvert: true,
@@ -112,14 +117,14 @@ public class LevelGeneration : ImpWidget
             (noModuleOverride, false)
         ]));
     }
-
+    
     private void InitLevelOverride(ImpBinaryBinding disabledBinding)
     {
         var options = Imperium.ObjectManager.LoadedLevels.Value
             .Select(level => new TMP_Dropdown.OptionData(level.NarrativeName))
             .ToList();
 
-        var dropdown = transform.Find("LevelOverride/Dropdown").GetComponent<TMP_Dropdown>();
+        var dropdown = content.Find("LevelOverride/Dropdown").GetComponent<TMP_Dropdown>();
         dropdown.options = options;
         dropdown.value = -1;
 
@@ -149,11 +154,11 @@ public class LevelGeneration : ImpWidget
                 }
             }
         };
-        ImpUtils.Interface.BindDropdownInteractable(disabledBinding, transform.Find("LevelOverride"), true);
+        ImpUtils.Interface.BindDropdownInteractable(disabledBinding, content.Find("LevelOverride"), true);
 
         ImpButton.Bind(
             "LevelOverride/Reset",
-            transform,
+            content,
             () => Imperium.GameManager.LevelOverride.Reset(),
             theme: theme,
             isIconButton: true,
@@ -161,7 +166,7 @@ public class LevelGeneration : ImpWidget
             interactableBindings: disabledBinding
         );
 
-        transform.Find("LevelOverrideTitle").AddComponent<ImpTooltipTrigger>().Init(new TooltipDefinition
+        content.Find("LevelOverrideTitle").AddComponent<ImpTooltipTrigger>().Init(new TooltipDefinition
         {
             Title = "Level Override",
             Description = "Forces the game to always load\nthe selected level.",
@@ -175,7 +180,7 @@ public class LevelGeneration : ImpWidget
             .Select(module => new TMP_Dropdown.OptionData(NormalizeModuleName(module.name)))
             .ToList();
 
-        var dropdown = transform.Find("ModuleOverride/Dropdown").GetComponent<TMP_Dropdown>();
+        var dropdown = content.Find("ModuleOverride/Dropdown").GetComponent<TMP_Dropdown>();
         dropdown.options = options;
         dropdown.value = -1;
 
@@ -205,11 +210,11 @@ public class LevelGeneration : ImpWidget
                 }
             }
         };
-        ImpUtils.Interface.BindDropdownInteractable(disabledBinding, transform.Find("ModuleOverride"), true);
+        ImpUtils.Interface.BindDropdownInteractable(disabledBinding, content.Find("ModuleOverride"), true);
 
         ImpButton.Bind(
             "ModuleOverride/Reset",
-            transform,
+            content,
             () => Imperium.GameManager.ModuleOverride.Reset(),
             theme: theme,
             isIconButton: true,
@@ -217,7 +222,7 @@ public class LevelGeneration : ImpWidget
             interactableBindings: disabledBinding
         );
 
-        transform.Find("ModuleOverrideTitle").AddComponent<ImpTooltipTrigger>().Init(new TooltipDefinition
+        content.Find("ModuleOverrideTitle").AddComponent<ImpTooltipTrigger>().Init(new TooltipDefinition
         {
             Title = "Module Override",
             Description = "Makes the level to be generated from a single module.\nCaution! Can cause faulty levels.",
@@ -233,7 +238,7 @@ public class LevelGeneration : ImpWidget
             .Select(type => new TMP_Dropdown.OptionData(type.ToString()))
             .ToList();
 
-        var dropdown = transform.Find("ModuleType/Dropdown").GetComponent<TMP_Dropdown>();
+        var dropdown = content.Find("ModuleType/Dropdown").GetComponent<TMP_Dropdown>();
         dropdown.options = options;
         dropdown.value = 0;
 
@@ -243,11 +248,11 @@ public class LevelGeneration : ImpWidget
         });
 
         Imperium.GameManager.OverrideModuleType.OnUpdateSecondary += value => dropdown.value = value;
-        ImpUtils.Interface.BindDropdownInteractable(disabledBinding, transform.Find("ModuleType"), true);
+        ImpUtils.Interface.BindDropdownInteractable(disabledBinding, content.Find("ModuleType"), true);
 
         ImpButton.Bind(
             "ModuleType/Reset",
-            transform,
+            content,
             () => Imperium.GameManager.OverrideModuleType.Reset(),
             theme: theme,
             isIconButton: true,
@@ -255,7 +260,7 @@ public class LevelGeneration : ImpWidget
             interactableBindings: disabledBinding
         );
 
-        transform.Find("ModuleTypeTitle").AddComponent<ImpTooltipTrigger>().Init(new TooltipDefinition
+        content.Find("ModuleTypeTitle").AddComponent<ImpTooltipTrigger>().Init(new TooltipDefinition
         {
             Title = "Module Type",
             Description = "The type of module to generate with the override module.",
@@ -269,7 +274,7 @@ public class LevelGeneration : ImpWidget
     {
         ImpThemeManager.Style(
             themeUpdate,
-            transform,
+            content,
             new StyleOverride("LevelOverride/Dropdown", Variant.FOREGROUND),
             new StyleOverride("LevelOverride/Dropdown/Arrow", Variant.FOREGROUND),
             new StyleOverride("LevelOverride/Dropdown/Template", Variant.DARKER),

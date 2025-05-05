@@ -140,7 +140,7 @@ internal class PreferencesWindow : ImperiumWindow
         }
     }
 
-    protected override void OnThemePrimaryUpdate(ImpTheme updatedTheme)
+    protected override void OnThemeUpdate(ImpTheme updatedTheme)
     {
         ImpThemeManager.Style(
             updatedTheme,

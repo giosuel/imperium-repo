@@ -120,7 +120,7 @@ internal class ObjectExplorerWindow : ImperiumWindow
         InitEntryEngine();
     }
 
-    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
+    protected override void OnThemeUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,

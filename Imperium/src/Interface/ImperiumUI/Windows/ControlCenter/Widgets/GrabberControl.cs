@@ -1,20 +1,15 @@
 #region
 
 using Imperium.Interface.Common;
-using UnityEngine;
 
 #endregion
 
-namespace Imperium.Interface.ImperiumUI.Windows.GrabberControl;
+namespace Imperium.Interface.ImperiumUI.Windows.ControlCenter.Widgets;
 
-internal class GrabberControlWindow : ImperiumWindow
+internal class GrabberControl : ImpWidget
 {
-    private Transform content;
-
-    protected override void InitWindow()
+    protected override void InitWidget()
     {
-        content = transform.Find("Content");
-
         InitGrabberSettings();
         InitPhysicsSettings();
     }
@@ -22,84 +17,84 @@ internal class GrabberControlWindow : ImperiumWindow
     private void InitGrabberSettings()
     {
         ImpToggle.Bind(
-            "GrabberSettings/StickyGrabber",
-            content,
-            Imperium.Settings.Grabber.StickyGrabber,
-            theme
+            "GrabberSettings/Sti" +
+            "ckyGrabber",
+            container: transform,
+            theme: theme,
+            valueBinding: Imperium.Settings.Grabber.StickyGrabber
         );
 
         ImpSlider.Bind(
             path: "BaseRange",
-            container: content,
+            container: transform,
             theme: theme,
             valueBinding: Imperium.Settings.Grabber.BaseRange
         );
 
         ImpSlider.Bind(
             path: "GrabStrength",
-            container: content,
+            container: transform,
             theme: theme,
             valueBinding: Imperium.Settings.Grabber.GrabStrength
         );
 
         ImpSlider.Bind(
             path: "ThrowStrength",
-            container: content,
+            container: transform,
             theme: theme,
             valueBinding: Imperium.Settings.Grabber.ThrowStrength
         );
 
         ImpSlider.Bind(
             path: "ReleaseDistance",
-            container: content,
+            container: transform,
             theme: theme,
             valueBinding: Imperium.Settings.Grabber.ReleaseDistance
         );
 
         ImpSlider.Bind(
             path: "MinDistance",
-            container: content,
+            container: transform,
             theme: theme,
             valueBinding: Imperium.Settings.Grabber.MinDistance
         );
 
         ImpSlider.Bind(
             path: "MaxDistance",
-            container: content,
+            container: transform,
             theme: theme,
             valueBinding: Imperium.Settings.Grabber.MaxDistance
         );
+    }
 
+    private void InitPhysicsSettings()
+    {
         ImpSlider.Bind(
             path: "SpringConstant",
-            container: content,
+            container: transform,
             theme: theme,
             valueBinding: Imperium.Settings.Grabber.SpringConstant
         );
 
         ImpSlider.Bind(
             path: "DampingConstant",
-            container: content,
+            container: transform,
             theme: theme,
             valueBinding: Imperium.Settings.Grabber.DampingConstant
         );
 
         ImpSlider.Bind(
             path: "ForceConstant",
-            container: content,
+            container: transform,
             theme: theme,
             valueBinding: Imperium.Settings.Grabber.ForceConstant
         );
 
         ImpSlider.Bind(
             path: "ForceMax",
-            container: content,
+            container: transform,
             theme: theme,
             valueBinding: Imperium.Settings.Grabber.ForceMax
         );
-    }
-
-    private void InitPhysicsSettings()
-    {
     }
 }

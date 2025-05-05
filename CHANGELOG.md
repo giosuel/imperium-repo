@@ -4,6 +4,7 @@
 
 ### Changes
 
+- Moved level generation to its own window and moved grabber settings to the control center.
 - Made it so invalid level point connections are highlighted in red.
 - Added the `Z` keybind to toggle cinematic mode.
 - Made it so the NavMesh visualizer automatically updates with the NavMesh.

@@ -30,7 +30,7 @@ internal abstract class ImpAssets
     internal static GameObject ControlCenterWindowObject;
     internal static GameObject ObjectExplorerWindowObject;
     internal static GameObject InfoWindowObject;
-    internal static GameObject GrabberControlWindowObject;
+    internal static GameObject LevelGenerationWindowObject;
     internal static GameObject EventLogWindowObject;
     internal static GameObject ArenaControlWindowObject;
     internal static GameObject RenderingWindowObject;
@@ -116,8 +116,8 @@ internal abstract class ImpAssets
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/control_center.prefab",
                 out ControlCenterWindowObject),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/info.prefab", out InfoWindowObject),
-            LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/grabber_control.prefab",
-                out GrabberControlWindowObject),
+            LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/level_generation.prefab",
+                out LevelGenerationWindowObject),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/event_log.prefab", out EventLogWindowObject),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/object_explorer.prefab",
                 out ObjectExplorerWindowObject),

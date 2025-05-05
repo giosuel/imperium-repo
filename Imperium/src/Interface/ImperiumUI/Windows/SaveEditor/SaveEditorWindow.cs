@@ -42,7 +42,7 @@ internal class SaveEditorWindow : ImperiumWindow
         // }
     }
 
-    protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
+    protected override void OnThemeUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
             themeUpdate,

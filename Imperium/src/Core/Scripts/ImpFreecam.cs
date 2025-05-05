@@ -187,18 +187,24 @@ public class ImpFreecam : ImpScript
         Imperium.Settings.Freecam.FreecamFieldOfView.Set(ImpConstants.DefaultFOV);
     }
 
-    private void OnFreehandModeEnable()
+    private static void OnFreehandModeEnable()
     {
         InputManager.instance.inputActions[InputKey.Movement].Enable();
         InputManager.instance.inputActions[InputKey.MouseDelta].Enable();
         InputManager.instance.inputActions[InputKey.MouseInput].Enable();
+        InputManager.instance.inputActions[InputKey.Crouch].Enable();
+        InputManager.instance.inputActions[InputKey.Jump].Enable();
+        InputManager.instance.inputActions[InputKey.Tumble].Enable();
     }
 
-    private void OnFreehandModeDisable()
+    private static void OnFreehandModeDisable()
     {
         InputManager.instance.inputActions[InputKey.Movement].Disable();
         InputManager.instance.inputActions[InputKey.MouseDelta].Disable();
         InputManager.instance.inputActions[InputKey.MouseInput].Disable();
+        InputManager.instance.inputActions[InputKey.Crouch].Disable();
+        InputManager.instance.inputActions[InputKey.Jump].Disable();
+        InputManager.instance.inputActions[InputKey.Tumble].Disable();
     }
 
     private void OnToggleFreehandMode(InputAction.CallbackContext callbackContext) => IsFreehandModeEnabled.Toggle();
