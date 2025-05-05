@@ -27,11 +27,11 @@ Imperium.API.Visualization.InsightsFor<EnemyParent>()
     .RegisterInsight(
         "Despawn Timer",
         enemy => Librarium.Formatting.FormatSecondsMinutes(enemy.DespawnedTimer)
-    ) // (4)!
+    ) 
     .RegisterInsight(
         "Position",
          enemy => Librarium.Formatting.FormatVector(enemy.transform.position)
-    ) // (4)!
+    )
     .SetConfigKey("Enemies"); // (5)!
 ```
 

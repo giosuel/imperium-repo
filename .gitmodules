@@ -1,0 +1,3 @@
+[submodule "librarium"]
+	path = librarium
+	url = https://github.com/giosuel/librarium

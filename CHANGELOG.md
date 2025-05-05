@@ -20,6 +20,7 @@
 - Fixed placeholders in the teleportation window.
 - Improved the materials and colors of the pathfinding visualizers.
 - Made it so the module override list is now sorted alphabetically.
+- Fixed the fonts used in insight panels to match the rest of Imperium.
 
 ### Compatibility
 

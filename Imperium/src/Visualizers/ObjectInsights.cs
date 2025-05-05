@@ -149,10 +149,10 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .SetNameGenerator(valuable => valuable.name.Replace("Valuable ", "").Replace("(Clone)", ""))
             .RegisterInsight(
                 "Value",
-                valuable => SemiFunc.DollarGetString(Mathf.RoundToInt(valuable.dollarValueCurrent))
+                valuable => $"${SemiFunc.DollarGetString(Mathf.RoundToInt(valuable.dollarValueCurrent))}"
             )
-            .RegisterInsight("Is Discovered", valuable => $"${valuable.discovered}")
-            .RegisterInsight("Durability", valuable => $"${valuable.durabilityPreset.durability}")
+            .RegisterInsight("Is Discovered", valuable => $"{valuable.discovered}")
+            .RegisterInsight("Durability", valuable => $"{valuable.durabilityPreset.durability}")
             .RegisterInsight("Discovered Timer", valuable => $"{valuable.discoveredReminderTimer:0}s")
             .SetPositionOverride(valuable => valuable.transform.position)
             .SetConfigKey("Valuables");
