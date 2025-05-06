@@ -38,6 +38,7 @@ internal abstract class ImpAssets
     internal static GameObject TeleportationWindowObject;
     internal static GameObject VisualizationWindowObject;
     internal static GameObject PreferencesWindowObject;
+    internal static GameObject PortalWindowObject;
 
     /*
      * Materials
@@ -122,6 +123,7 @@ internal abstract class ImpAssets
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/object_explorer.prefab",
                 out ObjectExplorerWindowObject),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/preferences.prefab", out PreferencesWindowObject),
+            LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/portal.prefab", out PortalWindowObject),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/rendering.prefab", out RenderingWindowObject),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/save_editor.prefab", out SaveEditorWindowObject),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/UI/Windows/arena_control.prefab",

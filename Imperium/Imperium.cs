@@ -9,6 +9,7 @@ using Imperium.Core;
 using Imperium.Core.EventLogging;
 using Imperium.Core.Input;
 using Imperium.Core.Lifecycle;
+using Imperium.Core.Portal;
 using Imperium.Core.Scripts;
 using Imperium.Integration;
 using Imperium.Interface.ImperiumUI;
@@ -51,6 +52,7 @@ public class Imperium : BaseUnityPlugin
     internal static ImpOutput IO { get; private set; }
     internal static ImpNetworking Networking { get; set; }
     internal static StartupManager StartupManager { get; private set; }
+    internal static PortalManager PortalManager { get; private set; }
 
     /*
      * Lifecycle systems. Instantiated when Imperium is launched (Stage 2).
@@ -120,6 +122,7 @@ public class Imperium : BaseUnityPlugin
         IO = new ImpOutput(Log);
         StartupManager = new StartupManager();
         Networking = new ImpNetworking();
+        PortalManager = new PortalManager();
 
         if (!ImpAssets.Load()) return;
 

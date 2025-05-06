@@ -99,6 +99,11 @@ public class ImperiumUI : BaseUI
         //     canOpenBindings: Imperium.IsArenaLoaded
         // );
         RegisterImperiumWindow<PreferencesWindow>(
+            ImpAssets.PortalWindowObject,
+            "Right/Preferences",
+            "Imperium Preferences"
+        );
+        RegisterImperiumWindow<PreferencesWindow>(
             ImpAssets.PreferencesWindowObject,
             "Right/Preferences",
             "Imperium Preferences"
