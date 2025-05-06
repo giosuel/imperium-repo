@@ -32,7 +32,7 @@ internal class ArenaControlWindow : ImperiumWindow
     private void InitQuotaAndCredits()
     {
         ImpInput.Bind(
-            "Right/GroupCurrency/Input",
+            "Right/GroupCurrency",
             transform,
             Imperium.GameManager.GroupCurrency,
             min: 0,
@@ -40,7 +40,7 @@ internal class ArenaControlWindow : ImperiumWindow
         );
 
         ImpInput.Bind(
-            "Right/TotalHaul/Input",
+            "Right/TotalHaul",
             transform,
             Imperium.GameManager.TotalHaul,
             min: 0,

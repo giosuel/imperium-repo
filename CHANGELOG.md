@@ -9,6 +9,7 @@
 ### QoL Changes
 
 - Made it so items and valuables no longer spawn beneath the floor or behind walls.
+- Made it so input fields now submit on value change instead of on submit.
 
 ## Imperium v0.1.4 - Bug fixes and QoL improvements
 

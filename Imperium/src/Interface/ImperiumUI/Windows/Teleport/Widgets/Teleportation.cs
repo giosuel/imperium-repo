@@ -49,9 +49,9 @@ public class Teleportation : ImpWidget
         coordinateY = new ImpBinding<float>(onUpdateSecondary: _ => TeleportToCoords());
         coordinateZ = new ImpBinding<float>(onUpdateSecondary: _ => TeleportToCoords());
 
-        ImpInput.Bind("Coords/CoordsX", transform, coordinateX, theme);
-        ImpInput.Bind("Coords/CoordsY", transform, coordinateY, theme);
-        ImpInput.Bind("Coords/CoordsZ", transform, coordinateZ, theme);
+        ImpInput.Bind("Coords/CoordsX", transform, coordinateX, theme: theme, updateOnSubmit: true);
+        ImpInput.Bind("Coords/CoordsY", transform, coordinateY, theme: theme, updateOnSubmit: true);
+        ImpInput.Bind("Coords/CoordsZ", transform, coordinateZ, theme: theme, updateOnSubmit: true);
 
         ImpButton.Bind("Buttons/Interactive", transform, OnInteractive, theme);
 

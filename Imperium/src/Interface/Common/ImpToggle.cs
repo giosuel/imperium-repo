@@ -8,6 +8,7 @@ using JetBrains.Annotations;
 using Librarium;
 using Librarium.Binding;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -46,29 +47,37 @@ public abstract class ImpToggle
         params ImpBinding<bool>[] interactableBindings
     )
     {
-        var toggleObject = container.Find(path);
-        if (!toggleObject)
+        var toggleParent = container.Find(path);
+        if (!toggleParent)
         {
-            Imperium.IO.LogInfo($"[UI] Failed to bind toggle '{Debugging.GetTransformPath(container)}/{path}'");
+            Imperium.IO.LogInfo($"[UI] Failed to bind toggle element '{Debugging.GetTransformPath(container)}/{path}'");
             return null;
         }
 
-        var toggle = toggleObject.GetComponent<Toggle>();
-        var checkmark = toggleObject.Find("Background/Checkmark")?.GetComponent<Image>()
-                        ?? toggleObject.Find("Checkmark").GetComponent<Image>();
-        var text = (toggleObject.Find("Text") ?? toggleObject.Find("Text (TMP)"))?.GetComponent<TMP_Text>();
-
+        var toggle = toggleParent.GetComponent<Toggle>();
         toggle.isOn = valueBinding.Value;
 
-        var interactable = toggleObject.gameObject.AddComponent<ImpInteractable>();
-        interactable.onClick += () =>
+        toggle.onValueChanged.AddListener(value =>
         {
-            if (!toggle.interactable) return;
-            valueBinding.Set(!valueBinding.Value);
-        };
+            if (value == valueBinding.Value) return;
+
+            valueBinding.Set(value);
+        });
+
+        // valueBinding.OnUpdate += value => toggle.isOn = value;
+
+        // var interactable = toggleParent.gameObject.AddComponent<ImpInteractable>();
+        // interactable.onClick += () =>
+        // {
+        //     if (!toggle.interactable) return;
+        //     valueBinding.Set(!valueBinding.Value);
+        // };
         valueBinding.OnUpdate += value => toggle.isOn = value;
 
-        // Only play the click sound when the update was invoked by the local client
+        /*
+         * When using an ImpNetworkBinding, we want to make sure the click sound is only played
+         * when the update comes from the local client.
+         */
         valueBinding.OnUpdateSecondary += _ =>
         {
             if (Imperium.Settings.Preferences.PlaySounds.Value && playClickSound)
@@ -79,38 +88,26 @@ public abstract class ImpToggle
 
         if (interactableBindings.Length > 0)
         {
+            var checkmark = toggleParent.Find("Background/Checkmark")?.GetComponent<Image>()
+                            ?? toggleParent.Find("Checkmark").GetComponent<Image>();
+            var text = (toggleParent.Find("Text") ?? toggleParent.Find("Text (TMP)"))?.GetComponent<TMP_Text>();
+
             var isOn = interactableBindings.All(entry => entry.Value);
-            ToggleInteractable(checkmark, text, toggle, isOn);
+            ToggleInteractable(toggle, checkmark, text, isOn);
 
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.OnUpdate += value => ToggleInteractable(checkmark, text, toggle, value);
+                interactableBinding.OnUpdate += value => ToggleInteractable(toggle, checkmark, text, value);
             }
         }
 
-        if (tooltipDefinition != null)
-        {
-            if (!tooltipDefinition.Tooltip)
-            {
-                var togglePath = $"{Debugging.GetTransformPath(container)}/{path}";
-                Imperium.IO.LogWarning(
-                    $"[UI] Failed to initialize tooltip for '{togglePath}'. No tooltip provided."
-                );
-            }
-
-            interactable.onOver += position => tooltipDefinition.Tooltip.SetPosition(
-                tooltipDefinition.Title,
-                tooltipDefinition.Description,
-                position,
-                tooltipDefinition.HasAccess
-            );
-            interactable.onExit += () => tooltipDefinition.Tooltip.Deactivate();
-        }
+        // Add tooltip to parent element if tooltip is provided
+        if (tooltipDefinition != null) ImpUtils.Interface.AddTooltip(tooltipDefinition, toggleParent);
 
         if (theme != null)
         {
-            theme.OnUpdate += value => OnThemeUpdate(value, toggleObject);
-            OnThemeUpdate(theme.Value, toggleObject);
+            OnThemeUpdate(theme.Value, toggleParent);
+            theme.OnUpdate += value => OnThemeUpdate(value, toggleParent);
         }
 
         return toggle;
@@ -131,9 +128,9 @@ public abstract class ImpToggle
     }
 
     private static void ToggleInteractable(
-        Image checkmark,
+        Toggle toggle,
+        [CanBeNull] Image checkmark,
         [CanBeNull] TMP_Text text,
-        Selectable toggle,
         bool isOn
     )
     {

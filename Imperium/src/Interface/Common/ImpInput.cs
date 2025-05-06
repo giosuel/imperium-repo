@@ -3,6 +3,8 @@
 using System.Globalization;
 using System.Linq;
 using Imperium.Types;
+using Imperium.Util;
+using JetBrains.Annotations;
 using Librarium;
 using Librarium.Binding;
 using TMPro;
@@ -13,263 +15,322 @@ using UnityEngine.UI;
 
 namespace Imperium.Interface.Common;
 
+/// <summary>
+///     Represents an input field in the Imperium UI, the UI structure should look like this.
+///     Parent (RectTransform)
+///       - Input (TMP_input)
+///         - (Input Stuff)
+///       - Title (TMP_Text) [Optional]
+///       - Reset (Button) [Optional]
+/// </summary>
 public abstract class ImpInput
 {
     /// <summary>
-    ///     Binds a Unity input field to an ImpBinding without adding a component (content type int)
+    ///     Binds an existing input field to an ImpBinding (content type int).
     /// </summary>
     /// <param name="path"></param>
     /// <param name="container"></param>
     /// <param name="valueBinding"></param>
-    /// <param name="theme">The theme the input will use</param>
     /// <param name="min">Minimum input value</param>
     /// <param name="max">Maximum input value</param>
-    /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     /// <param name="negativeIsEmpty">Whether the input field should be cleared on updates with negative value</param>
+    /// <param name="updateOnSubmit">Only update the value binding when the input value is submitted</param>
+    /// <param name="theme">The theme the input field will use</param>
+    /// <param name="tooltipDefinition">The tooltip definition of the button tooltip.</param>
+    /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the button is interactable</param>
     internal static TMP_InputField Bind(
         string path,
         Transform container,
-        IBinding<int> valueBinding = null,
-        IBinding<ImpTheme> theme = null,
+        IBinding<int> valueBinding,
         int min = int.MinValue,
         int max = int.MaxValue,
-        bool interactableInvert = false,
         bool negativeIsEmpty = false,
+        bool updateOnSubmit = false,
+        IBinding<ImpTheme> theme = null,
+        TooltipDefinition tooltipDefinition = null,
+        bool interactableInvert = false,
         params IBinding<bool>[] interactableBindings
     )
     {
-        var inputObject = container.Find(path);
-        if (!inputObject)
+        var inputParent = container.Find(path);
+        if (!inputParent)
         {
-            Imperium.IO.LogInfo($"[UI] Failed to input '{Debugging.GetTransformPath(container)}/{path}'");
+            Imperium.IO.LogInfo($"[UI] Failed to bind input element '{Debugging.GetTransformPath(container)}/{path}'");
             return null;
         }
 
-        var input = inputObject.gameObject.GetComponent<TMP_InputField>();
+        var input = inputParent.Find("Input").GetComponent<TMP_InputField>();
         input.contentType = TMP_InputField.ContentType.IntegerNumber;
 
-        if (valueBinding != null)
+        // If value is below zero and negativeIsEmpty is true, set input field empty
+        input.text = valueBinding.Value < 0 && negativeIsEmpty ? "" : valueBinding.Value.ToString();
+
+        input.onValueChanged.AddListener(value =>
         {
-            input.onValueChanged.AddListener(value => OnIntFieldInput(input, value, min, max));
+            OnIntFieldInput(input, value, min, max);
 
-            if (valueBinding.Value < 0 && negativeIsEmpty)
-            {
-                input.text = "";
-            }
-            else
-            {
-                input.text = valueBinding.Value.ToString();
-            }
+            if (!updateOnSubmit) UpdateBinding(value);
+        });
 
-            // Set binding to default value if input value is empty
-            input.onSubmit.AddListener(value =>
-            {
-                if (string.IsNullOrEmpty(value) || !int.TryParse(value, out var parsed))
-                {
-                    // Reset field to previous value if current value is invalid
-                    input.text = valueBinding.Value.ToString();
-                }
-                else
-                {
-                    valueBinding.Set(parsed);
-                }
-            });
+        if (updateOnSubmit) input.onSubmit.AddListener(UpdateBinding);
 
-            valueBinding.OnUpdate += value =>
-            {
-                if (value < 0 && negativeIsEmpty)
-                {
-                    input.text = "";
-                }
-                else
-                {
-                    input.text = value.ToString();
-                }
-            };
+        valueBinding.OnUpdate += value =>
+        {
+            // If value is below zero and negativeIsEmpty is true, set input field empty
+            input.text = valueBinding.Value < 0 && negativeIsEmpty ? "" : value.ToString();
+        };
+
+        // Bind reset button if available
+        if (inputParent.Find("Reset"))
+        {
+            ImpButton.Bind(
+                "Reset",
+                inputParent,
+                () => valueBinding.Reset(),
+                theme: theme,
+                interactableInvert: interactableInvert,
+                interactableBindings: interactableBindings
+            );
         }
 
+        // Add tooltip to parent element if tooltip is provided
+        if (tooltipDefinition != null) ImpUtils.Interface.AddTooltip(tooltipDefinition, inputParent);
+
+        // Bind all interactable bindings if any were provided
         if (interactableBindings.Length > 0)
         {
-            ToggleInteractable(input, interactableBindings.All(entry => entry.Value), interactableInvert);
-            foreach (var interactableBinding in interactableBindings)
-            {
-                interactableBinding.OnUpdate += value => ToggleInteractable(input, value, interactableInvert);
-            }
+            BindInteractableBindings(inputParent, input, interactableInvert, interactableBindings);
         }
 
         if (theme != null)
         {
-            theme.OnUpdate += value => OnThemeUpdate(value, inputObject);
+            OnThemeUpdate(theme.Value, inputParent);
+            theme.OnUpdate += value => OnThemeUpdate(value, inputParent);
         }
 
         return input;
+
+        void UpdateBinding(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                // Reset binding on empty value if is not already default
+                if (valueBinding.Value != valueBinding.DefaultValue) valueBinding.Reset();
+            }
+            else
+            {
+                var parsed = int.Parse(value);
+
+                // Update binding if binding value is not already equal to input value
+                if (parsed != valueBinding.Value) valueBinding.Set(parsed);
+            }
+        }
     }
 
     /// <summary>
-    ///     Binds a Unity input field to an ImpBinding without adding a component (content type float)
+    ///     Binds an existing input field to an ImpBinding (content type float).
     /// </summary>
     /// <param name="path"></param>
     /// <param name="container"></param>
     /// <param name="valueBinding"></param>
-    /// <param name="theme">The theme the input will use</param>
     /// <param name="min">Minimum input value</param>
     /// <param name="max">Maximum input value</param>
-    /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     /// <param name="negativeIsEmpty">Whether the input field should be cleared on updates with negative value</param>
+    /// <param name="updateOnSubmit">Only update the value binding when the input value is submitted</param>
+    /// <param name="theme">The theme the input field will use</param>
+    /// <param name="tooltipDefinition">The tooltip definition of the button tooltip.</param>
+    /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the button is interactable</param>
     internal static TMP_InputField Bind(
         string path,
         Transform container,
-        IBinding<float> valueBinding = null,
-        IBinding<ImpTheme> theme = null,
+        IBinding<float> valueBinding,
         float min = float.MinValue,
         float max = float.MaxValue,
-        bool interactableInvert = false,
         bool negativeIsEmpty = false,
+        bool updateOnSubmit = false,
+        IBinding<ImpTheme> theme = null,
+        TooltipDefinition tooltipDefinition = null,
+        bool interactableInvert = false,
         params IBinding<bool>[] interactableBindings
     )
     {
-        var inputObject = container.Find(path);
-        if (!inputObject) return null;
+        var inputParent = container.Find(path);
+        if (!inputParent)
+        {
+            Imperium.IO.LogInfo($"[UI] Failed to bind input element '{Debugging.GetTransformPath(container)}/{path}'");
+            return null;
+        }
 
-        var input = inputObject.gameObject.GetComponent<TMP_InputField>();
+        var input = inputParent.Find("Input").GetComponent<TMP_InputField>();
         input.contentType = TMP_InputField.ContentType.DecimalNumber;
 
-        if (valueBinding != null)
-        {
-            input.onValueChanged.AddListener(value => OnFloatFieldInput(input, value, min, max));
+        // If value is below zero and negativeIsEmpty is true, set input field empty
+        input.text = valueBinding.Value < 0 && negativeIsEmpty
+            ? ""
+            : valueBinding.Value.ToString(CultureInfo.InvariantCulture);
 
-            if (valueBinding.Value < 0 && negativeIsEmpty)
+        input.onValueChanged.AddListener(value =>
+        {
+            OnFloatFieldInput(input, value, min, max);
+
+            if (!updateOnSubmit) UpdateBinding(value);
+        });
+
+        if (updateOnSubmit) input.onSubmit.AddListener(UpdateBinding);
+
+        valueBinding.OnUpdate += value =>
+        {
+            // If value is below zero and negativeIsEmpty is true, set input field empty
+            input.text = valueBinding.Value < 0 && negativeIsEmpty
+                ? ""
+                : value.ToString(CultureInfo.InvariantCulture);
+        };
+
+        // Bind reset button if available
+        if (inputParent.Find("Reset"))
+        {
+            ImpButton.Bind(
+                "Reset",
+                inputParent,
+                () => valueBinding.Reset(),
+                theme: theme,
+                interactableInvert: interactableInvert,
+                interactableBindings: interactableBindings
+            );
+        }
+
+        // Add tooltip to parent element if tooltip is provided
+        if (tooltipDefinition != null) ImpUtils.Interface.AddTooltip(tooltipDefinition, inputParent);
+
+        // Bind all interactable bindings if any were provided
+        if (interactableBindings.Length > 0)
+        {
+            BindInteractableBindings(inputParent, input, interactableInvert, interactableBindings);
+        }
+
+        if (theme != null)
+        {
+            OnThemeUpdate(theme.Value, inputParent);
+            theme.OnUpdate += value => OnThemeUpdate(value, inputParent);
+        }
+
+        return input;
+
+        void UpdateBinding(string value)
+        {
+            if (string.IsNullOrEmpty(value))
             {
-                input.text = "";
+                // Reset binding on empty value if is not already default
+                if (!Mathf.Approximately(valueBinding.Value, valueBinding.DefaultValue)) valueBinding.Reset();
             }
             else
             {
-                input.text = valueBinding.Value.ToString(CultureInfo.InvariantCulture);
-            }
+                var parsed = float.Parse(value);
 
-            input.onSubmit.AddListener(value =>
-            {
-                if (string.IsNullOrEmpty(value) || !float.TryParse(value, out var parsed))
-                {
-                    // Reset field to previous value if current value is invalid
-                    input.text = valueBinding.Value.ToString(CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    valueBinding.Set(parsed);
-                }
-            });
-
-            valueBinding.OnUpdate += value =>
-            {
-                if (value < 0 && negativeIsEmpty)
-                {
-                    input.text = "";
-                }
-                else
-                {
-                    input.text = value.ToString(CultureInfo.InvariantCulture);
-                }
-            };
-        }
-
-        if (interactableBindings.Length > 0)
-        {
-            ToggleInteractable(input, interactableBindings.All(entry => entry.Value), interactableInvert);
-            foreach (var interactableBinding in interactableBindings)
-            {
-                interactableBinding.OnUpdate += value => ToggleInteractable(input, value, interactableInvert);
+                // Update binding if binding value is not already equal to input value
+                if (!Mathf.Approximately(parsed, valueBinding.Value)) valueBinding.Set(parsed);
             }
         }
-
-        if (theme != null)
-        {
-            theme.OnUpdate += value => OnThemeUpdate(value, inputObject);
-            OnThemeUpdate(theme.Value, inputObject);
-        }
-
-        return input;
     }
 
-    private static void OnThemeUpdate(ImpTheme theme, Transform container)
-    {
-        ImpThemeManager.Style(
-            theme,
-            container,
-            new StyleOverride("", Variant.FOREGROUND)
-        );
-    }
-
+    /// <summary>
+    ///     Binds an existing input field to an ImpBinding (content type string).
+    /// </summary>
+    /// <param name="path"></param>
+    /// <param name="container"></param>
+    /// <param name="valueBinding"></param>
+    /// <param name="updateOnSubmit">Only update the value binding when the input value is submitted</param>
+    /// <param name="theme">The theme the input field will use</param>
+    /// <param name="tooltipDefinition">The tooltip definition of the button tooltip.</param>
+    /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
+    /// <param name="interactableBindings">List of boolean bindings that decide if the button is interactable</param>
     internal static TMP_InputField Bind(
         string path,
         Transform container,
-        IBinding<string> valueBinding = null,
+        IBinding<string> valueBinding,
+        bool updateOnSubmit = false,
         IBinding<ImpTheme> theme = null,
+        TooltipDefinition tooltipDefinition = null,
         bool interactableInvert = false,
         params IBinding<bool>[] interactableBindings
     )
     {
-        var inputObject = container.Find(path);
-        if (!inputObject) return null;
-
-        var input = inputObject.gameObject.GetComponent<TMP_InputField>();
-        input.contentType = TMP_InputField.ContentType.Standard;
-
-        if (valueBinding != null)
+        var inputParent = container.Find(path);
+        if (!inputParent)
         {
-            input.text = valueBinding.Value;
-
-            // Set binding to default value if input value is empty
-            input.onSubmit.AddListener(value => valueBinding.Set(value));
-
-            valueBinding.OnUpdate += value => input.text = value.ToString();
+            Imperium.IO.LogInfo($"[UI] Failed to bind input element '{Debugging.GetTransformPath(container)}/{path}'");
+            return null;
         }
 
+        var input = inputParent.Find("Input").GetComponent<TMP_InputField>();
+        input.contentType = TMP_InputField.ContentType.Standard;
+
+        input.text = valueBinding.Value;
+
+        // Set binding to default value if input value is empty
+        input.onValueChanged.AddListener(value =>
+        {
+            if (!updateOnSubmit) UpdateBinding(value);
+        });
+
+        if (updateOnSubmit) input.onSubmit.AddListener(UpdateBinding);
+
+        valueBinding.OnUpdate += value => input.text = value.ToString();
+
+        // Bind reset button if available
+        if (inputParent.Find("Reset"))
+        {
+            ImpButton.Bind(
+                "Reset",
+                inputParent,
+                () => valueBinding.Reset(),
+                theme: theme,
+                interactableInvert: interactableInvert,
+                interactableBindings: interactableBindings
+            );
+        }
+
+        // Add tooltip to parent element if tooltip is provided
+        if (tooltipDefinition != null) ImpUtils.Interface.AddTooltip(tooltipDefinition, inputParent);
+
+        // Bind all interactable bindings if any were provided
         if (interactableBindings.Length > 0)
         {
-            ToggleInteractable(input, interactableBindings.All(entry => entry.Value), interactableInvert);
-            foreach (var interactableBinding in interactableBindings)
-            {
-                interactableBinding.OnUpdate += value => ToggleInteractable(input, value, interactableInvert);
-            }
+            BindInteractableBindings(inputParent, input, interactableInvert, interactableBindings);
         }
 
         if (theme != null)
         {
-            theme.OnUpdate += value => OnThemeUpdate(value, inputObject);
+            OnThemeUpdate(theme.Value, inputParent);
+            theme.OnUpdate += value => OnThemeUpdate(value, inputParent);
         }
 
         return input;
+
+        void UpdateBinding(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                // Reset binding on empty value if is not already default
+                if (valueBinding.Value != valueBinding.DefaultValue) valueBinding.Reset();
+            }
+            else
+            {
+                // Update binding if binding value is not already equal to input value
+                if (value != valueBinding.Value) valueBinding.Set(value);
+            }
+        }
     }
 
-    /// <summary>
-    ///     Creates a dummy field for decorative purposes (e.g. Outdoor deviation is a hard-coded value)
-    /// </summary>
-    /// <param name="path"></param>
-    /// <param name="container"></param>
-    /// <param name="text"></param>
-    /// <param name="theme">The theme the input will use</param>
-    /// <returns></returns>
-    internal static void CreateStatic(
-        string path,
-        Transform container,
-        string text,
-        IBinding<ImpTheme> theme = null
-    )
+    private static void OnThemeUpdate(ImpTheme themeUpdate, Transform container)
     {
-        var inputObject = container.Find(path);
-        var input = inputObject.gameObject.GetComponent<TMP_InputField>();
-        input.text = text;
-        input.interactable = false;
-        input.contentType = TMP_InputField.ContentType.IntegerNumber;
-
-        if (theme != null)
-        {
-            theme.OnUpdate += value => OnThemeUpdate(value, inputObject);
-            OnThemeUpdate(theme.Value, inputObject);
-        }
+        ImpThemeManager.Style(
+            themeUpdate,
+            container,
+            new StyleOverride("Input", Variant.FOREGROUND)
+        );
     }
 
     private static void OnIntFieldInput(
@@ -289,8 +350,6 @@ public abstract class ImpInput
         {
             field.text = min.ToString();
         }
-
-        // field.text = value.ToString();
     }
 
     private static void OnFloatFieldInput(
@@ -310,12 +369,41 @@ public abstract class ImpInput
         {
             field.text = min.ToString(CultureInfo.InvariantCulture);
         }
-
-        // field.text = value.ToString(CultureInfo.InvariantCulture);
     }
 
-    private static void ToggleInteractable(Selectable input, bool isOn, bool inverted)
+    private static void BindInteractableBindings(
+        Transform inputParent,
+        TMP_InputField input,
+        bool interactableInvert = false,
+        params IBinding<bool>[] interactableBindings
+    )
+    {
+        var title = inputParent.Find("Title")?.GetComponent<TMP_Text>();
+
+        ToggleInteractable(
+            input, title,
+            interactableBindings.All(entry => entry.Value),
+            interactableInvert
+        );
+
+        foreach (var interactableBinding in interactableBindings)
+        {
+            interactableBinding.OnUpdate += value => ToggleInteractable(
+                input, title,
+                interactableBindings.All(entry => entry.Value),
+                interactableInvert
+            );
+        }
+    }
+
+    private static void ToggleInteractable(
+        TMP_InputField input,
+        [CanBeNull] TMP_Text title,
+        bool isOn, bool inverted = false
+    )
     {
         input.interactable = inverted ? !isOn : isOn;
+
+        if (title) ImpUtils.Interface.ToggleTextActive(title, inverted ? !isOn : isOn);
     }
 }

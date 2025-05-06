@@ -7,6 +7,10 @@ using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
 using Imperium.Core;
+using Imperium.Interface;
+using Imperium.Interface.Common;
+using JetBrains.Annotations;
+using Librarium;
 using Librarium.Binding;
 using Newtonsoft.Json;
 using TMPro;
@@ -207,6 +211,30 @@ public abstract class ImpUtils
                 if (label) ToggleTextActive(label, inverted ? !isActive : isActive);
                 if (arrow) ToggleImageActive(arrow, inverted ? !isActive : isActive);
             };
+        }
+
+        /**
+         * Adds an ImpTooltip to a UI element.
+         */
+        internal static void AddTooltip(TooltipDefinition tooltipDefinition, Transform element)
+        {
+            if (!tooltipDefinition.Tooltip)
+            {
+                Imperium.IO.LogWarning(
+                    $"[UI] Failed to initialize tooltip for '{Debugging.GetTransformPath(element)}'. No tooltip provided."
+                );
+                return;
+            }
+
+            var interactable = element.gameObject.AddComponent<ImpInteractable>();
+
+            interactable.onOver += position => tooltipDefinition.Tooltip.SetPosition(
+                tooltipDefinition.Title,
+                tooltipDefinition.Description,
+                position,
+                tooltipDefinition.HasAccess
+            );
+            interactable.onExit += () => tooltipDefinition.Tooltip.Deactivate();
         }
 
         /**
