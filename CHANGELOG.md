@@ -1,5 +1,15 @@
 # Changelog
 
+## Imperium v0.1.5 - Interaction API
+
+### Changes
+
+- Introduction of the Interaction API for mod developers.
+
+### QoL Changes
+
+- Made it so items and valuables no longer spawn beneath the floor or behind walls.
+
 ## Imperium v0.1.4 - Bug fixes and QoL improvements
 
 ### Changes

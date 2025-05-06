@@ -291,16 +291,16 @@ internal class SpawningUI : BaseUI
             var playerTransform = PlayerAvatar.instance.localCamera.transform;
             var spawnPosition = playerTransform.position + playerTransform.forward * 3f;
 
-            var hasFloorBeneath = Physics.Raycast(
-                spawnPosition,
-                Vector3.down,
-                out var hitInfo,
-                80f,
-                LayerMask.NameToLayer("Default"),
-                QueryTriggerInteraction.Ignore
-            );
-
-            if (hasFloorBeneath) spawnPosition = hitInfo.point;
+            var ray = new Ray(playerTransform.position, playerTransform.forward);
+            if (Physics.Raycast(ray, out var hitInfo))
+            {
+                if (Vector3.Distance(playerTransform.position, hitInfo.point) <
+                    Vector3.Distance(playerTransform.position, spawnPosition))
+                {
+                    spawnPosition = hitInfo.point;
+                }
+            }
+            
             spawningObjectEntry.Spawn(spawnPosition, amount, value, true);
         }
 
