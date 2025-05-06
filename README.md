@@ -2,7 +2,7 @@
 
 # Imperium Repo
 
-Imperium is a powerful and highly performant all-in-one debugging tool to test and explore game mechanics and functionality in [R.E.P.O](https://store.steampowered.com/app/3241660/REPO/).
+A powerful all-in-one debugging and admin tool to test and explore game mechanics and functionality in [R.E.P.O](https://store.steampowered.com/app/3241660/REPO/).
 
 This is the official R.E.P.O. port of the original [Imperium for Lethal Company](https://github.com/giosuel/imperium).
 
@@ -59,7 +59,7 @@ Various icons were provided by [FlatIcon](https://www.flaticon.com/).
 - [alter ego](https://www.youtube.com/@alteregosocial) for helping me with testing and consistently being an amazing motivation!
 - [Hamunii](https://github.com/hamunii) for helping me and being awesome!
 - [Rune580](https://github.com/Rune580) for providing the amazing [RepoSteamNetworking](https://github.com/Rune580/RepoSteamNetworking)!
-- [Adi](https://thunderstore.io/c/lethal-company/p/AdiBTW/) for helping with the [LOS](https://github.com/AdalynBlack/LC-EnemyDebug) visualizers!
+- [Adi](https://thunderstore.io/c/lethal-company/p/AdiBTW/) for helping with the [LoS](https://github.com/AdalynBlack/LC-EnemyDebug) visualizers!
 - [NikkiDarkMatter](https://www.youtube.com/@NikkiDarkMatter) for helping me with the level point visualization!
 - [Nebby](https://github.com/nebulaetrix), [Swaggies](https://thunderstore.io/c/lethal-company/p/Swaggies), [aminoob](https://thunderstore.io/c/lethal-company/p/aminoob/) and star0138 for the help with the testing of Imperium!
 - [sinai-dev](https://github.com/sinai-dev) for creating [Unity Explorer](https://github.com/sinai-dev/UnityExplorer), my favorite mod of all time!
