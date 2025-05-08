@@ -123,6 +123,7 @@ public class Imperium : BaseUnityPlugin
         StartupManager = new StartupManager();
         Networking = new ImpNetworking();
         PortalManager = new PortalManager();
+        PortalManager.RegisterTestPortal();
 
         if (!ImpAssets.Load()) return;
 

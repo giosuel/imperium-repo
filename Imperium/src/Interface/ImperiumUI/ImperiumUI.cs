@@ -9,6 +9,7 @@ using Imperium.Interface.ImperiumUI.Windows.ControlCenter;
 using Imperium.Interface.ImperiumUI.Windows.EventLog;
 using Imperium.Interface.ImperiumUI.Windows.LevelGeneration;
 using Imperium.Interface.ImperiumUI.Windows.ObjectExplorer;
+using Imperium.Interface.ImperiumUI.Windows.Portal;
 using Imperium.Interface.ImperiumUI.Windows.Preferences;
 using Imperium.Interface.ImperiumUI.Windows.Rendering;
 using Imperium.Interface.ImperiumUI.Windows.Teleport;
@@ -35,6 +36,7 @@ public class ImperiumUI : BaseUI
 
     private RectTransform dockRect;
 
+    // ReSharper disable Unity.PerformanceAnalysis
     protected override void InitUI()
     {
         dockRect = container.Find("Dock").GetComponent<RectTransform>();
@@ -98,10 +100,10 @@ public class ImperiumUI : BaseUI
         //     "Level Information",
         //     canOpenBindings: Imperium.IsArenaLoaded
         // );
-        RegisterImperiumWindow<PreferencesWindow>(
+        RegisterImperiumWindow<PortalWindow>(
             ImpAssets.PortalWindowObject,
-            "Right/Preferences",
-            "Imperium Preferences"
+            "Right/Portal",
+            "Portals"
         );
         RegisterImperiumWindow<PreferencesWindow>(
             ImpAssets.PreferencesWindowObject,

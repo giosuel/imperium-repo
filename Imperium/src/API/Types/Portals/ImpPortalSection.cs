@@ -1,14 +1,15 @@
 using System.Collections.Generic;
-using Imperium.Core.Portal;
 
 namespace Imperium.API.Types.Portals;
 
 public record ImpPortalSection
 {
+    internal readonly string Name;
     internal readonly List<ImpPortalElement> Elements = [];
 
-    internal ImpPortalSection()
+    internal ImpPortalSection(string name)
     {
+        Name = name;
     }
 
     public ImpPortalSection Register(ImpPortalElement element)

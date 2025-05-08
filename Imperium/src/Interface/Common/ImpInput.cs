@@ -33,8 +33,10 @@ public abstract class ImpInput
     /// <param name="valueBinding"></param>
     /// <param name="min">Minimum input value</param>
     /// <param name="max">Maximum input value</param>
+    /// <param name="placeholder">A text that is shown when the input field is empty</param>
     /// <param name="negativeIsEmpty">Whether the input field should be cleared on updates with negative value</param>
     /// <param name="updateOnSubmit">Only update the value binding when the input value is submitted</param>
+    /// <param name="allowReset">Only update the value binding when the input value is submitted</param>
     /// <param name="theme">The theme the input field will use</param>
     /// <param name="tooltipDefinition">The tooltip definition of the button tooltip.</param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
@@ -45,8 +47,10 @@ public abstract class ImpInput
         IBinding<int> valueBinding,
         int min = int.MinValue,
         int max = int.MaxValue,
+        string placeholder = "",
         bool negativeIsEmpty = false,
         bool updateOnSubmit = false,
+        bool allowReset = true,
         IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
         bool interactableInvert = false,
@@ -80,18 +84,29 @@ public abstract class ImpInput
             // If value is below zero and negativeIsEmpty is true, set input field empty
             input.text = valueBinding.Value < 0 && negativeIsEmpty ? "" : value.ToString();
         };
+        
+        // Set placeholder text
+        inputParent.Find("Input/Text Area/Placeholder").GetComponent<TMP_Text>().text = placeholder;
 
         // Bind reset button if available
-        if (inputParent.Find("Reset"))
+        var resetButton = inputParent.Find("Reset");
+        if (resetButton)
         {
-            ImpButton.Bind(
-                "Reset",
-                inputParent,
-                () => valueBinding.Reset(),
-                theme: theme,
-                interactableInvert: interactableInvert,
-                interactableBindings: interactableBindings
-            );
+            if (allowReset)
+            {
+                ImpButton.Bind(
+                    "Reset",
+                    inputParent,
+                    () => valueBinding.Reset(),
+                    theme: theme,
+                    interactableInvert: interactableInvert,
+                    interactableBindings: interactableBindings
+                );
+            }
+            else
+            {
+                resetButton.gameObject.SetActive(false);
+            }
         }
 
         // Add tooltip to parent element if tooltip is provided
@@ -136,8 +151,10 @@ public abstract class ImpInput
     /// <param name="valueBinding"></param>
     /// <param name="min">Minimum input value</param>
     /// <param name="max">Maximum input value</param>
+    /// <param name="placeholder">A text that is shown when the input field is empty</param>
     /// <param name="negativeIsEmpty">Whether the input field should be cleared on updates with negative value</param>
     /// <param name="updateOnSubmit">Only update the value binding when the input value is submitted</param>
+    /// <param name="allowReset">Only update the value binding when the input value is submitted</param>
     /// <param name="theme">The theme the input field will use</param>
     /// <param name="tooltipDefinition">The tooltip definition of the button tooltip.</param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
@@ -148,8 +165,10 @@ public abstract class ImpInput
         IBinding<float> valueBinding,
         float min = float.MinValue,
         float max = float.MaxValue,
+        string placeholder = "",
         bool negativeIsEmpty = false,
         bool updateOnSubmit = false,
+        bool allowReset = false,
         IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
         bool interactableInvert = false,
@@ -187,18 +206,29 @@ public abstract class ImpInput
                 ? ""
                 : value.ToString(CultureInfo.InvariantCulture);
         };
+        
+        // Set placeholder text
+        inputParent.Find("Input/Text Area/Placeholder").GetComponent<TMP_Text>().text = placeholder;
 
         // Bind reset button if available
-        if (inputParent.Find("Reset"))
+        var resetButton = inputParent.Find("Reset");
+        if (resetButton)
         {
-            ImpButton.Bind(
-                "Reset",
-                inputParent,
-                () => valueBinding.Reset(),
-                theme: theme,
-                interactableInvert: interactableInvert,
-                interactableBindings: interactableBindings
-            );
+            if (allowReset)
+            {
+                ImpButton.Bind(
+                    "Reset",
+                    inputParent,
+                    () => valueBinding.Reset(),
+                    theme: theme,
+                    interactableInvert: interactableInvert,
+                    interactableBindings: interactableBindings
+                );
+            }
+            else
+            {
+                resetButton.gameObject.SetActive(false);
+            }
         }
 
         // Add tooltip to parent element if tooltip is provided
@@ -241,7 +271,9 @@ public abstract class ImpInput
     /// <param name="path"></param>
     /// <param name="container"></param>
     /// <param name="valueBinding"></param>
+    /// <param name="placeholder">A text that is shown when the input field is empty</param>
     /// <param name="updateOnSubmit">Only update the value binding when the input value is submitted</param>
+    /// <param name="allowReset">Only update the value binding when the input value is submitted</param>
     /// <param name="theme">The theme the input field will use</param>
     /// <param name="tooltipDefinition">The tooltip definition of the button tooltip.</param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
@@ -250,7 +282,9 @@ public abstract class ImpInput
         string path,
         Transform container,
         IBinding<string> valueBinding,
+        string placeholder = "",
         bool updateOnSubmit = false,
+        bool allowReset = false,
         IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
         bool interactableInvert = false,
@@ -278,18 +312,29 @@ public abstract class ImpInput
         if (updateOnSubmit) input.onSubmit.AddListener(UpdateBinding);
 
         valueBinding.OnUpdate += value => input.text = value.ToString();
+        
+        // Set placeholder text
+        inputParent.Find("Input/Text Area/Placeholder").GetComponent<TMP_Text>().text = placeholder;
 
         // Bind reset button if available
-        if (inputParent.Find("Reset"))
+        var resetButton = inputParent.Find("Reset");
+        if (resetButton)
         {
-            ImpButton.Bind(
-                "Reset",
-                inputParent,
-                () => valueBinding.Reset(),
-                theme: theme,
-                interactableInvert: interactableInvert,
-                interactableBindings: interactableBindings
-            );
+            if (allowReset)
+            {
+                ImpButton.Bind(
+                    "Reset",
+                    inputParent,
+                    () => valueBinding.Reset(),
+                    theme: theme,
+                    interactableInvert: interactableInvert,
+                    interactableBindings: interactableBindings
+                );
+            }
+            else
+            {
+                resetButton.gameObject.SetActive(false);
+            }
         }
 
         // Add tooltip to parent element if tooltip is provided

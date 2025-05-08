@@ -1,5 +1,5 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <Import Project="$(SolutionDir)Imperium.props.user" Condition="$(CI) != 'true'" />
+<!--    <Import Project="$(SolutionDir)Imperium.props.user" Condition="$(CI) != 'true'" />-->
 
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>

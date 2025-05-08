@@ -18,7 +18,7 @@ internal static class LoadingUIPatch
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch("LevelAnimationComplete")]
+    [HarmonyPatch(typeof(LoadingUI), "LevelAnimationComplete")]
     private static void LevelAnimationCompletePatch(LoadingUI __instance)
     {
         Imperium.IsArenaLoaded.SetTrue();

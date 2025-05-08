@@ -29,7 +29,9 @@ public static class ImpDropdown
         Transform container,
         IBinding<int> valueBinding,
         IEnumerable<string> options,
+        string placeholder = "",
         bool playClickSound = true,
+        bool allowReset = true,
         IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
         bool interactableInvert = false,
@@ -55,18 +57,29 @@ public static class ImpDropdown
         });
 
         valueBinding.OnUpdate += value => dropdown.value = value;
+        
+        // Set placeholder text
+        dropdownParent.Find("Dropdown/Placeholder").GetComponent<TMP_Text>().text = placeholder;
 
         // Bind reset button if available
-        if (dropdownParent.Find("Reset"))
+        var resetButton = dropdownParent.Find("Reset");
+        if (resetButton)
         {
-            ImpButton.Bind(
-                "Reset",
-                dropdownParent,
-                () => valueBinding.Reset(),
-                theme: theme,
-                interactableInvert: interactableInvert,
-                interactableBindings: interactableBindings
-            );
+            if (allowReset)
+            {
+                ImpButton.Bind(
+                    "Reset",
+                    dropdownParent,
+                    () => valueBinding.Reset(),
+                    theme: theme,
+                    interactableInvert: interactableInvert,
+                    interactableBindings: interactableBindings
+                );
+            }
+            else
+            {
+                resetButton.gameObject.SetActive(false);
+            }
         }
 
         // Add tooltip to parent element if tooltip is provided
