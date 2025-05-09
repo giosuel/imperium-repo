@@ -33,7 +33,7 @@ public class Teleportation : ImpWidget
     {
         tpShip = ImpButton.Bind(
             "Presets/Truck", transform,
-            () => TeleportTo(Imperium.PlayerManager.TruckTPAnchor.Value),
+            () => TeleportTo(Imperium.PlayerManager.TruckTPAnchor?.Value),
             theme
         );
         ImpButton.Bind(
@@ -64,7 +64,7 @@ public class Teleportation : ImpWidget
 
     protected override void OnOpen()
     {
-        tpShip.interactable = Imperium.PlayerManager.TruckTPAnchor.Value != null;
+        tpShip.interactable = Imperium.PlayerManager.TruckTPAnchor?.Value != null;
 
         var position = PlayerAvatar.instance.transform.position;
         coordinateX.Set(MathF.Round(position.x, 2), invokeSecondary: false);

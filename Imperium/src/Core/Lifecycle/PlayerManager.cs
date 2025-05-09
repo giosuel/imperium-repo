@@ -34,9 +34,7 @@ internal class PlayerManager : ImpLifecycleObject
         "TeleportPlayer", Imperium.Networking, true
     );
 
-    internal readonly ImpExternalBinding<Vector3?, bool> TruckTPAnchor = new(
-        () => GameObject.Find("Truck Item Shelf")?.transform.position
-    );
+    internal ImpExternalBinding<Vector3?, bool> TruckTPAnchor;
 
     internal bool FlyIsAscending;
     internal bool FlyIsDescending;
@@ -67,6 +65,9 @@ internal class PlayerManager : ImpLifecycleObject
 
     protected override void OnSceneLoad()
     {
+        if (TruckTPAnchor == null)
+            TruckTPAnchor = new(() => GameObject.Find("Truck Item Shelf")?.transform.position);
+        
         TruckTPAnchor.Refresh();
 
         // Load grabber and render settings as they are reset when the level is loaded
