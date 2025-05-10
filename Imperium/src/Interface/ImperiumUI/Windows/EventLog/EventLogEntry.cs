@@ -82,8 +82,8 @@ internal class EventLogEntry : MonoBehaviour
 
     private void OnExit()
     {
-        hover.SetActive(false);
         if (tooltip) tooltip.Deactivate();
+        hover.SetActive(false);
     }
 
     internal void OnClose() => hover.SetActive(false);
