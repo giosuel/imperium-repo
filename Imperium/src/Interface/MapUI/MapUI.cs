@@ -1,6 +1,7 @@
 #region
 
 using Imperium.Core;
+using Imperium.Extensions;
 using Imperium.Interface.Common;
 using Imperium.Types;
 using Librarium.Binding;
@@ -151,6 +152,8 @@ internal class MapUI : BaseUI
 
     private static void OnMinimapToggle(InputAction.CallbackContext _)
     {
+        if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
+
         Imperium.Settings.Map.MinimapEnabled.Set(!Imperium.Settings.Map.MinimapEnabled.Value);
     }
 
@@ -180,8 +183,10 @@ internal class MapUI : BaseUI
             path: "ZoomSlider",
             container: container,
             valueBinding: Imperium.Settings.Map.CameraZoom,
-            indicatorUnit: "x",
-            indicatorFormatter: value => Mathf.RoundToInt(value).ToString(),
+            minValue: 1,
+            maxValue: 100,
+            valueUnit: "x",
+            handleFormatter: value => $"{Mathf.RoundToInt(value)}",
             theme: theme
         );
         container.Find("ZoomSlider/MinIcon").gameObject.AddComponent<ImpInteractable>()
@@ -189,38 +194,42 @@ internal class MapUI : BaseUI
         container.Find("ZoomSlider/MaxIcon").gameObject.AddComponent<ImpInteractable>()
             .onClick += () => Imperium.Settings.Map.CameraZoom.Set(100);
 
-        farClipSlider = ImpSlider.Bind(
-            path: "NearClip",
-            container: container,
-            valueBinding: Imperium.Map.CameraFarClip,
-            indicatorFormatter: value => Mathf.RoundToInt(value).ToString(),
-            playClickSound: false,
-            theme: theme
-        );
-        farClipSlider.gameObject.SetActive(!Imperium.Settings.Map.AutoClipping.Value);
-        Imperium.Settings.Map.AutoClipping.OnUpdate += value => farClipSlider.gameObject.SetActive(!value);
-
         nearClipSlider = ImpSlider.Bind(
             path: "FarClip",
             container: container,
             valueBinding: Imperium.Map.CameraNearClip,
-            indicatorFormatter: value => Mathf.RoundToInt(value).ToString(),
+            minValue: -50,
+            maxValue: 200,
+            handleFormatter: value => $"{Mathf.RoundToInt(value)}",
             playClickSound: false,
             theme: theme
         );
         nearClipSlider.gameObject.SetActive(!Imperium.Settings.Map.AutoClipping.Value);
         Imperium.Settings.Map.AutoClipping.OnUpdate += value => nearClipSlider.gameObject.SetActive(!value);
+
+        farClipSlider = ImpSlider.Bind(
+            path: "NearClip",
+            container: container,
+            valueBinding: Imperium.Map.CameraFarClip,
+            minValue: -50,
+            maxValue: 200,
+            handleFormatter: value => $"{Mathf.RoundToInt(value)}",
+            playClickSound: false,
+            theme: theme
+        );
+        farClipSlider.gameObject.SetActive(!Imperium.Settings.Map.AutoClipping.Value);
+        Imperium.Settings.Map.AutoClipping.OnUpdate += value => farClipSlider.gameObject.SetActive(!value);
     }
 
     private void InitMapSettings()
     {
-        ImpToggle.Bind("MapSettings/MinimapEnabled", container, Imperium.Settings.Map.MinimapEnabled, theme);
-        ImpToggle.Bind("MapSettings/CompassEnabled", container, Imperium.Settings.Map.CompassEnabled, theme);
+        ImpToggle.Bind("MapSettings/MinimapEnabled", container, Imperium.Settings.Map.MinimapEnabled, theme: theme);
+        ImpToggle.Bind("MapSettings/CompassEnabled", container, Imperium.Settings.Map.CompassEnabled, theme: theme);
         ImpToggle.Bind(
             "MapSettings/RotationLock",
             container,
             Imperium.Settings.Map.RotationLock,
-            theme,
+            theme: theme,
             tooltipDefinition: new TooltipDefinition
             {
                 Tooltip = tooltip,
@@ -231,19 +240,19 @@ internal class MapUI : BaseUI
             "MapSettings/UnlockView",
             container,
             Imperium.Settings.Map.UnlockView,
-            theme,
+            theme: theme,
             tooltipDefinition: new TooltipDefinition
             {
                 Tooltip = tooltip,
                 Description = "When off, the camera resets to a 45 angle.\nWhen on, the camers resets to top-down view."
             }
         );
-        ImpToggle.Bind("MapSettings/AutoClipping", container, Imperium.Settings.Map.AutoClipping, theme);
+        ImpToggle.Bind("MapSettings/AutoClipping", container, Imperium.Settings.Map.AutoClipping, theme: theme);
         ImpButton.Bind(
             "MapSettings/MinimapSettings",
             container,
             () => Imperium.Interface.Open<MinimapSettings>(),
-            theme
+            theme: theme
         );
     }
 

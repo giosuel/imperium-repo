@@ -19,20 +19,21 @@ public abstract class BaseVisualizer<T, R> where R : Component
     protected Transform parent { get; private set; }
     protected readonly Dictionary<int, R> visualizerObjects = [];
 
+    private readonly IBinding<bool> visibilityBinding;
+
     protected BaseVisualizer(Transform parent, IBinding<T> objectsBinding = null, IBinding<bool> visibilityBinding = null)
     {
         this.parent = parent;
+        this.visibilityBinding = visibilityBinding;
 
-        if (objectsBinding != null)
-        {
-            objectsBinding.OnUpdate += objects =>
-            {
-                OnRefresh(objects);
-                if (visibilityBinding != null) OnVisibilityUpdate(visibilityBinding.Value);
-            };
-        }
-
+        if (objectsBinding != null) objectsBinding.OnUpdate += OnObjectBindingUpdate;
         if (visibilityBinding != null) visibilityBinding.OnUpdate += OnVisibilityUpdate;
+    }
+
+    private void OnObjectBindingUpdate(T objects)
+    {
+        OnRefresh(objects);
+        if (visibilityBinding != null) OnVisibilityUpdate(visibilityBinding.Value);
     }
 
     /// <summary>

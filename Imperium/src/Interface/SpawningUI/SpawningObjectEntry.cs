@@ -37,7 +37,7 @@ public class SpawningObjectEntry : MonoBehaviour
 
         objectNameNormalized = NormalizeName(spawnObjectName);
 
-        ImpButton.Bind("", transform, () => onClick?.Invoke(), themeBinding);
+        ImpButton.Bind("", transform, () => onClick?.Invoke(), theme: themeBinding);
 
         selectedCover = transform.Find("Selected").gameObject;
         selectedCover.SetActive(false);

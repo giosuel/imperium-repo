@@ -62,9 +62,10 @@ Various icons were provided by [FlatIcon](https://www.flaticon.com/).
 - [Adi](https://thunderstore.io/c/lethal-company/p/AdiBTW/) for helping with the [LoS](https://github.com/AdalynBlack/LC-EnemyDebug) visualizers!
 - [NikkiDarkMatter](https://www.youtube.com/@NikkiDarkMatter) for helping me with the level point visualization!
 - [1A3](https://github.com/1A3Dev) for helping me with the development build of the game.
+- [Nilaier](https://github.com/NilaierMusic) for le awesome readme inspiration.
 - [Nebby](https://github.com/nebulaetrix), [Swaggies](https://thunderstore.io/c/lethal-company/p/Swaggies), [aminoob](https://thunderstore.io/c/lethal-company/p/aminoob/) and star0138 for the help with the testing of Imperium!
 - [sinai-dev](https://github.com/sinai-dev) for creating [Unity Explorer](https://github.com/sinai-dev/UnityExplorer), my favorite mod of all time!
 
 ## 📜 License
 
-Imperium and all its assets are distributed under the [GNU GPL-3.0 license](https://www.gnu.org/licenses/gpl-3.0.en.html).
+Imperium and all its asvoisets are distributed under the [GNU GPL-3.0 license](https://www.gnu.org/licenses/gpl-3.0.en.html).

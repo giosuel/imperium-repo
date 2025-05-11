@@ -103,7 +103,7 @@ public class ImpMap : ImpScript
 
     private void Update()
     {
-        if (!Imperium.IsArenaLoaded.Value) return;
+        if (!Imperium.IsLevelLoaded.Value) return;
 
         Camera.transform.position = Imperium.ActiveCamera.Value.transform.position + Vector3.up * 20f;
     }

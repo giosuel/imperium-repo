@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BepInEx.Bootstrap;
+using ExitGames.Client.Photon.StructWrapping;
 using Imperium.API.Types.Portals;
 using Librarium.Binding;
 
@@ -29,45 +30,40 @@ internal class PortalManager
         return portal;
     }
 
-    internal ImpPortal GetRuntimePortal() => RuntimePortal;
-
     internal static void RegisterTestPortal()
     {
-        var inputFieldBinding = new ImpBinding<string>();
-        var dropdownBinding = new ImpBinding<int>();
-        var dropdownOptions = new List<string>(["option1", "option2"]);
+        var inputFieldBinding = new ImpBinding<string>("");
+        var dropdownBinding = new ImpBinding<int>(0);
+        var movementSpeedBinding = new ImpBinding<float>(1f);
+
+        Imperium.IsLevelLoaded.OnUpdate += value => Imperium.IO.LogInfo($"Imperium.IsArenaLoaded: {value}");
+        API.State.IsLevelLoaded.OnUpdate += value => Imperium.IO.LogInfo($"API.State.IsArenaLoaded: {value}");
 
         API.Portal.ForGuid(LCMPluginInfo.PLUGIN_GUID)
-            .InSection("section")
+            .InSection("General Config")
             .Register(
-                new ImpPortalButton("Test Button", ButtonCallback)
-                    .SetTooltip(new ImpPortalTooltip("Test button", "does something"))
-                    .SetInteractableBinding(new ImpBinaryBinding(true))
-            )
-            .Register(
-                new ImpPortalTextField(
-                        "Test text field",
-                        inputFieldBinding,
-                        "Generated"
-                    )
-                    .SetTooltip(new ImpPortalTooltip("Test input field", "does something"))
-                    .SetInteractableBinding(new ImpBinaryBinding(true))
-            )
-            .Register(
-                new ImpPortalDropdown(
-                        "Test dropdown",
-                        dropdownBinding,
-                        dropdownOptions,
-                        "Nothing"
-                    )
-                    .SetTooltip(new ImpPortalTooltip("Test dropdown", "does something"))
-                    .SetInteractableBinding(new ImpBinaryBinding(true))
+                new ImpPortalTextField("Global Modifier", inputFieldBinding, "Generated")
+                    .SetTooltip(new ImpPortalTooltip("Global Modifier", "Bla bla bla"))
+                    .SetInteractableBinding(API.State.IsGameLevel),
+                new ImpPortalSlider("Global Speed", new ImpBinding<float>(5f), 10, 100)
             );
-        return;
 
-        void ButtonCallback()
-        {
-            Imperium.IO.LogInfo("Someone pressed le funni button");
-        }
+        API.Portal.ForGuid(LCMPluginInfo.PLUGIN_GUID)
+            .InSection("Example Enemy")
+            .Register(
+                new ImpPortalDropdown("Behaviour", dropdownBinding, ["Passive", "Active"], "Generated", allowReset: false),
+                new ImpPortalNumberField(
+                    "Current Health",
+                    new ImpBinding<int>(100),
+                    0,
+                    100
+                ),
+                new ImpPortalToggle("Vision Enabled", new ImpBinding<bool>()),
+                new ImpPortalToggle("Hearing Enabled", new ImpBinding<bool>()),
+                new ImpPortalToggle("Disabled", new ImpBinding<bool>()),
+                new ImpPortalSlider("Spawn Chance", movementSpeedBinding, 0, 100, valueUnit: "%"),
+                new ImpPortalButton("Spawn", () => {}),
+                new ImpPortalButton("Despawn", () => {})
+            );
     }
 }

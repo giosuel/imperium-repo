@@ -12,10 +12,5 @@ public record ImpPortalSection
         Name = name;
     }
 
-    public ImpPortalSection Register(ImpPortalElement element)
-    {
-        Elements.Add(element);
-
-        return this;
-    }
+    public void Register(params ImpPortalElement[] elements) => Elements.AddRange(elements);
 }

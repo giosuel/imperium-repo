@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Imperium.API.Types.Portals;
 
@@ -14,6 +15,8 @@ public record ImpPortal
     internal readonly string Name;
     internal readonly Dictionary<string, ImpPortalSection> Sections = new();
 
+    internal int Elements => Sections.Values.Sum(section => section.Elements.Count);
+
     internal ImpPortal(string name)
     {
         Name = name;
@@ -21,10 +24,10 @@ public record ImpPortal
 
     public ImpPortalSection InSection(string sectionName)
     {
-        if (!Sections.TryGetValue(Name, out var section))
+        if (!Sections.TryGetValue(sectionName, out var section))
         {
             section = new ImpPortalSection(sectionName);
-            Sections[Name] = section;
+            Sections[sectionName] = section;
         }
 
         return section;

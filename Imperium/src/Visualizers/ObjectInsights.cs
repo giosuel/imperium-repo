@@ -52,7 +52,7 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
 
     internal void Refresh()
     {
-        if (!Imperium.IsArenaLoaded) return;
+        if (!Imperium.IsLevelLoaded) return;
 
         // Skip udpating if no insights are visible
         if (InsightVisibilityBindings.Value.All(binding => !binding.Value.Value)) return;

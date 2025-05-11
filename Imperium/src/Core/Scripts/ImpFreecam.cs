@@ -71,7 +71,7 @@ public class ImpFreecam : ImpScript
         Imperium.Settings.Freecam.FreecamLayerMask.OnUpdate += value => camera.cullingMask = value;
 
         // Disable freecam whenever the scene is reloaded
-        Imperium.IsArenaLoaded.OnTrigger += IsFreecamEnabled.SetFalse;
+        Imperium.IsLevelLoaded.OnTrigger += IsFreecamEnabled.SetFalse;
 
         Imperium.Settings.Rendering.AvatarInFreecam.OnUpdate += value =>
         {
@@ -138,7 +138,7 @@ public class ImpFreecam : ImpScript
 
     private void OnFreecamEnable()
     {
-        if (!Imperium.IsArenaLoaded || !Imperium.IsImperiumEnabled) return;
+        if (!Imperium.IsLevelLoaded || !Imperium.IsImperiumEnabled) return;
         Imperium.Interface.Close();
 
         if (IsMinicamEnabled.Value) IsMinicamEnabled.SetFalse();

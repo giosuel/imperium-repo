@@ -66,7 +66,7 @@ public class TapeMeasure : ImpScript
         OnExitAction();
 
         // Deactivate tape measure whenever the scene is reloaded
-        Imperium.IsArenaLoaded.OnTrigger += Deactivate;
+        Imperium.IsLevelLoaded.OnTrigger += Deactivate;
     }
 
     private void Activate()

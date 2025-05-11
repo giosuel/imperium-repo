@@ -9,8 +9,7 @@ using Librarium.Binding;
 
 namespace Imperium.Core.Settings;
 
-internal class VisualizationSettings(ConfigFile config, IBinding<bool> isSceneLoaded, IBinding<bool> isEnabled)
-    : SettingsContainer(config)
+internal class VisualizationSettings(ConfigFile config) : SettingsContainer(config)
 {
     /// <summary>
     ///     Visualization Settings

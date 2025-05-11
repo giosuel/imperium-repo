@@ -16,35 +16,38 @@ internal class VisualizerSettings : ImpWidget
             "General/SmoothAnimations",
             transform,
             Imperium.Settings.Visualization.SmoothAnimations,
-            theme
+            theme: theme
         );
         ImpToggle.Bind(
             "SSOverlays/AlwaysOnTop",
             transform,
             Imperium.Settings.Visualization.SSAlwaysOnTop,
-            theme
+            theme: theme
         );
         ImpToggle.Bind(
             "SSOverlays/AutoScale",
             transform,
             Imperium.Settings.Visualization.SSAutoScale,
-            theme
+            theme: theme
         );
         ImpToggle.Bind(
             "SSOverlays/HideInactive",
             transform,
             Imperium.Settings.Visualization.SSHideInactive,
-            theme
+            theme: theme
         );
 
         ImpSlider.Bind(
             path: "OverlayScale",
             container: transform,
             valueBinding: Imperium.Settings.Visualization.SSOverlayScale,
-            indicatorFormatter: Formatting.FormatFloatToThreeDigits,
+            minValue: 0.1f,
+            maxValue: 3f,
+            valueUnit: "x",
+            handleFormatter: Formatting.FormatFloatToThreeDigits,
             theme: theme,
-            interactableBindings: Imperium.Settings.Visualization.SSAutoScale,
-            interactableInvert: true
+            interactableInvert: true,
+            interactableBindings: Imperium.Settings.Visualization.SSAutoScale
         );
 
         ImpButton.Bind(

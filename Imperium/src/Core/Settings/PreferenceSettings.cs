@@ -8,8 +8,7 @@ using Librarium.Binding;
 
 namespace Imperium.Core.Settings;
 
-internal class PreferenceSettings(ConfigFile config, IBinding<bool> isSceneLoaded, IBinding<bool> isEnabled)
-    : SettingsContainer(config)
+internal class PreferenceSettings(ConfigFile config) : SettingsContainer(config)
 {
     internal readonly ImpConfig<bool> EnableImperium = new(
         config,
@@ -20,9 +19,9 @@ internal class PreferenceSettings(ConfigFile config, IBinding<bool> isSceneLoade
 
     internal readonly ImpConfig<bool> GeneralLogging = new(config, "Preferences.General", "GeneralLogging", true);
     internal readonly ImpConfig<bool> LeftHandedMode = new(config, "Preferences.General", "LeftHandedMode", false);
-    internal readonly ImpConfig<bool> CustomWelcome = new(config, "Preferences.General", "CustomWelcome", true);
     internal readonly ImpConfig<bool> ShowTooltips = new(config, "Preferences.General", "Tooltips", true);
     internal readonly ImpConfig<bool> PlaySounds = new(config, "Preferences.General", "Sounds", true);
+    internal readonly ImpConfig<bool> SkipLoading = new(config, "Preferences.General", "SkipLoadingAnimation", false);
 
     internal readonly ImpConfig<string> ImperiumWindowLayout = new(
         config,

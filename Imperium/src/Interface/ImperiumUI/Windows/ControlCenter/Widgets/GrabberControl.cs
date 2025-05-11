@@ -17,53 +17,65 @@ internal class GrabberControl : ImpWidget
     private void InitGrabberSettings()
     {
         ImpToggle.Bind(
-            "GrabberSettings/Sti" +
-            "ckyGrabber",
+            "GrabberSettings/StickyGrabber",
             container: transform,
-            theme: theme,
-            valueBinding: Imperium.Settings.Grabber.StickyGrabber
+            valueBinding: Imperium.Settings.Grabber.StickyGrabber,
+            theme: theme
         );
 
         ImpSlider.Bind(
             path: "BaseRange",
             container: transform,
-            theme: theme,
-            valueBinding: Imperium.Settings.Grabber.BaseRange
+            valueBinding: Imperium.Settings.Grabber.BaseRange,
+            minValue: 0,
+            maxValue: 20,
+            theme: theme
         );
 
         ImpSlider.Bind(
             path: "GrabStrength",
             container: transform,
-            theme: theme,
-            valueBinding: Imperium.Settings.Grabber.GrabStrength
+            valueBinding: Imperium.Settings.Grabber.GrabStrength,
+            minValue: 0,
+            maxValue: 20,
+            theme: theme
         );
 
         ImpSlider.Bind(
             path: "ThrowStrength",
             container: transform,
-            theme: theme,
-            valueBinding: Imperium.Settings.Grabber.ThrowStrength
+            valueBinding: Imperium.Settings.Grabber.ThrowStrength,
+
+            minValue: 0,
+            maxValue: 20,
+            theme: theme
         );
 
         ImpSlider.Bind(
             path: "ReleaseDistance",
             container: transform,
-            theme: theme,
-            valueBinding: Imperium.Settings.Grabber.ReleaseDistance
+            valueBinding: Imperium.Settings.Grabber.ReleaseDistance,
+            minValue: 0,
+            maxValue: 20,
+            theme: theme
         );
 
         ImpSlider.Bind(
             path: "MinDistance",
             container: transform,
-            theme: theme,
-            valueBinding: Imperium.Settings.Grabber.MinDistance
+            valueBinding: Imperium.Settings.Grabber.MinDistance,
+            minValue: 0,
+            maxValue: 10,
+            theme: theme
         );
 
         ImpSlider.Bind(
             path: "MaxDistance",
             container: transform,
-            theme: theme,
-            valueBinding: Imperium.Settings.Grabber.MaxDistance
+            valueBinding: Imperium.Settings.Grabber.MaxDistance,
+            minValue: 0,
+            maxValue: 10,
+            theme: theme
         );
     }
 
@@ -72,29 +84,37 @@ internal class GrabberControl : ImpWidget
         ImpSlider.Bind(
             path: "SpringConstant",
             container: transform,
-            theme: theme,
-            valueBinding: Imperium.Settings.Grabber.SpringConstant
+            valueBinding: Imperium.Settings.Grabber.SpringConstant,
+            minValue: 0,
+            maxValue: 5,
+            theme: theme
         );
 
         ImpSlider.Bind(
             path: "DampingConstant",
             container: transform,
-            theme: theme,
-            valueBinding: Imperium.Settings.Grabber.DampingConstant
+            valueBinding: Imperium.Settings.Grabber.DampingConstant,
+            minValue: 0,
+            maxValue: 5,
+            theme: theme
         );
 
         ImpSlider.Bind(
             path: "ForceConstant",
             container: transform,
-            theme: theme,
-            valueBinding: Imperium.Settings.Grabber.ForceConstant
+            valueBinding: Imperium.Settings.Grabber.ForceConstant,
+            minValue: 0,
+            maxValue: 20,
+            theme: theme
         );
 
         ImpSlider.Bind(
             path: "ForceMax",
             container: transform,
-            theme: theme,
-            valueBinding: Imperium.Settings.Grabber.ForceMax
+            valueBinding: Imperium.Settings.Grabber.ForceMax,
+            minValue: 0,
+            maxValue: 20,
+            theme: theme
         );
     }
 }

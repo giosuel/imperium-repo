@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Imperium.Core;
 using Imperium.Types;
 using Imperium.Util;
 using JetBrains.Annotations;
@@ -24,14 +25,31 @@ namespace Imperium.Interface.Common;
 /// </summary>
 public static class ImpDropdown
 {
+    /// <summary>
+    /// Binds an existing dropdown to an binding.
+    /// </summary>
+    /// <param name="path">The path to the element relative to the container</param>
+    /// <param name="container">The parent container of the element</param>
+    /// <param name="valueBinding">The binding the element should be bound to</param>
+    /// <param name="options">The list of dropdown options the user can pick from</param>
+    /// <param name="label">The label that is shown next to the dropdown</param>
+    /// <param name="placeholder">A text that is shown when no dropdown value is selected</param>
+    /// <param name="allowReset">Whether to show a reset button next to the slider</param>
+    /// <param name="playClickSound">Whether to play a click sound when the dropdown value is changed</param>
+    /// <param name="theme">The theme the dropdown will use</param>
+    /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
+    /// <param name="interactableBindings">List of boolean bindings that decide if the dropdown is interactable</param>
+    /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
+    /// <returns></returns>
     internal static TMP_Dropdown Bind(
         string path,
         Transform container,
         IBinding<int> valueBinding,
         IEnumerable<string> options,
+        string label = "",
         string placeholder = "",
-        bool playClickSound = true,
         bool allowReset = true,
+        bool playClickSound = true,
         IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
         bool interactableInvert = false,
@@ -49,6 +67,13 @@ public static class ImpDropdown
         dropdown.options = options.Select(option => new TMP_Dropdown.OptionData(option)).ToList();
         dropdown.value = valueBinding.Value;
 
+        var dropdownLabel = dropdownParent.Find("Dropdown/Label")?.GetComponent<TMP_Text>();
+        var dropdownArrow = dropdownParent.Find("Dropdown/Arrow")?.GetComponent<Image>();
+
+        // Set label test if label element exists
+        var labelText = dropdownParent.Find("Text")?.GetComponent<TMP_Text>();
+        if (labelText && !string.IsNullOrEmpty(label)) labelText.text = label;
+
         dropdown.onValueChanged.AddListener(value =>
         {
             if (value == valueBinding.Value) return;
@@ -57,9 +82,19 @@ public static class ImpDropdown
         });
 
         valueBinding.OnUpdate += value => dropdown.value = value;
+
+        // This has to be in local, so we can manually skip the click sound by disabling send local
+        valueBinding.OnTriggerSecondary += () =>
+        {
+            if (Imperium.Settings.Preferences.PlaySounds.Value && playClickSound) GameUtils.PlayClip(ImpAssets.ButtonClick);
+        };
         
-        // Set placeholder text
-        dropdownParent.Find("Dropdown/Placeholder").GetComponent<TMP_Text>().text = placeholder;
+        // Set placeholder text if placeholder element exists
+        if (!string.IsNullOrEmpty(placeholder))
+        {
+            var placeholderText = dropdownParent.Find("Dropdown/Placeholder")?.GetComponent<TMP_Text>();
+            if (placeholderText) placeholderText.text = placeholder;
+        }
 
         // Bind reset button if available
         var resetButton = dropdownParent.Find("Reset");
@@ -88,21 +123,19 @@ public static class ImpDropdown
         // Bind all interactable bindings if any were provided
         if (interactableBindings.Length > 0)
         {
-            var title = dropdownParent.Find("Title")?.GetComponent<TMP_Text>();
-            var label = dropdownParent.Find("Dropdown/Label")?.GetComponent<TMP_Text>();
-            var arrow = dropdownParent.Find("Dropdown/Arrow")?.GetComponent<Image>();
-
             ToggleInteractable(
-                dropdown, title, label, arrow,
-                interactableBindings.All(entry => entry.Value),
+                dropdown, labelText, dropdownLabel, dropdownArrow,
+                interactableBindings.All(entry => entry == null || entry.Value),
                 interactableInvert
             );
 
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.OnUpdate += value => ToggleInteractable(
-                    dropdown, title, label, arrow,
-                    interactableBindings.All(entry => entry.Value),
+                if (interactableBinding == null) continue;
+
+                interactableBinding.OnTrigger += () => ToggleInteractable(
+                    dropdown, labelText, dropdownLabel, dropdownArrow,
+                    interactableBindings.All(entry => entry == null || entry.Value),
                     interactableInvert
                 );
             }
@@ -111,7 +144,17 @@ public static class ImpDropdown
         if (theme != null)
         {
             OnThemeUpdate(theme.Value, dropdownParent);
-            theme.OnUpdate += value => OnThemeUpdate(value, dropdownParent);
+            theme.OnUpdate += value =>
+            {
+                OnThemeUpdate(value, dropdownParent);
+
+                // Fix interactability after theme update
+                ToggleInteractable(
+                    dropdown, labelText, dropdownLabel, dropdownArrow,
+                    interactableBindings.All(entry => entry == null || entry.Value),
+                    interactableInvert
+                );
+            };
         }
 
         return dropdown;

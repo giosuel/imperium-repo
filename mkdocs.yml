@@ -11,12 +11,12 @@ nav:
  - Quick Start: 'quick-start.md'
  - Imperium API:
     - 'api/index.md'
-    - Visualization:
+    - Visualization API:
       - Static Visualizers: 'api/visualization/static.md'
       - Insights: 'api/visualization/insights.md'
-    - Event Logging: 'api/event-log.md'
-    - Interaction: 'api/interaction.md'
-    - World: 'api/world.md'
+    - Portal API: 'api/portal.md'
+    - Event Log API: 'api/event-log.md'
+    - World API: 'api/world.md'
  - Issues: 'https://github.com/giosuel/imperium-repo/issues/'
 
 theme:
@@ -64,6 +64,9 @@ markdown_extensions:
 
 plugins:
   - offline
+  - plantuml:
+        puml_url: https://www.plantuml.com/plantuml/
+        num_workers: 8
 
 extra_css:
   - stylesheets/extra.css

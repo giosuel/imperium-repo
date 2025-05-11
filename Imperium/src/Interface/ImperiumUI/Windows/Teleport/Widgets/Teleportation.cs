@@ -16,7 +16,8 @@ using UnityEngine.UI;
 
 namespace Imperium.Interface.ImperiumUI.Windows.Teleport.Widgets;
 
-public class Teleportation : ImpWidget
+public class
+    Teleportation : ImpWidget
 {
     private Button tpShip;
 
@@ -34,12 +35,12 @@ public class Teleportation : ImpWidget
         tpShip = ImpButton.Bind(
             "Presets/Truck", transform,
             () => TeleportTo(Imperium.PlayerManager.TruckTPAnchor.Value),
-            theme
+            theme: theme
         );
         ImpButton.Bind(
             "Presets/Freecam", transform,
             () => TeleportTo(Imperium.Freecam.transform.position),
-            theme
+            theme: theme
         );
 
         // We need to set the teleport function as sync callback as the game might teleport the player to different
@@ -53,11 +54,11 @@ public class Teleportation : ImpWidget
         ImpInput.Bind("Coords/CoordsY", transform, coordinateY, theme: theme, updateOnSubmit: true);
         ImpInput.Bind("Coords/CoordsZ", transform, coordinateZ, theme: theme, updateOnSubmit: true);
 
-        ImpButton.Bind("Buttons/Interactive", transform, OnInteractive, theme);
+        ImpButton.Bind("Buttons/Interactive", transform, OnInteractive, theme: theme);
 
         Imperium.InputBindings.BaseMap.Teleport.performed += OnInteractiveTeleport;
 
-        Imperium.IsArenaLoaded.OnTrigger += OnOpen;
+        Imperium.IsLevelLoaded.OnTrigger += OnOpen;
 
         InitExtractionPoints();
     }
@@ -116,7 +117,7 @@ public class Teleportation : ImpWidget
         extractionPointTemplate = extractionPointContainer.Find("Template").gameObject;
         extractionPointTemplate.gameObject.SetActive(false);
 
-        Imperium.IsArenaLoaded.OnTrigger += SetExtractionPoints;
+        Imperium.IsLevelLoaded.OnTrigger += SetExtractionPoints;
         SetExtractionPoints();
     }
 
@@ -125,7 +126,10 @@ public class Teleportation : ImpWidget
         ImpThemeManager.Style(
             themeUpdated,
             transform,
-            new StyleOverride("ExtractionPoints", Variant.DARKER)
+            new StyleOverride("ExtractionPoints", Variant.DARKER),
+            new StyleOverride("ExtractionPoints/ScrollView/Scrollbar", Variant.DARKEST),
+            new StyleOverride("ExtractionPoints/ScrollView/Scrollbar/SlidingArea/Handle", Variant.LIGHTER)
+
         );
 
         foreach (var extractionPoint in extractionPoints)
