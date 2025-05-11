@@ -9,8 +9,7 @@ using UnityEngine;
 
 namespace Imperium.Core.Settings;
 
-internal class MapSettings(ConfigFile config, IBinding<bool> isSceneLoaded, IBinding<bool> isEnabled)
-    : SettingsContainer(config)
+internal class MapSettings(ConfigFile config) : SettingsContainer(config)
 {
     internal readonly ImpConfig<bool> MinimapEnabled = new(
         config,

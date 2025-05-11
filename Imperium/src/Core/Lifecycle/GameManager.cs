@@ -42,10 +42,6 @@ internal class GameManager : ImpLifecycleObject
         LevelOverride.OnUpdate += OnLevelOverrideUpdate;
     }
 
-    protected override void OnSceneLoad()
-    {
-    }
-
     private static void OnLevelOverrideUpdate(string levelName)
     {
         if (levelName == "")
@@ -56,5 +52,18 @@ internal class GameManager : ImpLifecycleObject
 
         var customLevel = Imperium.ObjectManager.LoadedLevels.Value.First(level => level.NarrativeName == levelName);
         RunManager.instance.debugLevel = customLevel;
+    }
+
+    internal static bool IsGameLevel()
+    {
+        Imperium.IO.LogInfo($"is lobby menu: {RunManager.instance.levelCurrent == RunManager.instance.levelLobbyMenu}");
+        Imperium.IO.LogInfo($"is main menu: {RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu}");
+        Imperium.IO.LogInfo($"is lobby: {RunManager.instance.levelCurrent == RunManager.instance.levelLobby}");
+        Imperium.IO.LogInfo($"is tutorial: {RunManager.instance.levelCurrent == RunManager.instance.levelTutorial}");
+
+        return RunManager.instance.levelCurrent != RunManager.instance.levelLobbyMenu &&
+               RunManager.instance.levelCurrent != RunManager.instance.levelMainMenu &&
+               RunManager.instance.levelCurrent != RunManager.instance.levelLobby &&
+               RunManager.instance.levelCurrent != RunManager.instance.levelTutorial;
     }
 }

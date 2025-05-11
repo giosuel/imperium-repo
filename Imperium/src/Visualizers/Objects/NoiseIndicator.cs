@@ -64,7 +64,7 @@ public class NoiseIndicator : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!Imperium.IsArenaLoaded.Value || Imperium.GameManager.IsGameLoading) return;
+        if (!Imperium.IsLevelLoaded.Value || Imperium.GameManager.IsGameLoading) return;
 
         if (timer >= 0)
         {

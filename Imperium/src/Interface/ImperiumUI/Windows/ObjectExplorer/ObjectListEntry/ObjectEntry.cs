@@ -60,7 +60,7 @@ internal class ObjectEntry : MonoBehaviour
 
         objectNameText = transform.Find("Name").GetComponent<TMP_Text>();
 
-        activeToggle = ImpToggle.Bind("Active", transform, IsObjectActive, theme);
+        activeToggle = ImpToggle.Bind("Active", transform, IsObjectActive, theme: theme);
         // IsObjectActive.onUpdate += isOn => ObjectEntryGenerator.ToggleObject(this, isOn);
 
         // We subscribe to secondary here to be able to skip feedback loop from DisabledObject.onUpdate() above.
@@ -83,8 +83,8 @@ internal class ObjectEntry : MonoBehaviour
                     Imperium.Interface.Close();
                 }
             },
-            theme,
-            isIconButton: true
+            isIconButton: true,
+            theme: theme
         );
 
         // Teleport here button
@@ -92,8 +92,8 @@ internal class ObjectEntry : MonoBehaviour
             "TeleportHere",
             transform,
             () => ObjectEntryGenerator.TeleportObjectHere(this),
-            theme,
-            isIconButton: true
+            isIconButton: true,
+            theme: theme
         );
 
         // Destroy button (Unthemed, as it's red in any theme)
@@ -108,13 +108,15 @@ internal class ObjectEntry : MonoBehaviour
             "Despawn",
             transform,
             () => ObjectEntryGenerator.DespawnObject(this),
-            theme,
             isIconButton: true,
-            tooltipDefinition: new TooltipDefinition
-            {
-                Title = "Despawn Enemy",
-                Tooltip = tooltip
-            }
+            theme: theme,
+            tooltipDefinition: tooltip
+                ? new TooltipDefinition
+                {
+                    Title = "Despawn Enemy",
+                    Tooltip = tooltip
+                }
+                : null
         );
 
         // Spawn button
@@ -122,13 +124,15 @@ internal class ObjectEntry : MonoBehaviour
             "Spawn",
             transform,
             () => ObjectEntryGenerator.SpawnObject(this),
-            theme,
             isIconButton: true,
-            tooltipDefinition: new TooltipDefinition
-            {
-                Title = "Spawn Enemy",
-                Tooltip = tooltip
-            }
+            theme: theme,
+            tooltipDefinition: tooltip
+                ? new TooltipDefinition
+                {
+                    Title = "Spawn Enemy",
+                    Tooltip = tooltip
+                }
+                : null
         );
 
         // Drop button
@@ -136,13 +140,15 @@ internal class ObjectEntry : MonoBehaviour
             "Complete",
             transform,
             () => ObjectEntryGenerator.CompleteObject(this),
-            theme,
             isIconButton: true,
-            tooltipDefinition: new TooltipDefinition
-            {
-                Title = "Complete",
-                Tooltip = tooltip
-            }
+            theme: theme,
+            tooltipDefinition: tooltip
+                ? new TooltipDefinition
+                {
+                    Title = "Complete",
+                    Tooltip = tooltip
+                }
+                : null
         );
 
         // Kill button (Unthemes, as it is red in every theme)

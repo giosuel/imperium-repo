@@ -11,16 +11,27 @@ internal class MinimapSettings : BaseUI
 {
     protected override void InitUI()
     {
-        ImpToggle.Bind("Content/Gizmos/ShowInfoPanel", transform, Imperium.Settings.Map.MinimapInfoPanel, theme);
-        ImpToggle.Bind("Content/Gizmos/ShowLocationPanel", transform, Imperium.Settings.Map.MinimapLocationPanel, theme);
-
-        ImpSlider.Bind(
-            path: "Content/Scale",
-            container: transform,
-            valueBinding: Imperium.Settings.Map.MinimapScale,
-            indicatorFormatter: value => $"{value:0.0}",
+        ImpToggle.Bind(
+            "Content/Gizmos/ShowInfoPanel",
+            transform,
+            Imperium.Settings.Map.MinimapInfoPanel,
             theme: theme
         );
+
+        ImpToggle.Bind(
+            "Content/Gizmos/ShowLocationPanel",
+            transform,
+            Imperium.Settings.Map.MinimapLocationPanel,
+            theme: theme
+        );
+
+        // ImpSlider.Bind(
+        //     path: "Content/Scale",
+        //     container: transform,
+        //     valueBinding: Imperium.Settings.Map.MinimapScale,
+        //     handleFormatter: value => $"{value:0.0}",
+        //     theme: theme
+        // );
     }
 
     protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)

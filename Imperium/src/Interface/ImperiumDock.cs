@@ -1,5 +1,6 @@
 #region
 
+using System.Linq;
 using Imperium.Core;
 using Imperium.Interface.Common;
 using Imperium.Types;
@@ -22,13 +23,23 @@ public class ImperiumDock : BaseUI
         params IBinding<bool>[] canOpenBindings
     ) where T : BaseUI
     {
-        var button = ImpButton.Bind(
-            buttonPath,
-            container,
-            () => dockInterfaceManager.Open<T>(),
-            theme,
+        var buttonObj = container.Find(buttonPath);
+        var buttonImage = buttonObj.GetComponent<Image>();
+        buttonImage.enabled = dockInterfaceManager.IsOpen<T>() && canOpenBindings.All(binding => binding.Value);
+
+        ImpButton.Bind(
+            "",
+            buttonObj,
+            () =>
+            {
+                if (canOpenBindings.All(binding => binding.Value))
+                {
+                    dockInterfaceManager.Open<T>();
+                }
+            },
             isIconButton: true,
             playClickSound: false,
+            theme: theme,
             tooltipDefinition: new TooltipDefinition
             {
                 Tooltip = tooltip,
@@ -39,19 +50,9 @@ public class ImperiumDock : BaseUI
             interactableBindings: canOpenBindings
         );
 
-        var buttonImage = button.GetComponent<Image>();
-        buttonImage.enabled = false;
         dockInterfaceManager.OpenInterface.OnUpdate += selectedInterface =>
         {
-            if (!buttonImage) return;
-
-            if (!selectedInterface)
-            {
-                buttonImage.enabled = false;
-                return;
-            }
-
-            buttonImage.enabled = selectedInterface.GetType() == typeof(T);
+            buttonImage.enabled = selectedInterface && selectedInterface.GetType() == typeof(T);
         };
     }
 

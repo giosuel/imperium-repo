@@ -26,7 +26,7 @@ public class ImpNetworking
     /// <summary>
     ///     Set to true, when Imperium access is first granted. Always set to true on the host.
     /// </summary>
-    internal bool WasImperiumAccessGranted { get; private set; }
+    internal bool ImperiumAccessGranted { get; private set; }
 
     private readonly ImpNetEvent authenticateEvent;
     private readonly ImpNetEvent enableImperiumEvent;
@@ -206,15 +206,22 @@ public class ImpNetworking
     [ImpAttributes.LocalMethod]
     private void OnAuthenticateResponse()
     {
-        WasImperiumAccessGranted = true;
+        ImperiumAccessGranted = true;
 
         Imperium.IO.Send("Imperium access was granted!", type: NotificationType.AccessControl);
         Imperium.IO.LogInfo("[NET] Imperium access was granted! Launching Imperium...");
 
-        if (!ImpUtils.RunSafe(Imperium.Launch, "Imperium startup failed"))
+        if (!Imperium.IsImperiumLaunched)
         {
-            Imperium.IO.Send("Imperium launch failed! Shutting down.", type: NotificationType.Required);
-            Imperium.DisableImperium();
+            if (!ImpUtils.RunSafe(Imperium.Launch, "Imperium startup failed"))
+            {
+                Imperium.IO.Send("Imperium launch failed! Shutting down.", type: NotificationType.Required);
+                Imperium.DisableImperium();
+            }
+        }
+        else
+        {
+            Imperium.EnableImperium();
         }
 
         // Request network values update from server if client is not host
@@ -222,12 +229,15 @@ public class ImpNetworking
     }
 
     [ImpAttributes.LocalMethod]
-    private static void OnDisableImperiumAccess()
+    private void OnDisableImperiumAccess()
     {
         if (SemiFunc.IsMasterClientOrSingleplayer()) return;
 
+        ImperiumAccessGranted = false;
+
         Imperium.IO.Send("Imperium access was revoked!", type: NotificationType.AccessControl, isWarning: true);
         Imperium.IO.LogInfo("[NET] Imperium access was revoked!");
+
         Imperium.DisableImperium();
     }
 
@@ -236,23 +246,35 @@ public class ImpNetworking
     {
         if (SemiFunc.IsMasterClientOrSingleplayer()) return;
 
+        ImperiumAccessGranted = true;
+
         Imperium.IO.Send("Imperium access was granted!", type: NotificationType.AccessControl);
         Imperium.IO.LogInfo("[NET] Imperium access was granted! Launching Imperium...");
-        if (WasImperiumAccessGranted)
+
+        // Re-enable Imperium if has been launched before
+        if (Imperium.IsImperiumLaunched)
         {
             Imperium.EnableImperium();
         }
         else
         {
             if (!ImpUtils.RunSafe(Imperium.Launch, "Imperium startup failed")) Imperium.DisableImperium();
-
-            // Request network values update from server
-            clientRequestValues.DispatchToServer();
         }
+
+        // Request network values update from server
+        clientRequestValues.DispatchToServer();
     }
 
     [ImpAttributes.RemoteMethod]
-    internal void RequestImperiumAccess() => MenuManager.instance.StartCoroutine(waitForImperiumAccess());
+    internal void RequestImperiumAccess()
+    {
+        ImperiumAccessGranted = false;
+        Imperium.DisableImperium();
+
+        MenuManager.instance.StartCoroutine(waitForImperiumAccess());
+    }
+
+    internal void ResetImperiumAccess() => ImperiumAccessGranted = false;
 
     private IEnumerator waitForImperiumAccess()
     {
@@ -267,8 +289,6 @@ public class ImpNetworking
 
     public void Unload()
     {
-        WasImperiumAccessGranted = false;
-
         foreach (var subscriber in RegisteredNetworkSubscribers) subscriber.Unsubscribe();
         RegisteredNetworkSubscribers.Clear();
     }

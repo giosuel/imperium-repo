@@ -29,12 +29,12 @@ internal class Visualization
 
         NavMeshVisualizer = new NavMeshVisualizer(
             visualizerParent.transform,
-            Imperium.IsArenaLoaded,
+            Imperium.IsLevelLoaded,
             Imperium.Settings.Visualization.NavMeshSurfaces
         );
         LevelPointVisualizer = new LevelPointVisualizer(
             visualizerParent.transform,
-            Imperium.IsArenaLoaded,
+            Imperium.IsLevelLoaded,
             Imperium.Settings.Visualization.LevelPoints
         );
 
@@ -42,15 +42,15 @@ internal class Visualization
         EnemyGizmos = new EnemyGizmos(
             visualizerParent.transform,
             objectManager.CurrentLevelEntities,
-            Imperium.IsArenaLoaded,
+            Imperium.IsLevelLoaded,
             config
         );
         ObjectInsights = new ObjectInsights(visualizerParent.transform, config);
         NoiseIndicators = ImpScript.Create<NoiseIndicators>(visualizerParent.transform);
         StaticVisualizers = ImpScript.Create<StaticVisualizers>(visualizerParent.transform);
 
-        Imperium.IsArenaLoaded.OnTrigger += ObjectInsights.Refresh;
-        Imperium.IsArenaLoaded.OnTrigger += () => StaticVisualizers.Refresh(true);
+        Imperium.IsLevelLoaded.OnTrigger += ObjectInsights.Refresh;
+        Imperium.IsLevelLoaded.OnTrigger += () => StaticVisualizers.Refresh(true);
 
         Imperium.ObjectManager.CurrentLevelObjectsChanged += ObjectInsights.Refresh;
         Imperium.ObjectManager.CurrentLevelObjectsChanged += () => StaticVisualizers.Refresh();

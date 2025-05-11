@@ -43,6 +43,8 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
     private const float hideAnimationFadeDuration = 0.1f;
     private const float hideAnimationSnapDuration = 0.08f;
 
+    private bool isShown;
+
     public void InitWindow(
         ImpBinding<ImpTheme> themeBinding, WindowDefinition definition, ImpTooltip impTootip, ImperiumUI parentUI
     )
@@ -62,14 +64,18 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
 
         onOpen += () =>
         {
+            // Skip hide animation if window is already closed
+            if (isShown) return;
+
             if (fadeAnimation != null) StopCoroutine(fadeAnimation);
             fadeAnimation = StartCoroutine(showAnimation());
         };
 
         onClose += () =>
         {
-            // if (fadeAnimation != null) StopCoroutine(fadeAnimation);
-            // fadeAnimation = StartCoroutine(animateOpacityTo(0.05f, 0, false));
+            // Skip hide animation if window is already closed
+            if (!isShown) return;
+
             if (fadeAnimation != null) StopCoroutine(fadeAnimation);
             fadeAnimation = StartCoroutine(hideAnimation());
         };
@@ -109,6 +115,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         windowGroup.alpha = 0;
         windowGroup.interactable = false;
         windowGroup.blocksRaycasts = false;
+        isShown = false;
     }
 
     private void OnDisable()
@@ -118,6 +125,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         windowGroup.interactable = false;
         windowGroup.blocksRaycasts = false;
         rect.localScale = Vector3.one;
+        isShown = false;
     }
 
     private IEnumerator hideAnimation()
@@ -158,6 +166,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         windowGroup.interactable = false;
         windowGroup.blocksRaycasts = false;
         rect.localScale = originalScale;
+        isShown = false;
     }
 
     private IEnumerator showAnimation()
@@ -202,6 +211,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         windowGroup.alpha = 1f;
         windowGroup.interactable = true;
         windowGroup.blocksRaycasts = true;
+        isShown = true;
     }
 
     private IEnumerator animateOpacityTo(float duration, float targetAlpha, bool setInteractable = true)

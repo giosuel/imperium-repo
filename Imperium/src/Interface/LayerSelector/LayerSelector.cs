@@ -87,8 +87,10 @@ internal class LayerSelector : BaseUI
                 "FovSlider",
                 transform,
                 Imperium.Settings.Freecam.FreecamFieldOfView,
-                theme: theme,
-                playClickSound: false
+                minValue: 1,
+                maxValue: 180,
+                playClickSound: false,
+                theme: theme
             );
         }
 
@@ -99,8 +101,10 @@ internal class LayerSelector : BaseUI
                 "MovementSpeedSlider",
                 transform,
                 Imperium.Settings.Freecam.FreecamMovementSpeed,
-                theme: theme,
-                playClickSound: false
+                minValue: 1,
+                maxValue: 100,
+                playClickSound: false,
+                theme: theme
             );
         }
 

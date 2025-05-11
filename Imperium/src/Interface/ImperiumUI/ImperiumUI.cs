@@ -3,12 +3,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AsmResolver.PE.Imports;
 using Imperium.Interface.Common;
 using Imperium.Interface.ImperiumUI.Windows.ArenaControl;
 using Imperium.Interface.ImperiumUI.Windows.ControlCenter;
 using Imperium.Interface.ImperiumUI.Windows.EventLog;
 using Imperium.Interface.ImperiumUI.Windows.LevelGeneration;
 using Imperium.Interface.ImperiumUI.Windows.ObjectExplorer;
+using Imperium.Interface.ImperiumUI.Windows.Portal;
 using Imperium.Interface.ImperiumUI.Windows.Preferences;
 using Imperium.Interface.ImperiumUI.Windows.Rendering;
 using Imperium.Interface.ImperiumUI.Windows.Teleport;
@@ -30,11 +32,13 @@ public class ImperiumUI : BaseUI
 {
     private readonly Dictionary<Type, WindowDefinition> windowControllers = [];
     private readonly Dictionary<Type, ImpBinding<bool>> dockButtonBindings = [];
+    private readonly Dictionary<Type, IBinding<bool>[]> canOpenBindingMap = [];
 
     private readonly ImpStack<WindowDefinition> controllerStack = [];
 
     private RectTransform dockRect;
 
+    // ReSharper disable Unity.PerformanceAnalysis
     protected override void InitUI()
     {
         dockRect = container.Find("Dock").GetComponent<RectTransform>();
@@ -48,33 +52,37 @@ public class ImperiumUI : BaseUI
             ImpAssets.ObjectExplorerWindowObject,
             "Left/ObjectExplorer",
             "Object Explorer",
-            canOpenBindings: Imperium.IsArenaLoaded
+            canOpenBindings: Imperium.IsGameLevel
         );
 
         RegisterImperiumWindow<VisualizationWindow>(
             ImpAssets.VisualizationWindowObject,
             "Center/Visualization",
             "Visualization",
-            canOpenBindings: Imperium.IsArenaLoaded
+            canOpenBindings: Imperium.IsGameLevel
         );
         RegisterImperiumWindow<TeleportWindow>(
             ImpAssets.TeleportationWindowObject,
             "Center/Teleportation",
             "Teleportation",
             keybind: Imperium.InputBindings.InterfaceMap.TeleportWindow,
-            canOpenBindings: Imperium.IsArenaLoaded
+            canOpenBindings: Imperium.IsGameLevel
         );
         RegisterImperiumWindow<LevelGeneration>(
             ImpAssets.LevelGenerationWindowObject,
             "Center/LevelGeneration",
-            "Level Generation",
-            canOpenBindings: Imperium.IsArenaLoaded
+            "Level Generation"
+        );
+        RegisterImperiumWindow<LevelGeneration>(
+            ImpAssets.UpgradesWindowObject,
+            "Center/Upgrades",
+            "Upgrades"
         );
         RegisterImperiumWindow<ArenaControlWindow>(
             ImpAssets.ArenaControlWindowObject,
             "Center/ArenaControl",
             "Arena Control",
-            canOpenBindings: Imperium.IsArenaLoaded
+            canOpenBindings: Imperium.IsGameLevel
         );
 
         RegisterImperiumWindow<RenderingWindow>(
@@ -98,6 +106,11 @@ public class ImperiumUI : BaseUI
         //     "Level Information",
         //     canOpenBindings: Imperium.IsArenaLoaded
         // );
+        RegisterImperiumWindow<PortalWindow>(
+            ImpAssets.PortalWindowObject,
+            "Right/Portal",
+            "Portals"
+        );
         RegisterImperiumWindow<PreferencesWindow>(
             ImpAssets.PreferencesWindowObject,
             "Right/Preferences",
@@ -146,15 +159,27 @@ public class ImperiumUI : BaseUI
             WindowType = typeof(T)
         };
         windowControllers[typeof(T)] = windowDefinition;
+        canOpenBindingMap[typeof(T)] = canOpenBindings;
 
         floatingWindow.InitWindow(theme, windowDefinition, tooltip, this);
         floatingWindow.onClose += OnCloseWindow<T>;
         floatingWindow.onOpen += OnOpenWindow<T>;
         floatingWindow.onFocus += OnFocusWindow<T>;
 
-        var button = ImpButton.Bind(
-            dockButtonPath,
-            container.Find("Dock"),
+        var buttonObj = container.Find("Dock").Find(dockButtonPath);
+
+        /*
+         * The border around the dock button indication whether a window is currently open or not
+         *
+         * Since all can-open-bindings have to be set to true in order for the window to be open, we disable the border
+         * if any of the bindings is set to false.
+         */
+        var buttonImage = buttonObj.GetComponent<Image>();
+        buttonImage.enabled = windowDefinition.IsOpen && canOpenBindings.All(binding => binding.Value);
+
+        ImpButton.Bind(
+            "",
+            buttonObj,
             () =>
             {
                 if (windowDefinition.IsOpen)
@@ -165,10 +190,12 @@ public class ImperiumUI : BaseUI
                 {
                     windowDefinition.Controller.Open();
                 }
+
+                buttonImage.enabled = windowDefinition.IsOpen && canOpenBindings.All(binding => binding.Value);
             },
-            theme,
             isIconButton: true,
             playClickSound: false,
+            theme: theme,
             tooltipDefinition: new TooltipDefinition
             {
                 Tooltip = tooltip,
@@ -181,20 +208,15 @@ public class ImperiumUI : BaseUI
         var buttonBinding = new ImpBinding<bool>(false);
         dockButtonBindings[typeof(T)] = buttonBinding;
 
-        if (!button) return;
+        buttonBinding.OnUpdate += value => buttonImage.enabled = value && canOpenBindings.All(binding => binding.Value);
 
-        var buttonImage = button.GetComponent<Image>();
-        buttonImage.enabled = buttonBinding.Value;
-        buttonBinding.OnUpdate += isOn =>
+        foreach (var canOpenBinding in canOpenBindings)
         {
-            if (!buttonImage)
+            canOpenBinding.OnTrigger += () =>
             {
-                Imperium.IO.LogError("Button image on dock button was null");
-                return;
-            }
-
-            buttonImage.enabled = isOn;
-        };
+                buttonImage.enabled = windowDefinition.IsOpen && canOpenBindings.All(binding => binding.Value);
+            };
+        }
 
         if (keybind != null)
         {
@@ -214,13 +236,20 @@ public class ImperiumUI : BaseUI
 
         foreach (var windowDefinition in controllerStack.Where(controller => controller.IsOpen))
         {
-            if (windowDefinition.IsOpen)
+            var canOpen = canOpenBindingMap.TryGetValue(windowDefinition.WindowType, out var bindings) &&
+                          bindings.All(binding => binding.Value);
+            if (canOpen)
             {
                 windowDefinition.Controller.InvokeOnOpen();
             }
             else
             {
                 windowDefinition.Controller.Close();
+
+                /*
+                 * Since the window is only closed temporarily, we don't want to actually set it to closed.
+                 */
+                windowDefinition.IsOpen = true;
             }
         }
     }
@@ -261,6 +290,8 @@ public class ImperiumUI : BaseUI
 
             // Update the dock button binding
             dockButtonBindings[existingDefinition.WindowType].Set(windowDefinition.IsOpen);
+
+            Imperium.IO.LogInfo($"window: {windowDefinition.WindowType.Name} is open: {windowDefinition.IsOpen}");
 
             // Inform the window of the new state
             existingDefinition.Controller.PlaceWindow(

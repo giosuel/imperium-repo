@@ -122,8 +122,8 @@ internal class ObjectManager : ImpLifecycleObject
 
         RefreshLevelObjects();
 
-        Imperium.IsArenaLoaded.OnTrigger += RefreshLevelObjects;
-        Imperium.IsArenaLoaded.OnTrigger += FetchPlayers;
+        Imperium.IsLevelLoaded.OnTrigger += RefreshLevelObjects;
+        Imperium.IsLevelLoaded.OnTrigger += FetchPlayers;
 
         objectsChangedEvent.OnClientRecive += RefreshLevelObjects;
 
@@ -142,7 +142,7 @@ internal class ObjectManager : ImpLifecycleObject
         }
     }
 
-    protected override void OnSceneLoad() => RefreshLevelObjects();
+    protected override void OnLevelLoad() => RefreshLevelObjects();
 
     protected override void OnPlayersUpdate(int playersConnected) => FetchPlayers();
 

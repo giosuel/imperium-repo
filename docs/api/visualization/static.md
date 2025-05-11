@@ -1,4 +1,4 @@
-# Static Visualizers
+# Static Visualizers API
 
 Static visualizers can be used to highlight a group of objects in the game. As soon as a static visualizer is registered, Imperium makes sure the visualizer is shown and updated when the arena is loaded and unloaded. The target objects can be defined by a **Unity Tag**, **Unity Layer** or **Component Type**.
 

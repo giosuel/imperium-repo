@@ -76,8 +76,9 @@ public class ImpTooltip : ImpWidget
     public void Deactivate()
     {
         isActive = false;
+
         if (showAnimationCoroutine != null) StopCoroutine(showAnimationCoroutine);
-        StartCoroutine(hideAnimation());
+        if (gameObject.activeInHierarchy) StartCoroutine(hideAnimation());
     }
 
     private IEnumerator showAnimation(string title, string text, bool hasAccess = true)

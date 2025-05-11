@@ -14,35 +14,35 @@ internal class Visualizers : ImpWidget
             "Overlays/NavMeshSurfaces",
             transform,
             Imperium.Settings.Visualization.NavMeshSurfaces,
-            theme
+            theme: theme
         );
 
         ImpToggle.Bind(
             "Gizmos/NoiseIndicators",
             transform,
             Imperium.Settings.Visualization.NoiseIndicators,
-            theme
+            theme: theme
         );
 
         ImpToggle.Bind(
             "Gizmos/PlayerProximity",
             transform,
             Imperium.Settings.Visualization.PlayerProximity,
-            theme
+            theme: theme
         );
 
         ImpToggle.Bind(
             "Gizmos/LevelPoints",
             transform,
             Imperium.Settings.Visualization.LevelPoints,
-            theme
+            theme: theme
         );
 
         // ImpToggle.Bind(
         //     "Gizmos/ValuableSpawns",
         //     transform,
         //     Imperium.Settings.Visualization.ValuableSpawns,
-        //     theme
+        //     theme: theme
         // );
     }
 }

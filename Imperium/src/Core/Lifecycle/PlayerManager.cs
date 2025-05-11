@@ -36,6 +36,8 @@ internal class PlayerManager : ImpLifecycleObject
 
     internal ImpExternalBinding<Vector3?, bool> TruckTPAnchor;
 
+    internal readonly Dictionary<string, ImpBinding<int>> PlayerUpgradeBinding = [];
+
     internal bool FlyIsAscending;
     internal bool FlyIsDescending;
 
@@ -63,7 +65,7 @@ internal class PlayerManager : ImpLifecycleObject
         }
     }
 
-    protected override void OnSceneLoad()
+    protected override void OnLevelLoad()
     {
         if (TruckTPAnchor == null)
             TruckTPAnchor = new(() => GameObject.Find("Truck Item Shelf")?.transform.position);
@@ -93,7 +95,7 @@ internal class PlayerManager : ImpLifecycleObject
 
     internal static void ToggleLocalAvatar(bool isShown)
     {
-        if (!Imperium.IsArenaLoaded) return;
+        if (!Imperium.IsLevelLoaded) return;
 
         PlayerAvatar.instance.playerAvatarVisuals.animator.enabled = isShown;
         PlayerAvatar.instance.playerAvatarVisuals.meshParent.SetActive(value: isShown);

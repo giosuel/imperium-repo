@@ -28,9 +28,9 @@ internal class LevelGeneration : ImperiumWindow
             "Numbers/LevelSize",
             content,
             Imperium.GameManager.CustomLevelSize,
+            negativeIsEmpty: true,
             theme: theme,
             interactableInvert: true,
-            negativeIsEmpty: true,
             interactableBindings: disabledBinding
         );
 
@@ -38,9 +38,9 @@ internal class LevelGeneration : ImperiumWindow
             "Numbers/ModuleAmount",
             content,
             Imperium.GameManager.CustomModuleAmount,
+            negativeIsEmpty: true,
             theme: theme,
             interactableInvert: true,
-            negativeIsEmpty: true,
             interactableBindings: disabledBinding
         );
 
@@ -48,9 +48,9 @@ internal class LevelGeneration : ImperiumWindow
             "LevelNumber",
             content,
             Imperium.GameManager.CustomLevelNumber,
+            negativeIsEmpty: true,
             theme: theme,
             interactableInvert: true,
-            negativeIsEmpty: true,
             interactableBindings: disabledBinding
         );
 

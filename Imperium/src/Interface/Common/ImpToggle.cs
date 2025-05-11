@@ -18,12 +18,10 @@ namespace Imperium.Interface.Common;
 
 /// <summary>
 ///     Represents a toggle in the Imperium UI, supports two types of structures
-///     Toggle (Toggle)
-///     - Background (Image)
-///     - Checkmark (Image)
-///     - Text (TMP_Text)
-///     Toggle (Toggle, Image)
-///     - Checkmark (Image)
+///     Parent (RectTransform)
+///       - Background (Image)
+///         - Checkmark (Image)
+///       - Text (TMP_Text) [Optional]
 /// </summary>
 public abstract class ImpToggle
 {
@@ -33,6 +31,7 @@ public abstract class ImpToggle
     /// <param name="path"></param>
     /// <param name="container"></param>
     /// <param name="valueBinding">Binding that decides on the state of the toggle</param>
+    /// <param name="label">The label that is shown next to the input field</param>
     /// <param name="theme">The theme the button will use</param>
     /// <param name="playClickSound">Whether the click sound playes when the button is clicked.</param>
     /// <param name="tooltipDefinition">The tooltip definition of the toggle tooltip.</param>
@@ -41,10 +40,11 @@ public abstract class ImpToggle
         string path,
         Transform container,
         IBinding<bool> valueBinding,
+        string label = "",
         IBinding<ImpTheme> theme = null,
         bool playClickSound = true,
         TooltipDefinition tooltipDefinition = null,
-        params ImpBinding<bool>[] interactableBindings
+        params IBinding<bool>[] interactableBindings
     )
     {
         var toggleParent = container.Find(path);
@@ -57,6 +57,10 @@ public abstract class ImpToggle
         var toggle = toggleParent.GetComponent<Toggle>();
         toggle.isOn = valueBinding.Value;
 
+        // Set label test if label element exists
+        var labelText = toggleParent.Find("Text")?.GetComponent<TMP_Text>();
+        if (labelText && !string.IsNullOrEmpty(label)) labelText.text = label;
+
         toggle.onValueChanged.AddListener(value =>
         {
             if (value == valueBinding.Value) return;
@@ -64,14 +68,6 @@ public abstract class ImpToggle
             valueBinding.Set(value);
         });
 
-        // valueBinding.OnUpdate += value => toggle.isOn = value;
-
-        // var interactable = toggleParent.gameObject.AddComponent<ImpInteractable>();
-        // interactable.onClick += () =>
-        // {
-        //     if (!toggle.interactable) return;
-        //     valueBinding.Set(!valueBinding.Value);
-        // };
         valueBinding.OnUpdate += value => toggle.isOn = value;
 
         /*
@@ -88,16 +84,22 @@ public abstract class ImpToggle
 
         if (interactableBindings.Length > 0)
         {
-            var checkmark = toggleParent.Find("Background/Checkmark")?.GetComponent<Image>()
-                            ?? toggleParent.Find("Checkmark").GetComponent<Image>();
-            var text = (toggleParent.Find("Text") ?? toggleParent.Find("Text (TMP)"))?.GetComponent<TMP_Text>();
+            var checkmark = (toggleParent.Find("Background/Checkmark") ?? toggleParent.Find("Checkmark"))
+                ?.GetComponent<Image>();
 
-            var isOn = interactableBindings.All(entry => entry.Value);
-            ToggleInteractable(toggle, checkmark, text, isOn);
+            ToggleInteractable(
+                toggle, checkmark, labelText,
+                interactableBindings.All(entry => entry == null || entry.Value)
+            );
 
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.OnUpdate += value => ToggleInteractable(toggle, checkmark, text, value);
+                if (interactableBinding == null) continue;
+
+                interactableBinding.OnTrigger += () => ToggleInteractable(
+                    toggle, checkmark, labelText,
+                    interactableBindings.All(entry => entry == null || entry.Value)
+                );
             }
         }
 
@@ -130,12 +132,12 @@ public abstract class ImpToggle
     private static void ToggleInteractable(
         Toggle toggle,
         [CanBeNull] Image checkmark,
-        [CanBeNull] TMP_Text text,
+        [CanBeNull] TMP_Text labelText,
         bool isOn
     )
     {
         toggle.interactable = isOn;
         if (checkmark) ImpUtils.Interface.ToggleImageActive(checkmark, isOn);
-        if (text) ImpUtils.Interface.ToggleTextActive(text, isOn);
+        if (labelText) ImpUtils.Interface.ToggleTextActive(labelText, isOn);
     }
 }

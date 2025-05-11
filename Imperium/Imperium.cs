@@ -9,6 +9,7 @@ using Imperium.Core;
 using Imperium.Core.EventLogging;
 using Imperium.Core.Input;
 using Imperium.Core.Lifecycle;
+using Imperium.Core.Portal;
 using Imperium.Core.Scripts;
 using Imperium.Integration;
 using Imperium.Interface.ImperiumUI;
@@ -51,6 +52,7 @@ public class Imperium : BaseUnityPlugin
     internal static ImpOutput IO { get; private set; }
     internal static ImpNetworking Networking { get; set; }
     internal static StartupManager StartupManager { get; private set; }
+    internal static PortalManager PortalManager { get; private set; }
 
     /*
      * Lifecycle systems. Instantiated when Imperium is launched (Stage 2).
@@ -76,24 +78,33 @@ public class Imperium : BaseUnityPlugin
     internal static WaypointManager WaypointManager { get; private set; }
 
     /// <summary>
-    ///     Set to true, then Imperium is initialized (Stage 1).
+    ///     Set to true when Imperium is initialized (Stage 1).
     /// </summary>
     internal static bool IsImperiumInitialized { get; private set; }
 
     /// <summary>
-    ///     Set to true, then Imperium is launched (Stage 2) and ready to serve API calls.
+    ///     Set to true when Imperium is launched (Stage 2) and ready to serve API calls.
     /// </summary>
     internal static bool IsImperiumLaunched { get; private set; }
 
     /// <summary>
-    ///     Set to true, when Imperium is launched and imperium access is currently granted.
+    ///     Set to true when Imperium is launched and imperium access is currently granted.
     /// </summary>
     internal static ImpBinaryBinding IsImperiumEnabled { get; private set; }
 
     /// <summary>
-    ///     Binding that indicates whether the game is currently in the main menu / lobby or in an arena level.
+    ///     Binding that indicates whether the game has finished loading the current level.
+    ///
+    ///     Triggers after every call to <see cref="LoadingUI.StartLoading"/> and <see cref="LoadingUI.StopLoading"/>.
     /// </summary>
-    internal static ImpBinaryBinding IsArenaLoaded { get; private set; }
+    internal static ImpBinaryBinding IsLevelLoaded { get; private set; }
+
+    /// <summary>
+    /// Binding that indicates whether the currently loaded level is a game level and not the main menu or lobby.
+    ///
+    /// Is updated every time <see cref="IsLevelLoaded"/> is udpated.
+    /// </summary>
+    internal static IBinding<bool> IsGameLevel { get; private set; }
 
     internal static GameObject GameObject { get; private set; }
 
@@ -108,18 +119,22 @@ public class Imperium : BaseUnityPlugin
         configFile = Config;
         Log = Logger;
 
-        IsArenaLoaded = new ImpBinaryBinding(false);
+        IsLevelLoaded = new ImpBinaryBinding(false);
+        IsGameLevel = new ImpExternalBinding<bool, bool>(Core.Lifecycle.GameManager.IsGameLevel, IsLevelLoaded);
+
+        IsLevelLoaded.OnUpdate += value => IO.LogInfo($"Is level loaded : {value}");
+        IsGameLevel.OnUpdate += value => IO.LogInfo($"Is game level : {value}");
+
         IsImperiumEnabled = new ImpBinaryBinding(false);
 
-        /*
-         * Temporary settings instance for startup functionality.
-         * This object will be re-instantiated once Imperium launches, meaning all listeners will be removed!
-         */
-        Settings = new ImpSettings(Config, IsArenaLoaded, IsImperiumEnabled);
+        Settings = new ImpSettings(Config);
+        IsLevelLoaded.OnUpdate += OnLevelLoaded;
 
         IO = new ImpOutput(Log);
         StartupManager = new StartupManager();
         Networking = new ImpNetworking();
+        PortalManager = new PortalManager();
+        PortalManager.RegisterTestPortal();
 
         if (!ImpAssets.Load()) return;
 
@@ -145,15 +160,11 @@ public class Imperium : BaseUnityPlugin
         InputBindings = new ImpInputBindings();
 
         // Re-instantiate settings to get rid of existing bindings
-        IsArenaLoaded = new ImpBinaryBinding(false);
-        Settings = new ImpSettings(configFile, IsArenaLoaded, IsImperiumEnabled);
-        IsArenaLoaded.OnUpdate += isLoaded =>
-        {
-            if (isLoaded) Settings.LoadAll();
-        };
+        // IsArenaLoaded = new ImpBinaryBinding(false);
+        // Settings = new ImpSettings(configFile);
 
         // Register camera update when scene is loaded
-        ActiveCamera = new ImpExternalBinding<Camera, bool>(() => PlayerAvatar.instance.localCamera, IsArenaLoaded);
+        ActiveCamera = new ImpExternalBinding<Camera, bool>(() => PlayerAvatar.instance.localCamera, IsLevelLoaded);
 
         IO.BindNotificationSettings(Settings);
         Networking.BindAllowClients(Settings.Preferences.AllowClients);
@@ -162,19 +173,19 @@ public class Imperium : BaseUnityPlugin
         EventLog = new ImpEventLog();
 
         GameManager = ImpLifecycleObject.Create<Core.Lifecycle.GameManager>(
-            GameObject.transform, IsArenaLoaded, ImpNetworking.ConnectedPlayers
+            GameObject.transform, IsLevelLoaded, ImpNetworking.ConnectedPlayers
         );
         ArenaManager = ImpLifecycleObject.Create<ArenaManager>(
-            GameObject.transform, IsArenaLoaded, ImpNetworking.ConnectedPlayers
+            GameObject.transform, IsLevelLoaded, ImpNetworking.ConnectedPlayers
         );
         ObjectManager = ImpLifecycleObject.Create<ObjectManager>(
-            GameObject.transform, IsArenaLoaded, ImpNetworking.ConnectedPlayers
+            GameObject.transform, IsLevelLoaded, ImpNetworking.ConnectedPlayers
         );
         PlayerManager = ImpLifecycleObject.Create<PlayerManager>(
-            GameObject.transform, IsArenaLoaded, ImpNetworking.ConnectedPlayers
+            GameObject.transform, IsLevelLoaded, ImpNetworking.ConnectedPlayers
         );
         WaypointManager = ImpLifecycleObject.Create<WaypointManager>(
-            GameObject.transform, IsArenaLoaded, ImpNetworking.ConnectedPlayers
+            GameObject.transform, IsLevelLoaded, ImpNetworking.ConnectedPlayers
         );
 
         Visualization = new Visualization(GameObject.transform, ObjectManager, configFile);
@@ -202,7 +213,7 @@ public class Imperium : BaseUnityPlugin
             EnableImperium();
 
             // Send scene update to ensure consistency in the UIs
-            IsArenaLoaded.SetFalse();
+            IsLevelLoaded.SetFalse();
         }
         else
         {
@@ -210,9 +221,11 @@ public class Imperium : BaseUnityPlugin
         }
     }
 
+
     internal static void DisableImperium()
     {
-        if (!IsImperiumEnabled.Value) return;
+        if (!IsImperiumLaunched || !IsImperiumEnabled.Value) return;
+
         IsImperiumEnabled.SetFalse();
 
         Interface.Close();
@@ -265,6 +278,11 @@ public class Imperium : BaseUnityPlugin
         IO.Send("[SYS] Successfully reloaded Imperium.");
     }
 
+    private static void OnLevelLoaded(bool isLoaded)
+    {
+        if (isLoaded) Settings.LoadAll();
+    }
+
     private static void RegisterInterfaces()
     {
         Interface.OpenInterface.OnUpdate += openInterface =>
@@ -285,7 +303,7 @@ public class Imperium : BaseUnityPlugin
             "Spawning",
             "Allows you to spawn objects\nsuch as Scrap or Entities.",
             InputBindings.InterfaceMap.SpawningUI,
-            IsArenaLoaded
+            canOpenBindings: IsGameLevel
         );
         Interface.RegisterInterface<MapUI>(
             ImpAssets.MapUIObject,
@@ -293,7 +311,7 @@ public class Imperium : BaseUnityPlugin
             "Map",
             "Imperium's built-in map.",
             InputBindings.InterfaceMap.MapUI,
-            IsArenaLoaded
+            canOpenBindings: IsGameLevel
         );
         Interface.RegisterInterface<MinimapSettings>(ImpAssets.MinimapSettingsObject);
 

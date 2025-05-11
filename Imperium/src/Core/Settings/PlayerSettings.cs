@@ -9,8 +9,7 @@ using UnityEngine;
 
 namespace Imperium.Core.Settings;
 
-internal class PlayerSettings(ConfigFile config, IBinding<bool> isSceneLoaded, IBinding<bool> isEnabled)
-    : SettingsContainer(config)
+internal class PlayerSettings(ConfigFile config) : SettingsContainer(config)
 {
     internal readonly ImpConfig<bool> InfiniteEnergy = new(
         config,
@@ -100,14 +99,6 @@ internal class PlayerSettings(ConfigFile config, IBinding<bool> isSceneLoaded, I
             PlayerController.instance.CrouchSpeed = value * 0.5f;
             PlayerController.instance.playerOriginalCrouchSpeed = value * 0.5f;
         }
-    );
-
-    internal readonly ImpConfig<float> SlideTime = new(
-        config,
-        "Player",
-        "SlideTime",
-        ImpConstants.DefaultSlideTime,
-        primaryUpdate: value => PlayerController.instance.SlideTime = value
     );
 
     internal readonly ImpConfig<float> JumpForce = new(

@@ -1,15 +1,25 @@
 # Changelog
 
-## Imperium v0.1.5 - Interaction API
+## Imperium v0.2.0 - Portal API
 
 ### Changes
 
 - Introduction of the Interaction API for mod developers.
+  - More information
+- Made it so Imperium can now be used from the start.
+
+### Bug Fixes
+
+- Fixed some bugs that caused errors in the development version of the game.
+- Fixed a bug that made disabled elements look enabled after the theme has been changed.
+- Fixed an issue where the Spawning UI was not scaling properly on wide monitors.
+
 
 ### QoL Changes
 
 - Made it so items and valuables no longer spawn beneath the floor or behind walls.
 - Made it so input fields now submit on value change instead of on submit.
+- Various optimizations and consistency fixes around UI elements.
 
 ## Imperium v0.1.4 - Bug fixes and QoL improvements
 

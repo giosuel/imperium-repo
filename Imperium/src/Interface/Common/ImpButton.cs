@@ -12,6 +12,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using static Imperium.Util.ImpUtils;
 
 #endregion
 
@@ -22,29 +23,31 @@ public abstract class ImpButton
     /// <summary>
     ///     Binds a unity button with an onclick listener and interactiveBindings
     /// </summary>
-    /// <param name="path"></param>
-    /// <param name="container"></param>
-    /// <param name="onClick"></param>
+    /// <param name="path">The path to the element relative to the container</param>
+    /// <param name="container">The parent container of the element</param>
+    /// <param name="onClick">The callback that will be called when the button is pressed</param>
+    /// <param name="label">The text that is shown within the button</param>
+    /// <param name="isIconButton">Whether the button represents an icon button (Used for theming)</param>
+    /// <param name="playClickSound">Whether to play a click sound when the button is clicked</param>
     /// <param name="theme">The theme the button will use</param>
-    /// <param name="isIconButton">Whether the button represents an icon button (For theming)</param>
+    /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
-    /// <param name="playClickSound">Whether the click sound playes when the button is clicked.</param>
-    /// <param name="tooltipDefinition">The tooltip definition of the button tooltip.</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the button is interactable</param>
     internal static Button Bind(
         string path,
         Transform container,
-        UnityAction onClick,
-        IBinding<ImpTheme> theme = null,
+        Action onClick,
+        string label = "",
         bool isIconButton = false,
-        bool interactableInvert = false,
         bool playClickSound = true,
+        IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
+        bool interactableInvert = false,
         params IBinding<bool>[] interactableBindings
     )
     {
-        var buttonObject = container.Find(path);
-        if (!buttonObject || !buttonObject.TryGetComponent<Button>(out var button))
+        var buttonParent = container.Find(path);
+        if (!buttonParent || !buttonParent.TryGetComponent<Button>(out var button))
         {
             Imperium.IO.LogInfo($"[UI] Failed to bind button '{Debugging.GetTransformPath(container)}/{path}'");
             return null;
@@ -60,109 +63,35 @@ public abstract class ImpButton
             }
         });
 
-        var icon = buttonObject.Find("Icon")?.GetComponent<Image>();
-        var text = buttonObject.Find("Text")?.GetComponent<TMP_Text>() ??
-                   buttonObject.Find("Text (TMP)")?.GetComponent<TMP_Text>();
+        // Set label test if label element exists
+        var labelText = buttonParent.Find("Text")?.GetComponent<TMP_Text>();
+        if (labelText && !string.IsNullOrEmpty(label)) labelText.text = label;
 
+        var icon = buttonParent.Find("Icon")?.GetComponent<Image>();
+
+        // Bind all interactable bindings if any were provided
         if (interactableBindings.Length > 0)
         {
-            ToggleInteractable(
-                button, icon, text,
-                interactableBindings.All(entry => entry.Value),
-                interactableInvert
-            );
-            foreach (var interactableBinding in interactableBindings)
-            {
-                interactableBinding.OnUpdate += _ => ToggleInteractable(
-                    button, icon, text,
-                    interactableBindings.All(entry => entry.Value),
-                    interactableInvert
-                );
-            }
+            BindInteractableBindings(buttonParent, button, icon, labelText, interactableInvert, interactableBindings);
         }
 
-        if (tooltipDefinition != null)
-        {
-            var interactable = buttonObject.gameObject.AddComponent<ImpInteractable>();
-            interactable.onOver += position =>
-            {
-                if (!tooltipDefinition.Tooltip) return;
-
-                tooltipDefinition.Tooltip.SetPosition(
-                    tooltipDefinition.Title,
-                    tooltipDefinition.Description,
-                    position,
-                    tooltipDefinition.HasAccess
-                );
-            };
-            interactable.onExit += () =>
-            {
-                if (!tooltipDefinition.Tooltip) return;
-
-                tooltipDefinition.Tooltip.Deactivate();
-            };
-        }
+        // Add tooltip to parent element if tooltip is provided
+        if (tooltipDefinition != null) ImpUtils.Interface.AddTooltip(tooltipDefinition, buttonParent);
 
         if (theme != null)
         {
-            theme.OnUpdate += value => OnThemeUpdate(value, buttonObject, isIconButton);
-            OnThemeUpdate(theme.Value, buttonObject, isIconButton);
-        }
-
-        return button;
-    }
-
-    internal static Button Bind(
-        string path,
-        Transform container,
-        IBinding<bool> stateBinding,
-        IBinding<ImpTheme> theme = null,
-        bool isIconButton = false,
-        bool interactableInvert = false,
-        bool playClickSound = true,
-        params IBinding<bool>[] interactableBindings
-    )
-    {
-        var buttonObject = container.Find(path);
-        if (!buttonObject)
-        {
-            Imperium.IO.LogInfo($"[UI] Failed to bind button '{Debugging.GetTransformPath(container)}/{path}'");
-            return null;
-        }
-
-        var button = buttonObject.GetComponent<Button>();
-        button.onClick.AddListener(() =>
-        {
-            stateBinding.Set(!stateBinding.Value);
-
-            if (Imperium.Settings.Preferences.PlaySounds.Value && playClickSound) GameUtils.PlayClip(ImpAssets.ButtonClick);
-        });
-
-        var icon = buttonObject.Find("Icon")?.GetComponent<Image>();
-        var text = buttonObject.Find("Text")?.GetComponent<TMP_Text>() ??
-                   buttonObject.Find("Text (TMP)")?.GetComponent<TMP_Text>();
-
-        if (interactableBindings.Length > 0)
-        {
-            ToggleInteractable(
-                button, icon, text,
-                interactableBindings.All(entry => entry.Value),
-                interactableInvert
-            );
-            foreach (var interactableBinding in interactableBindings)
+            OnThemeUpdate(theme.Value, buttonParent, isIconButton);
+            theme.OnUpdate += value =>
             {
-                interactableBinding.OnTrigger += () => ToggleInteractable(
-                    button, icon, text,
-                    interactableBindings.All(entry => entry.Value),
+                OnThemeUpdate(value, buttonParent, isIconButton);
+
+                // Fix interactability after theme update
+                ToggleInteractable(
+                    button, icon, labelText,
+                    interactableBindings.All(entry => entry == null || entry.Value),
                     interactableInvert
                 );
-            }
-        }
-
-        if (theme != null)
-        {
-            theme.OnUpdate += value => OnThemeUpdate(value, buttonObject, isIconButton);
-            OnThemeUpdate(theme.Value, buttonObject, isIconButton);
+            };
         }
 
         return button;
@@ -218,10 +147,23 @@ public abstract class ImpButton
 
         if (interactableBindings.Length > 0)
         {
-            ToggleInteractable(button, null, null, interactableBindings.All(entry => entry.Value), interactableInvert);
+            ToggleInteractable(
+                button,
+                null, null,
+                interactableBindings.All(entry => entry == null || entry.Value),
+                interactableInvert
+            );
+
             foreach (var interactableBinding in interactableBindings)
             {
-                interactableBinding.OnUpdate += value => ToggleInteractable(button, null, null, value, interactableInvert);
+                if (interactableBinding == null) continue;
+
+                interactableBinding.OnTrigger += () => ToggleInteractable(
+                    button,
+                    null, null,
+                    interactableBindings.All(entry => entry == null || entry.Value),
+                    interactableInvert
+                );
             }
         }
 
@@ -232,8 +174,35 @@ public abstract class ImpButton
         }
     }
 
-    internal static void ToggleInteractable(
-        Selectable button,
+    private static void BindInteractableBindings(
+        Transform buttonParent,
+        Button button,
+        [CanBeNull] Image icon = null,
+        [CanBeNull] TMP_Text labelText = null,
+        bool interactableInvert = false,
+        params IBinding<bool>[] interactableBindings
+    )
+    {
+        ToggleInteractable(
+            button, icon, labelText,
+            interactableBindings.All(entry => entry == null || entry.Value),
+            interactableInvert
+        );
+
+        foreach (var interactableBinding in interactableBindings)
+        {
+            if (interactableBinding == null) continue;
+
+            interactableBinding.OnTrigger += () => ToggleInteractable(
+                button, icon, labelText,
+                interactableBindings.All(entry => entry == null || entry.Value),
+                interactableInvert
+            );
+        }
+    }
+
+    private static void ToggleInteractable(
+        Button button,
         [CanBeNull] Image icon,
         [CanBeNull] TMP_Text text,
         bool isOn,
@@ -241,6 +210,7 @@ public abstract class ImpButton
     )
     {
         button.interactable = inverted ? !isOn : isOn;
+
         if (icon) ImpUtils.Interface.ToggleImageActive(icon, inverted ? !isOn : isOn);
         if (text) ImpUtils.Interface.ToggleTextActive(text, inverted ? !isOn : isOn);
     }

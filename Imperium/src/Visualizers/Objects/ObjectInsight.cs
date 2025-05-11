@@ -156,7 +156,7 @@ public class ObjectInsight : MonoBehaviour
         var camera = Imperium.ActiveCamera.Value;
         var cameraTexture = camera.activeTexture;
 
-        if (!InsightDefinition.VisibilityBinding.Value || !cameraTexture || !Imperium.IsArenaLoaded.Value ||
+        if (!InsightDefinition.VisibilityBinding.Value || !cameraTexture || !Imperium.IsLevelLoaded.Value ||
             Imperium.GameManager.IsGameLoading)
         {
             insightPanelObject.SetActive(false);

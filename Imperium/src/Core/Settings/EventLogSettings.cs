@@ -8,8 +8,7 @@ using Librarium.Binding;
 
 namespace Imperium.Core.Settings;
 
-internal class EventLogSettings(ConfigFile config, IBinding<bool> isSceneLoaded, IBinding<bool> isEnabled)
-    : SettingsContainer(config)
+internal class EventLogSettings(ConfigFile config) : SettingsContainer(config)
 {
     internal readonly ImpConfig<bool> EntityLogs = new(config, "EventLog", "Entity", true);
     internal readonly ImpConfig<bool> PlayerLogs = new(config, "EventLog", "Player", true);

@@ -32,11 +32,11 @@ internal class RenderingWindow : ImperiumWindow
         //     negativeIsDefault: true
         // );
 
-        ImpToggle.Bind("PostProcessing/Main", content, Imperium.Settings.Rendering.PostMain, theme);
-        ImpToggle.Bind("PostProcessing/Darkness", content, Imperium.Settings.Rendering.PostDarkness, theme);
-        ImpToggle.Bind("PostProcessing/Overlay", content, Imperium.Settings.Rendering.PostOverlay, theme);
+        ImpToggle.Bind("PostProcessing/Main", content, Imperium.Settings.Rendering.PostMain, theme: theme);
+        ImpToggle.Bind("PostProcessing/Darkness", content, Imperium.Settings.Rendering.PostDarkness, theme: theme);
+        ImpToggle.Bind("PostProcessing/Overlay", content, Imperium.Settings.Rendering.PostOverlay, theme: theme);
 
-        ImpToggle.Bind("PlayerAvatar/MainCamera", content, Imperium.Settings.Rendering.AvatarInMain, theme);
-        ImpToggle.Bind("PlayerAvatar/Freecam", content, Imperium.Settings.Rendering.AvatarInFreecam, theme);
+        ImpToggle.Bind("PlayerAvatar/MainCamera", content, Imperium.Settings.Rendering.AvatarInMain, theme: theme);
+        ImpToggle.Bind("PlayerAvatar/Freecam", content, Imperium.Settings.Rendering.AvatarInFreecam, theme: theme);
     }
 }

@@ -25,22 +25,56 @@ internal static class PreInitPatches
         // Ignore if avatar isn't local avatar
         if (!PlayerAvatar.instance || !Imperium.IsImperiumInitialized) return;
 
-        if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu ||
+        /*if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu ||
             RunManager.instance.levelCurrent == RunManager.instance.levelLobbyMenu)
         {
             Imperium.Unload();
         }
         else if (!Imperium.IsImperiumLaunched)
+        {*/
+        // if (!SemiFunc.IsMultiplayer())
+        // {
+        //     if (!ImpUtils.RunSafe(Imperium.Launch, "Imperium startup failed")) Imperium.DisableImperium();
+        // }
+        // else
+        // {
+        //     Imperium.Networking.RequestImperiumAccess();
+        // }
+        //}
+
+        if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu)
         {
-            if (!SemiFunc.IsMultiplayer())
+            if (!Imperium.IsImperiumLaunched)
             {
                 if (!ImpUtils.RunSafe(Imperium.Launch, "Imperium startup failed")) Imperium.DisableImperium();
             }
             else
             {
-                Imperium.Networking.RequestImperiumAccess();
+                Imperium.EnableImperium();
             }
         }
+        else if (RunManager.instance.levelCurrent == RunManager.instance.levelLobbyMenu)
+        {
+            Imperium.Networking.RequestImperiumAccess();
+        }
+
+        // if (!SemiFunc.IsMultiplayer())
+        // {
+        //     if (!ImpUtils.RunSafe(Imperium.Launch, "Imperium startup failed")) Imperium.DisableImperium();
+        // }
+        // else
+        // {
+        //     if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu)
+        //     {
+        //         Imperium.IO.LogInfo("Starting imperium in main menu");
+        //         if (!ImpUtils.RunSafe(Imperium.Launch, "Imperium startup failed")) Imperium.DisableImperium();
+        //     }
+        //     else if (RunManager.instance.levelCurrent == RunManager.instance.levelLobbyMenu)
+        //     {
+        //         Imperium.IO.LogInfo("re-requesting imperium access");
+        //         Imperium.Networking.RequestImperiumAccess();
+        //     }
+        // }
     }
 
     private static bool hasAutoLoaded;
