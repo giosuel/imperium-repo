@@ -14,6 +14,7 @@ using Imperium.Interface.ImperiumUI.Windows.Portal;
 using Imperium.Interface.ImperiumUI.Windows.Preferences;
 using Imperium.Interface.ImperiumUI.Windows.Rendering;
 using Imperium.Interface.ImperiumUI.Windows.Teleport;
+using Imperium.Interface.ImperiumUI.Windows.Upgrades;
 using Imperium.Interface.ImperiumUI.Windows.Visualization;
 using Imperium.Types;
 using Imperium.Util;
@@ -73,10 +74,11 @@ public class ImperiumUI : BaseUI
             "Center/LevelGeneration",
             "Level Generation"
         );
-        RegisterImperiumWindow<LevelGeneration>(
+        RegisterImperiumWindow<UpgradesWindow>(
             ImpAssets.UpgradesWindowObject,
             "Center/Upgrades",
-            "Upgrades"
+            "Upgrades",
+            canOpenBindings: Imperium.IsGameLevel
         );
         RegisterImperiumWindow<ArenaControlWindow>(
             ImpAssets.ArenaControlWindowObject,

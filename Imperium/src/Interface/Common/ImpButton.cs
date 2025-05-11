@@ -67,7 +67,7 @@ public abstract class ImpButton
         var labelText = buttonParent.Find("Text")?.GetComponent<TMP_Text>();
         if (labelText && !string.IsNullOrEmpty(label)) labelText.text = label;
 
-        var icon = buttonParent.Find("Icon")?.GetComponent<Image>();
+        var icon = (buttonParent.Find("Icon") ?? buttonParent.Find("Icon_notheme"))?.GetComponent<Image>();
 
         // Bind all interactable bindings if any were provided
         if (interactableBindings.Length > 0)

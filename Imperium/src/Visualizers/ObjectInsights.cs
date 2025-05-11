@@ -123,7 +123,7 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
     {
         InsightsFor<EnemyParent>()
             .SetNameGenerator(enemy => enemy.enemyName)
-            .SetIsDeadGenerator(enemy => !enemy.Spawned)
+            .SetIsDisabledGenerator(enemy => !enemy.Spawned)
             .RegisterInsight("Health", enemy => $"{enemy.Enemy.Health.health} HP")
             .RegisterInsight("Current State", enemy => enemy.Enemy.CurrentState.ToString())
             .RegisterInsight("Spawn Timer", enemy => Formatting.FormatSecondsMinutes(enemy.SpawnedTimer))

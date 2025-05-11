@@ -110,7 +110,7 @@ public class ObjectInsight : MonoBehaviour
     }
 
     /// <summary>
-    ///     Executes the <see cref="InsightDefinition{T}.NameGenerator" /> and <see cref="InsightDefinition.IsDeadGenerator" />
+    ///     Executes the <see cref="InsightDefinition{T}.NameGenerator" /> and <see cref="InsightDefinition{T}.IsDisabledGenerator" />
     ///     functions.
     ///     Since these functions are provided by the client, they are only executed every so often
     ///     (<see cref="overlayUpdateTimer" />) for performance reasons.
@@ -134,9 +134,8 @@ public class ObjectInsight : MonoBehaviour
         }
 
         // Death overlay / disable on death
-        if (InsightDefinition.IsDeadGenerator != null && InsightDefinition.IsDeadGenerator(targetObject))
+        if (InsightDefinition.IsDisabledGenerator != null && InsightDefinition.IsDisabledGenerator(targetObject))
         {
-            if (Imperium.Settings.Visualization.SSHideInactive.Value) return;
             deathOverlay.gameObject.SetActive(true);
         }
         else
@@ -156,8 +155,13 @@ public class ObjectInsight : MonoBehaviour
         var camera = Imperium.ActiveCamera.Value;
         var cameraTexture = camera.activeTexture;
 
-        if (!InsightDefinition.VisibilityBinding.Value || !cameraTexture || !Imperium.IsLevelLoaded.Value ||
-            Imperium.GameManager.IsGameLoading)
+        if (!InsightDefinition.VisibilityBinding.Value ||
+            (InsightDefinition.IsDisabledGenerator?.Invoke(targetObject) ?? false)
+            && Imperium.Settings.Visualization.SSHideDespawned.Value ||
+            !cameraTexture ||
+            !Imperium.IsLevelLoaded.Value ||
+            Imperium.GameManager.IsGameLoading
+           )
         {
             insightPanelObject.SetActive(false);
             return;

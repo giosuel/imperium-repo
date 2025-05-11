@@ -100,13 +100,6 @@ internal class ControlCenterWindow : ImperiumWindow
         );
 
         ImpToggle.Bind(
-            "Right/PlayerSettings/DevMode",
-            content,
-            Imperium.Settings.Player.DevMode,
-            theme: theme
-        );
-
-        ImpToggle.Bind(
             "Right/PlayerSettings/SlowMode",
             content,
             Imperium.Settings.Player.SlowMode,

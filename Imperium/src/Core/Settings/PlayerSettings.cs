@@ -43,13 +43,6 @@ internal class PlayerSettings(ConfigFile config) : SettingsContainer(config)
         }
     );
 
-    internal readonly ImpConfig<bool> DevMode = new(
-        config,
-        "Player",
-        "DevMode",
-        false
-    );
-
     internal readonly ImpConfig<bool> SlowMode = new(
         config,
         "Player",

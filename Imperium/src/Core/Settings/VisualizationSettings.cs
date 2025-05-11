@@ -35,10 +35,10 @@ internal class VisualizationSettings(ConfigFile config) : SettingsContainer(conf
         true
     );
 
-    internal readonly ImpConfig<bool> SSHideInactive = new(
+    internal readonly ImpConfig<bool> SSHideDespawned = new(
         config,
         "Visualization.Insights",
-        "HideInactive",
+        "HideDespawned",
         false
     );
 

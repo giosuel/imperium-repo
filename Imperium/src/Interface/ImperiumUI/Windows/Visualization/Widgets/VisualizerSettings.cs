@@ -31,9 +31,9 @@ internal class VisualizerSettings : ImpWidget
             theme: theme
         );
         ImpToggle.Bind(
-            "SSOverlays/HideInactive",
+            "SSOverlays/HideDespawned",
             transform,
-            Imperium.Settings.Visualization.SSHideInactive,
+            Imperium.Settings.Visualization.SSHideDespawned,
             theme: theme
         );
 

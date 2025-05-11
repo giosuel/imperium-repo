@@ -1,18 +1,20 @@
 # Changelog
 
-## Imperium v0.2.0 - Portal API
+## Imperium v0.2.0 - Portal API and Upgrades
 
 ### Changes
 
 - Introduction of the Interaction API for mod developers.
   - More information
-- Made it so Imperium can now be used from the start.
+- Added a new window to add and remove player upgrades.
+- Made it so Imperium can now be used from the main menu and lobby.
 
 ### Bug Fixes
 
 - Fixed some bugs that caused errors in the development version of the game.
 - Fixed a bug that made disabled elements look enabled after the theme has been changed.
 - Fixed an issue where the Spawning UI was not scaling properly on wide monitors.
+- Fixed a bug that made it so the hide despawned insight setting didn't work properly.
 
 
 ### QoL Changes

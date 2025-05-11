@@ -64,7 +64,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
 
         onOpen += () =>
         {
-            // Skip hide animation if window is already closed
+            // Skip hide animation if window is already open
             if (isShown) return;
 
             if (fadeAnimation != null) StopCoroutine(fadeAnimation);
@@ -130,6 +130,8 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
 
     private IEnumerator hideAnimation()
     {
+        isShown = false;
+
         var originalScale = rect.localScale;
         var elapsed = 0f;
 
@@ -166,11 +168,12 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         windowGroup.interactable = false;
         windowGroup.blocksRaycasts = false;
         rect.localScale = originalScale;
-        isShown = false;
     }
 
     private IEnumerator showAnimation()
     {
+        isShown = true;
+
         var originalScale = Vector3.one;
 
         var bounceScales = new[]
@@ -211,7 +214,6 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         windowGroup.alpha = 1f;
         windowGroup.interactable = true;
         windowGroup.blocksRaycasts = true;
-        isShown = true;
     }
 
     private IEnumerator animateOpacityTo(float duration, float targetAlpha, bool setInteractable = true)
