@@ -19,20 +19,20 @@ giosuel-Librarium = "0.0.6"
 DiFFoZ-BepInEx_MonoMod_Debug_Patcher = "1.1.1"
 
 [build]
-icon = "assets/icon_256x256.png"
-readme = "README.md"
-outdir = "artifacts/thunderstore/"
+icon = "../assets/icon_256x256.png"
+readme = "../README.md"
+outdir = "../artifacts/thunderstore/"
 
 [[build.copy]]
-source = "artifacts/bin/Imperium/release/giosuel.Imperium.dll"
+source = "../artifacts/bin/Imperium/release/giosuel.Imperium.dll"
 target = "/"
 
 [[build.copy]]
-source = "CHANGELOG.md"
+source = "../CHANGELOG.md"
 target = "/"
 
 [[build.copy]]
-source = "LICENSE"
+source = "../LICENSE"
 target = "/"
 
 [publish]

@@ -4,7 +4,6 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
-using Imperium.API.Types;
 using Imperium.Core;
 using Imperium.Core.EventLogging;
 using Imperium.Core.Input;
@@ -138,7 +137,7 @@ public class Imperium : BaseUnityPlugin
 
         if (!ImpAssets.Load()) return;
 
-        Harmony = new Harmony(LCMPluginInfo.PLUGIN_GUID);
+        Harmony = new Harmony(LCMPluginInfo.PLUGIN_VERSION);
         PreLaunchPatches();
 
         IsImperiumInitialized = true;
