@@ -16,7 +16,8 @@ internal static class WorldSpaceUIValueLostPatch
         if (Imperium.GameManager.EnemyValueLostInstances.Contains(__instance))
         {
             __instance.text.text = $"-{__instance.value} HP";
-            __instance.transform.localScale *= 2f;
+            __instance.scale *= 2f;
+            __instance.transform.localScale = __instance.scale;
         }
     }
 }

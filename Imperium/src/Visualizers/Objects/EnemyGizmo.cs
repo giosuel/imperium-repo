@@ -196,7 +196,7 @@ public class EnemyGizmo : MonoBehaviour
 
         if (entityConfig.Hearing.Value)
         {
-            Geometry.SetLinePositions(lastHeardNoiseLine, enemyParent.transform.position, origin);
+            Geometry.SetLinePositions(lastHeardNoiseLine, enemyParent.Enemy.transform.position, origin);
             lastHeardNoiseDot.gameObject.transform.position = origin;
         }
     }

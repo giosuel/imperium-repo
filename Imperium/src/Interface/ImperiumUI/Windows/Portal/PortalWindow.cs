@@ -30,6 +30,8 @@ internal class PortalWindow : ImperiumWindow
     private GameObject inputTemplate;
     private GameObject dropdownTemplate;
 
+    private GameObject placeholder;
+
     private readonly List<GameObject> interfaceElements = [];
 
     // Cached titles for theme updates
@@ -38,6 +40,8 @@ internal class PortalWindow : ImperiumWindow
     protected override void InitWindow()
     {
         content = transform.Find("Content/Viewport/Content");
+
+        placeholder = transform.Find("Placeholder").gameObject;
 
         portalTitleTemplate = content.Find("PortalTitle").gameObject;
         portalTitleTemplate.SetActive(false);
@@ -75,10 +79,17 @@ internal class PortalWindow : ImperiumWindow
         BuildPortal();
     }
 
+    protected override void OnOpen()
+    {
+        BuildPortal();
+    }
+
     private void ClearPortals()
     {
         interfaceElements.Do(Destroy);
         interfaceElements.Clear();
+
+        placeholder.SetActive(true);
     }
 
     private void BuildPortal()
@@ -107,6 +118,8 @@ internal class PortalWindow : ImperiumWindow
         ImpButton.CreateCollapse("Arrow", portalTitle.transform, portalContainer.transform);
 
         portal.Sections.Values.Do(section => BuildSection(section, portalContainer.transform));
+
+        placeholder.SetActive(false);
     }
 
     private void BuildSection(ImpPortalSection section, Transform portalContainer)

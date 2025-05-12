@@ -124,16 +124,18 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .SetNameGenerator(enemy => enemy.enemyName)
             .SetIsDisabledGenerator(enemy => !enemy.Spawned)
             .RegisterInsight("Health", enemy => $"{enemy.Enemy.Health.health} HP")
-            .RegisterInsight("Current State", enemy => enemy.Enemy.CurrentState.ToString())
+            .RegisterInsight("Current State", Core.Lifecycle.GameManager.GetEnemyState)
             .RegisterInsight("Spawn Timer", enemy => Formatting.FormatSecondsMinutes(enemy.SpawnedTimer))
             .RegisterInsight("Spawn Paused", enemy => Formatting.FormatSecondsMinutes(enemy.spawnedTimerPauseTimer))
             .RegisterInsight("Despawn Timer", enemy => Formatting.FormatSecondsMinutes(enemy.DespawnedTimer))
             .RegisterInsight("Valuable Timer", enemy => Formatting.FormatSecondsMinutes(enemy.valuableSpawnTimer))
             .RegisterInsight("No Vision Timer",
-                enemy => !enemy.Enemy.Vision ? "?" : Formatting.FormatSecondsMinutes(enemy.Enemy.Vision.DisableTimer))
+                enemy => enemy.Enemy.Vision ? Formatting.FormatSecondsMinutes(enemy.Enemy.Vision.DisableTimer) : "?"
+            )
             .RegisterInsight("Player Close", enemy => enemy.playerClose.ToString())
             .RegisterInsight("Spawn Idle Timer",
-                _ => Formatting.FormatSecondsMinutes(EnemyDirector.instance.spawnIdlePauseTimer))
+                _ => Formatting.FormatSecondsMinutes(EnemyDirector.instance.spawnIdlePauseTimer)
+            )
             .SetPositionOverride(enemy => enemy.Enemy.transform.position)
             .SetConfigKey("Enemies");
 
@@ -143,13 +145,12 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .RegisterInsight("Haul Goal", point => SemiFunc.DollarGetString(point.haulGoal))
             .RegisterInsight("Haul Current", point => SemiFunc.DollarGetString(point.haulCurrent))
             .RegisterInsight("In Start Room", point => $"{point.inStartRoom}")
-            .SetPositionOverride(DefaultPositionOverride)
+            .SetPositionOverride(point => point.transform.position)
             .SetConfigKey("Extraction Points");
 
         InsightsFor<ValuableObject>()
             .SetNameGenerator(valuable => valuable.name.Replace("Valuable ", "").Replace("(Clone)", ""))
-            .RegisterInsight(
-                "Value",
+            .RegisterInsight("Value",
                 valuable => $"${SemiFunc.DollarGetString(Mathf.RoundToInt(valuable.dollarValueCurrent))}"
             )
             .RegisterInsight("Is Discovered", valuable => $"{valuable.discovered}")

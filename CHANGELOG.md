@@ -10,6 +10,7 @@
 - Added a health bar and player detection bar to enemies.
 - Added damage indicators for enemies.
 - Made it so Imperium can now be used from the main menu and the lobby.
+- Added an option to force the game to spawn valuables in all possible spawn locations.
 
 ### Bug Fixes
 

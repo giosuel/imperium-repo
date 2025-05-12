@@ -5,11 +5,11 @@
   <figcaption>The code for this example can be found <a href="https://github.com/giosuel/imperium-repo/blob/development/Imperium/src/API/Examples/PortalExample.cs">here</a>.</figcaption>
 </figure>
 
-Imperium's Portal API allows mod developers and game testers to dynamically add their own UI elements to the Imperium UI in order to speed up their workflows. This can be useful to execute your own logic at a press of a button or expose internal properties in a simple and intuitve way.
+Imperium's Portal API is a toolkit for mod developers and game testers to dynamically build their own UIs within the Imperium UI to help them speed up their debugging and testing workflows. This can be useful to execute your own logic at a press of a button or expose internal properties in a simple and intuitve way.
 
 The portal window is divided into the registered portals which are further divided into sections.
 
-There are currently seven different UI elements from which to pick from to build your portal. Each element inherits from the base class `ImpPortalElement` which provides access to builder functions that let you set generic element properties such as a tooltip and an interactible binding.
+There are currently seven different UI elements from which to choose to build your portal. Each element inherits from the base class `ImpPortalElement` which provides access to builder functions that let you set generic element properties such as a tooltip and an interactible binding.
 
 ## How To Use
 
