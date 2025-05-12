@@ -1,5 +1,6 @@
 #region
 
+using System.Collections.Generic;
 using System.Linq;
 using Imperium.Networking;
 
@@ -36,6 +37,13 @@ internal class GameManager : ImpLifecycleObject
     );
 
     internal bool IsGameLoading { get; set; } = true;
+
+    /// <summary>
+    /// A list of value lost UI instances that were instantiated by Imperium when an enemy was damaged.
+    ///
+    /// This is used to customize the UIs in <see cref="Patches.Objects.WorldSpaceUIValueLostPatch.StartPatch"/>.
+    /// </summary>
+    internal readonly HashSet<WorldSpaceUIValueLost> EnemyValueLostInstances = [];
 
     protected override void Init()
     {

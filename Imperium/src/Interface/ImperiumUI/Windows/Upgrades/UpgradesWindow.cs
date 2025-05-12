@@ -7,6 +7,7 @@ using Imperium.Interface.Common;
 using Imperium.Types;
 using Librarium.Binding;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 #endregion
@@ -25,6 +26,13 @@ internal class UpgradesWindow : ImperiumWindow
 
         template = content.Find("Template").gameObject;
         template.SetActive(false);
+
+        transform.Find("TitleBox/Info").AddComponent<ImpTooltipTrigger>().Init(new TooltipDefinition()
+        {
+            Title = "Disclaimer!",
+            Description = "You need to restart the level\nto apply the upgrades.",
+            Tooltip = tooltip
+        });
 
         BuildElement("playerUpgradeHealth");
         BuildElement("playerUpgradeStrength");
@@ -98,9 +106,10 @@ internal class UpgradesWindow : ImperiumWindow
     {
         ImpThemeManager.Style(
             themeUpdate,
-            content,
-            new StyleOverride("Scrollbar", Variant.DARKEST),
-            new StyleOverride("Scrollbar/SlidingArea/Handle", Variant.LIGHTER)
+            transform,
+            new StyleOverride("TitleBox/Info", Variant.LIGHTER),
+            new StyleOverride("Content/Viewport/ContentScrollbar", Variant.DARKEST),
+            new StyleOverride("Content/Viewport/ContentScrollbar/SlidingArea/Handle", Variant.LIGHTER)
         );
     }
 }

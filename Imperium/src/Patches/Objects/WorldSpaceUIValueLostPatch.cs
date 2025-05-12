@@ -9,16 +9,17 @@ using UnityEngine;
 
 namespace Imperium.Patches.Objects;
 
-[HarmonyPatch(typeof(EnemyHealth))]
-internal static class EnemyHealthPatch
+[HarmonyPatch(typeof(WorldSpaceUIValueLost))]
+internal static class WorldSpaceUIValueLostPatch
 {
-    internal static readonly HashSet<int> valueLostInstances = [];
-
     [HarmonyPostfix]
-    [HarmonyPatch("HurtRPC")]
-    private static void HurtRPCPatch(EnemyHealth __instance, int _damage)
+    [HarmonyPatch("Start")]
+    private static void StartPatch(WorldSpaceUIValueLost __instance)
     {
-        WorldSpaceUIParent.instance.ValueLostCreate(__instance.transform.position, _damage);
-        valueLostInstances.Add(WorldSpaceUIParent.instance.valueLostList.Last().GetInstanceID());
+        if (Imperium.GameManager.EnemyValueLostInstances.Contains(__instance))
+        {
+            __instance.text.text = $"-{__instance.value} HP";
+            __instance.transform.localScale *= 2f;
+        }
     }
 }

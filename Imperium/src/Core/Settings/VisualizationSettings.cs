@@ -11,9 +11,9 @@ namespace Imperium.Core.Settings;
 
 internal class VisualizationSettings(ConfigFile config) : SettingsContainer(config)
 {
-    /// <summary>
-    ///     Visualization Settings
-    /// </summary>
+    /*
+     * Settings
+     */
     internal readonly ImpConfig<bool> SmoothAnimations = new(
         config,
         "Visualization.Visualizers",
@@ -49,6 +49,9 @@ internal class VisualizationSettings(ConfigFile config) : SettingsContainer(conf
         1
     );
 
+    /*
+     * Overlays
+     */
     internal readonly ImpConfig<bool> NavMeshSurfaces = new(
         config,
         "Visualization.Overlays",
@@ -56,9 +59,9 @@ internal class VisualizationSettings(ConfigFile config) : SettingsContainer(conf
         false
     );
 
-    /// <summary>
-    ///     Gizmos
-    /// </summary>
+    /*
+     * Gizmos
+     */
     internal readonly ImpConfig<bool> NoiseIndicators = new(
         config,
         "Visualization.Gizmos",

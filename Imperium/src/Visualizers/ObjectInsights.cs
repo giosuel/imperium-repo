@@ -130,6 +130,8 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .RegisterInsight("Spawn Paused", enemy => Formatting.FormatSecondsMinutes(enemy.spawnedTimerPauseTimer))
             .RegisterInsight("Despawn Timer", enemy => Formatting.FormatSecondsMinutes(enemy.DespawnedTimer))
             .RegisterInsight("Valuable Timer", enemy => Formatting.FormatSecondsMinutes(enemy.valuableSpawnTimer))
+            .RegisterInsight("No Vision Timer",
+                enemy => !enemy.Enemy.Vision ? "?" : Formatting.FormatSecondsMinutes(enemy.Enemy.Vision.DisableTimer))
             .RegisterInsight("Player Close", enemy => enemy.playerClose.ToString())
             .RegisterInsight("Spawn Idle Timer",
                 _ => Formatting.FormatSecondsMinutes(EnemyDirector.instance.spawnIdlePauseTimer))

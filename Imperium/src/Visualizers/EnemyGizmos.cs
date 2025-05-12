@@ -41,12 +41,8 @@ internal class EnemyGizmos : BaseVisualizer<IReadOnlyCollection<EnemyParent>, En
 
     protected override void OnRefresh(IReadOnlyCollection<EnemyParent> objects)
     {
-        var traversedGizmos = new HashSet<int>();
-
         foreach (var entity in objects.Where(entity => entity))
         {
-            traversedGizmos.Add(entity.GetInstanceID());
-
             if (visualizerObjects.ContainsKey(entity.GetInstanceID())) continue;
 
             if (!EntityInfoConfigs.TryGetValue(entity.enemyName, out var entityConfig))
@@ -63,21 +59,6 @@ internal class EnemyGizmos : BaseVisualizer<IReadOnlyCollection<EnemyParent>, En
 
             visualizerObjects[entity.GetInstanceID()] = entityGizmo;
         }
-
-        var gizmosToRemove = new HashSet<int>();
-
-        // Destroy all gizmos what haven't been updated
-        foreach (var (instanceId, gizmo) in visualizerObjects)
-        {
-            if (!traversedGizmos.Contains(instanceId))
-            {
-                gizmosToRemove.Add(instanceId);
-                Object.Destroy(gizmo);
-            }
-        }
-
-        // Remove destroyed gizmos from object list
-        foreach (var instanceId in gizmosToRemove) visualizerObjects.Remove(instanceId);
     }
 
     private void HardRefresh(IReadOnlyCollection<EnemyParent> objects)

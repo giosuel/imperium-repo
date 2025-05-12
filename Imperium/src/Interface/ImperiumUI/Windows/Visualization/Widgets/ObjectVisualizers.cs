@@ -107,6 +107,19 @@ internal class ObjectVisualizers : ImpWidget
             }
         );
         ImpButton.Bind(
+            "EntitiesHeader/Icons/Vitality",
+            transform,
+            () => ToggleEntityConfigs(config => config.Vitality),
+            theme: theme,
+            isIconButton: true,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Tooltip = tooltip,
+                Title = "Vitality",
+                HasAccess = true
+            }
+        );
+        ImpButton.Bind(
             "EntitiesHeader/Icons/Custom",
             transform,
             () => ToggleEntityConfigs(config => config.Custom),

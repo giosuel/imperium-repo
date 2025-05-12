@@ -4,10 +4,12 @@
 
 ### Changes
 
-- Introduction of the Interaction API for mod developers.
-  - More information
+- Introduction of the Portal API for mod developers to add their own UI elements.
+  - More information in the Imperium API [documentation](<https://giosuel.github.io/imperium-repo/api/portal.html>).
 - Added a new window to add and remove player upgrades.
-- Made it so Imperium can now be used from the main menu and lobby.
+- Added a health bar and player detection bar to enemies.
+- Added damage indicators for enemies.
+- Made it so Imperium can now be used from the main menu and the lobby.
 
 ### Bug Fixes
 

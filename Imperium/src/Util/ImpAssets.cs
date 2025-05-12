@@ -70,6 +70,7 @@ internal abstract class ImpAssets
     internal static GameObject ObjectInsightPanel;
     internal static GameObject WaypointBeacon;
     internal static GameObject LevelPoint;
+    internal static GameObject EnemyStatus;
 
     /*
      * Audio Clips
@@ -139,6 +140,7 @@ internal abstract class ImpAssets
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/insight_panel.prefab", out ObjectInsightPanel),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/waypoint_beacon.prefab", out WaypointBeacon),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/level_point.prefab", out LevelPoint),
+            LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/enemy_status.prefab", out EnemyStatus),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Prefabs/waypoint_overlay.prefab", out WaypointOverlay),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/xray.mat", out XRay),
             LoadAsset(ImperiumAssets, "Assets/Imperium/Materials/fresnel_white.mat", out FresnelWhite),

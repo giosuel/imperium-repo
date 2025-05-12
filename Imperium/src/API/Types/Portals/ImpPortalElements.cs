@@ -71,7 +71,6 @@ public record ImpPortalTextField(
 /// <param name="minValue">The smallest integer value that the input field allows (Default: int.MinValue)</param>
 /// <param name="maxValue">The largest integer value that the input field allows (Default int.MaxValue)</param>
 /// <param name="placeholder">A text that is displayed when the input field's value is empty</param>
-/// <param name="negativeIsEmpty">If set to true, any negative value will result in the input field being cleared</param>
 /// <param name="updateOnSubmit">Whether to only update the value binding when the input field is submitted</param>
 /// <param name="allowReset">Whether the element should contain a reset button that resets its value binding to the default value</param>
 public record ImpPortalNumberField(
@@ -80,7 +79,6 @@ public record ImpPortalNumberField(
     int minValue = int.MinValue,
     int maxValue = int.MaxValue,
     string placeholder = "",
-    bool negativeIsEmpty = false,
     bool updateOnSubmit = false,
     bool allowReset = true
 ) : ImpPortalElement;
@@ -93,7 +91,6 @@ public record ImpPortalNumberField(
 /// <param name="minValue">The smallest decimal value that the input field allows (Default: float.MinValue)</param>
 /// <param name="maxValue">The largest decimal value that the input field allows (Default float.MaxValue)</param>
 /// <param name="placeholder">A text that is displayed when the input field's value is empty</param>
-/// <param name="negativeIsEmpty">If set to true, any negative value will result in the input field being cleared</param>
 /// <param name="updateOnSubmit">Whether to only update the value binding when the input field is submitted</param>
 /// <param name="allowReset">Whether the element should contain a reset button that resets its value binding to the default value</param>
 public record ImpPortalDecimalField(
@@ -102,7 +99,6 @@ public record ImpPortalDecimalField(
     float minValue = float.MinValue,
     float maxValue = float.MaxValue,
     string placeholder = "",
-    bool negativeIsEmpty = false,
     bool updateOnSubmit = false,
     bool allowReset = true
 ) : ImpPortalElement;

@@ -120,9 +120,13 @@ internal static class ObjectEntryGenerator
         switch (entry.Type)
         {
             case ObjectType.ExtractionPoint:
+                var point = (ExtractionPoint)entry.component;
+                var uniqueId = SemiFunc.IsMultiplayer()
+                    ? point.photonView.ViewID
+                    : point.gameObject.GetInstanceID();
                 Imperium.ObjectManager.CompleteExtraction(new ExtractionCompleteRequest
                 {
-                    ObjectId = ((ExtractionPoint)entry.component).photonView.ViewID
+                    ObjectId = uniqueId
                 });
                 break;
             default:

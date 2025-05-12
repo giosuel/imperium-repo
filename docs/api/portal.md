@@ -1,5 +1,10 @@
 # Portal API
 
+<figure markdown="span" class="float-right-img">
+  ![Portal Window](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/portal.png?raw=true)
+  <figcaption>The code for this example can be found <a href="https://github.com/giosuel/imperium-repo/blob/development/Imperium/src/API/Examples/PortalExample.cs">here</a>.</figcaption>
+</figure>
+
 Imperium's Portal API allows mod developers and game testers to dynamically add their own UI elements to the Imperium UI in order to speed up their workflows. This can be useful to execute your own logic at a press of a button or expose internal properties in a simple and intuitve way.
 
 The portal window is divided into the registered portals which are further divided into sections.
@@ -30,26 +35,192 @@ Imperium.API.Portal.ForGuid("<mod-guid>")
 
 Interactable bindings are bindings of the type `IBinding<bool>` that let you control whether your UI elements are interactable by the user or not. This can be useful to only let the user access your elements when a level is loaded. You can set the interactable binding of any UI element like so.
 
-!!! example
-    ```csharp
-    var button = new ImpPortalButton("asdf", () => {});
+#### Example
+```csharp
+var button = new ImpPortalButton("asdf", () => {});
 
-    button.SetInteractableBinding(Imperium.API.State.IsLevelLoaded);
-    ```
+button.SetInteractableBinding(Imperium.API.State.IsLevelLoaded);
+```
+
 ## Tooltips
 
 A portal tooltip is a little overlay that is shown when the cursor hovers over your UI element. It can contain a title and an optional descriptive text. 
 
-!!! example
-    ```csharp
-    var button = new ImpPortalButton("asdf", () => {});
+#### Example
+```csharp
+var button = new ImpPortalButton("asdf", () => {});
 
-    button.SetTooltip("Spawn", "Spawns all custom enemies");
-    ```
+button.SetTooltip("Spawn", "Spawns all custom enemies");
+```
 
 ## Portal Elements
 
 ### Button Element
 
-**Class:** `Imperium.API.Types.Portals.ImpPortalButton`
+![Button Element](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/portal-button.png?raw=true)
 
+**Type:** `Imperium.API.Types.Portals.ImpPortalButton`
+
+#### Example
+```csharp
+var button = new ImpPortalButton(
+    label: "Spawn",
+    onClick: () => {}
+);
+```
+
+!!! note
+    Buttons will always be grouped into a two-column grid at the end of the section.
+
+### Text Field Element
+
+![Text Field Element](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/portal-field.png?raw=true)
+
+**Type:** `Imperium.API.Types.Portals.ImpPortalTextField`
+
+#### Example
+```csharp
+var binding = new ImpBinding<string>("");
+
+var textField = new ImpPortalTextField(
+    label: "Global Modifier",
+    valueBinding: binding,
+    placeholder: "Generated",
+    updateOnSubmit: true, // (1)!
+    allowReset: true // (2)!
+);
+```
+
+1. Whether the value binding should only be updated once the user presses the return key.<br>(Default: `false`)
+2. Whether the element should include a reset button to reset the value binding to its default value.<br>(Default: `true`)
+
+### Number Field Element
+
+![Number Field Element](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/portal-number-field.png?raw=true)
+
+**Type:** `Imperium.API.Types.Portals.ImpPortalNumberField`
+
+#### Example
+```csharp
+var binding = new ImpBinding<int>(100);
+
+var numberField = new ImpPortalNumberField(
+    label: "Some Number",
+    valueBinding: binding,
+    minValue: 0, // (1)!
+    maxValue: 9999, // (2)!
+    placeholder: "Generated",
+    updateOnSubmit: true, // (3)!
+    allowReset: true // (4)!
+);
+```
+
+1. The smallest value that can be entered into the field.<br>(Default: `int.MinValue`)
+2. The largest value that can be entered into the field.<br>(Default: `int.MaxValue`)
+3. Whether the value binding should only be updated once the user presses the return key.<br>(Default: `false`)
+4. Whether the element should include a reset button to reset the value binding to its default value.<br>(Default: `true`)
+
+### Decimal Field Element
+
+
+![Decimal Field Element](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/portal-number-field.png?raw=true)
+
+**Type:** `Imperium.API.Types.Portals.ImpPortalDecimalField`
+
+#### Example
+```csharp
+var binding = new ImpBinding<float>(3.14f);
+
+var decimalField = new ImpPortalDecimalField(
+    label: "Some Decimal",
+    valueBinding: binding,
+    minValue: 0f, // (1)!
+    maxValue: 9999f, // (2)!
+    placeholder: "Generated",
+    updateOnSubmit: true, // (3)!
+    allowReset: true // (4)!
+);
+```
+
+1. The smallest value that can be entered into the field.<br>(Default: `float.MinValue`)
+2. The largest value that can be entered into the field.<br>(Default: `float.MaxValue`)
+3. Whether the value binding should only be updated once the user presses the return key.<br>(Default: `false`)
+4. Whether the element should include a reset button to reset the value binding to its default value.<br>(Default: `true`)
+
+### Dropdown Element
+
+![Dropdown Element](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/portal-dropdown.png?raw=true)
+
+**Type:** `Imperium.API.Types.Portals.ImpPortalDropdown`
+
+#### Example
+```csharp
+var binding = new ImpBinding<int>(0); // (1)!
+List<string> options = ["Option 1", "Option 2"];
+
+var dropdown = new ImpPortalDropdown(
+    label: "Some Dropdown",
+    valueBinding: binding,
+    options: options, // (2)!
+    allowReset: true // (3)!
+);
+```
+
+1. The value binding contains the index of the currently selected option in the option list.
+2. A list of options from which the user can pick from.
+3. Whether the element should include a reset button to reset the value binding to its default value.<br>(Default: `true`)
+
+### Toggle Element
+
+![Toggle Element](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/portal-toggle.png?raw=true)
+
+**Type:** `Imperium.API.Types.Portals.ImpPortalToggle`
+
+#### Example
+```csharp
+var binding = new ImpBinding<bool>(true);
+
+var toggle = new ImpPortalToggle(
+    label: "Some Toggle",
+    valueBinding: binding,
+    allowReset: true // (1)!
+);
+```
+
+!!! note
+    Toggles will always be grouped into a two-column grid at the beginning of the section.
+
+1. Whether the element should include a reset button to reset the value binding to its default value.<br>(Default: `true`)
+
+### Slider Element
+
+![Slider Element](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/portal-slider.png?raw=true)
+
+**Type:** `Imperium.API.Types.Portals.ImpPortalSlider`
+
+#### Example
+```csharp
+var binding = new ImpBinding<float>(1f);
+
+var slider = new ImpPortalToggle(
+    label: "Global Speed",
+    valueBinding: binding,
+    minValue: 0f, // (1)!
+    maxValue: 100f, // (2)!
+    debounceTime: 0.1f, // (3)!
+    valueUnit: "%", // (4)!
+    handleFormatter: value => Mathf.RoundToInt(value), // (5)!
+    useWholeNumbers: true, // (6)!
+    negativeIsDefault: true, // (7)!
+    allowReset: true // (8)!
+);
+```
+
+1. The slider range's lower bound.
+2. The slider range's upper bound.
+3. Debounce time for slider updates, useful when value binding is a network binding.<br>(Default: `0`)
+4. The unit of the slider's value. Used on the handle and min/max indicators.
+5. A formatter function to format the text on the slider's handle.<br>(Default: `Mathf.RoundToInt()`)
+6. Whether the slider should snap to whole integer numbers.<br>(Default: `false`) 
+7. Whether the value binding's default value should be shown when the binding's value is negative.<br>(Default: `false`)
+8. Whether the element should include a reset button to reset the value binding to its default value.<br>(Default: `true`)

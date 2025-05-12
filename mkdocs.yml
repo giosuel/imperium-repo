@@ -61,6 +61,11 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - attr_list
+  - md_in_html
+  - pymdownx.blocks.caption
+  - toc:
+      toc_depth: 3
 
 plugins:
   - offline
