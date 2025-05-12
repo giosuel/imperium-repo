@@ -31,6 +31,8 @@ Imperium.API.Portal.ForGuid("<mod-guid>")
     );
 ```
 
+Portal elements get and set their value via Imperium's bindings. Read more about Imperium bindings [here](http://localhost:8000/imperium-repo/api/index.html#the-imperium-binding).
+
 ## Interactable Bindings
 
 Interactable bindings are bindings of the type `IBinding<bool>` that let you control whether your UI elements are interactable by the user or not. This can be useful to only let the user access your elements when a level is loaded. You can set the interactable binding of any UI element like so.
@@ -105,7 +107,7 @@ var textField = new ImpPortalTextField(
 var binding = new ImpBinding<int>(100);
 
 var numberField = new ImpPortalNumberField(
-    label: "Some Number",
+    label: "Current Health",
     valueBinding: binding,
     minValue: 0, // (1)!
     maxValue: 9999, // (2)!
@@ -129,10 +131,10 @@ var numberField = new ImpPortalNumberField(
 
 #### Example
 ```csharp
-var binding = new ImpBinding<float>(3.14f);
+var binding = new ImpBinding<float>(100f);
 
 var decimalField = new ImpPortalDecimalField(
-    label: "Some Decimal",
+    label: "Current Health",
     valueBinding: binding,
     minValue: 0f, // (1)!
     maxValue: 9999f, // (2)!
@@ -156,12 +158,13 @@ var decimalField = new ImpPortalDecimalField(
 #### Example
 ```csharp
 var binding = new ImpBinding<int>(0); // (1)!
-List<string> options = ["Option 1", "Option 2"];
+List<string> options = ["Passive", "Active"];
 
 var dropdown = new ImpPortalDropdown(
-    label: "Some Dropdown",
+    label: "Behaviour",
     valueBinding: binding,
     options: options, // (2)!
+    placeholder: "Generated",
     allowReset: true // (3)!
 );
 ```
@@ -181,16 +184,16 @@ var dropdown = new ImpPortalDropdown(
 var binding = new ImpBinding<bool>(true);
 
 var toggle = new ImpPortalToggle(
-    label: "Some Toggle",
+    label: "Vision Enabled",
     valueBinding: binding,
     allowReset: true // (1)!
 );
 ```
 
+1. Whether the element should include a reset button to reset the value binding to its default value.<br>(Default: `true`)
+
 !!! note
     Toggles will always be grouped into a two-column grid at the beginning of the section.
-
-1. Whether the element should include a reset button to reset the value binding to its default value.<br>(Default: `true`)
 
 ### Slider Element
 
@@ -203,7 +206,7 @@ var toggle = new ImpPortalToggle(
 var binding = new ImpBinding<float>(1f);
 
 var slider = new ImpPortalToggle(
-    label: "Global Speed",
+    label: "Spawn Chance",
     valueBinding: binding,
     minValue: 0f, // (1)!
     maxValue: 100f, // (2)!

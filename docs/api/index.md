@@ -9,7 +9,7 @@ The Imperium API provides debugging tools and visualizers for mod developers to 
 - **[Event Logging API](event-log.md)**  
   Tools to log events in-game to Imperium's event log with additional event information.
 - **[World API (WIP)](world.md)**  
-  Tools to spawn and otherwise interact with game objects such as enemies or valueables.
+  Tools to spawn and otherwise interact with game objects such as enemies or valuables.
 
 To complement your debugging experience with Imperium, it is recommended to use the tools available in [Librarium](https://github.com/giosuel/librarium), a library that contains core utility that Imperium is using. For more information, please refer to librarium's code documentation.
 
