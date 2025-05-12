@@ -1,6 +1,5 @@
 #region
 
-using System;
 using System.Collections.Generic;
 using Imperium.API.Types;
 using Imperium.Util;

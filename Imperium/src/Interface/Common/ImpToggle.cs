@@ -8,7 +8,6 @@ using JetBrains.Annotations;
 using Librarium;
 using Librarium.Binding;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -19,9 +18,9 @@ namespace Imperium.Interface.Common;
 /// <summary>
 ///     Represents a toggle in the Imperium UI, supports two types of structures
 ///     Parent (RectTransform)
-///       - Background (Image)
-///         - Checkmark (Image)
-///       - Text (TMP_Text) [Optional]
+///     - Background (Image)
+///     - Checkmark (Image)
+///     - Text (TMP_Text) [Optional]
 /// </summary>
 public abstract class ImpToggle
 {

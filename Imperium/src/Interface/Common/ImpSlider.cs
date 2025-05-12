@@ -2,8 +2,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Imperium.Core;
 using Imperium.Types;
@@ -32,12 +30,12 @@ public class ImpSlider : MonoBehaviour
     /// <summary>
     ///     Represents a slider in the Imperium UI, the UI structure should look like this.
     ///     Parent (RectTransform)
-    ///       - Label (TMP_Text)
-    ///       - Slider (Slider)
-    ///         - (Slider Stuff)
-    ///       - MinValue (TMP_Text) [Optional]
-    ///       - MaxValue (TMP_Text) [Optional]
-    ///       - Reset (Button) [Optional]
+    ///     - Label (TMP_Text)
+    ///     - Slider (Slider)
+    ///     - (Slider Stuff)
+    ///     - MinValue (TMP_Text) [Optional]
+    ///     - MaxValue (TMP_Text) [Optional]
+    ///     - Reset (Button) [Optional]
     /// </summary>
     /// <param name="path">The path to the UI element relative to the parent.</param>
     /// <param name="container">The parent object of the UI elmeent.</param>

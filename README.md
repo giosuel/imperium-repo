@@ -6,12 +6,12 @@ A powerful all-in-one debugging and admin tool to test and explore game mechanic
 
 This is the official R.E.P.O. port of the original [Imperium for Lethal Company](https://github.com/giosuel/imperium).
 
+![Imperium UI](https://raw.githubusercontent.com/giosuel/imperium-repo/refs/heads/main/assets/screenshots/imperium.png)
+
 > [!IMPORTANT]
 > The Imperium mods were made with the intent to be tools to debug and explore game functionalities and provide more insight into the mechanics behind R.E.P.O. and Lethal Company.
 >
 > Imperium fully supports multiplayer as long as the host has it installed. I strongly stand against cheating and trolling in public lobbies. If you really want to cheat, at least put some effort into making your own hacked client!
-
-![Imperium UI](https://raw.githubusercontent.com/giosuel/imperium-repo/refs/heads/main/assets/screenshots/imperium.png)
 
 ## ✨ Main Features
 
@@ -56,10 +56,11 @@ Various icons were provided by [FlatIcon](https://www.flaticon.com/).
 
 ### Special Thanks To
 
-- [alter ego](https://www.youtube.com/@alteregosocial) for helping me with testing and consistently being an amazing motivation!
+- [alter ego](https://www.youtube.com/@alteregosocial) for helping me with testing and being an amazing motivation!
 - [Hamunii](https://github.com/hamunii) for helping me and being awesome!
 - [Rune580](https://github.com/Rune580) for providing the amazing [RepoSteamNetworking](https://github.com/Rune580/RepoSteamNetworking)!
 - [Adi](https://thunderstore.io/c/lethal-company/p/AdiBTW/) for helping with the [LoS](https://github.com/AdalynBlack/LC-EnemyDebug) visualizers!
+- [chboo1](https://github.com/chboo1-chickadoo) for helping me with the data mining.
 - [NikkiDarkMatter](https://www.youtube.com/@NikkiDarkMatter) for helping me with the level point visualization!
 - [1A3](https://github.com/1A3Dev) for helping me with the development build of the game.
 - [Nilaier](https://github.com/NilaierMusic) for le awesome readme inspiration.

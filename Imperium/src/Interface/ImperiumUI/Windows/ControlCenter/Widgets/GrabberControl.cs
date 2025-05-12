@@ -45,7 +45,6 @@ internal class GrabberControl : ImpWidget
             path: "ThrowStrength",
             container: transform,
             valueBinding: Imperium.Settings.Grabber.ThrowStrength,
-
             minValue: 0,
             maxValue: 20,
             theme: theme

@@ -1,3 +1,5 @@
+#region
+
 using System.Collections.Generic;
 using System.Linq;
 using Imperium.Core;
@@ -10,23 +12,25 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+#endregion
+
 namespace Imperium.Interface.Common;
 
 /// <summary>
 ///     Represents a dropdown in the Imperium UI, the UI structure should look like this.
 ///     Parent (RectTransform)
-///       - Dropdown (TMP_Dropdown)
-///         - Label (TMP_Text)
-///         - Placeholder (TMP_Text)
-///         - Arrow (Image)
-///         - Template (Dropdown Template Stuff)
-///       - Title (TMP_Text) [Optional]
-///       - Reset (Button) [Optional]
+///     - Dropdown (TMP_Dropdown)
+///     - Label (TMP_Text)
+///     - Placeholder (TMP_Text)
+///     - Arrow (Image)
+///     - Template (Dropdown Template Stuff)
+///     - Title (TMP_Text) [Optional]
+///     - Reset (Button) [Optional]
 /// </summary>
 public static class ImpDropdown
 {
     /// <summary>
-    /// Binds an existing dropdown to an binding.
+    ///     Binds an existing dropdown to an binding.
     /// </summary>
     /// <param name="path">The path to the element relative to the container</param>
     /// <param name="container">The parent container of the element</param>
@@ -88,7 +92,7 @@ public static class ImpDropdown
         {
             if (Imperium.Settings.Preferences.PlaySounds.Value && playClickSound) GameUtils.PlayClip(ImpAssets.ButtonClick);
         };
-        
+
         // Set placeholder text if placeholder element exists
         if (!string.IsNullOrEmpty(placeholder))
         {

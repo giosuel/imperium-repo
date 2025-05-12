@@ -2,8 +2,6 @@
 
 using System.Reflection;
 using HarmonyLib;
-using Imperium.API.Types;
-using Librarium;
 using MonoMod.Utils;
 
 #endregion

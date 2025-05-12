@@ -9,8 +9,6 @@ using Librarium;
 using Librarium.Binding;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using WebSocketSharp;
 
 #endregion
 
@@ -19,10 +17,10 @@ namespace Imperium.Interface.Common;
 /// <summary>
 ///     Represents an input field in the Imperium UI, the UI structure should look like this.
 ///     Parent (RectTransform)
-///       - Input (TMP_input)
-///         - (Input Stuff)
-///       - Label (TMP_Text) [Optional]
-///       - Reset (Button) [Optional]
+///     - Input (TMP_input)
+///     - (Input Stuff)
+///     - Label (TMP_Text) [Optional]
+///     - Reset (Button) [Optional]
 /// </summary>
 public abstract class ImpInput
 {

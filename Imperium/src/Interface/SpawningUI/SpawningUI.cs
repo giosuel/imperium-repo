@@ -300,7 +300,7 @@ internal class SpawningUI : BaseUI
                     spawnPosition = hitInfo.point;
                 }
             }
-            
+
             spawningObjectEntry.Spawn(spawnPosition, amount, value, true);
         }
 

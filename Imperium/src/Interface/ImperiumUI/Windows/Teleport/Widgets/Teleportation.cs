@@ -129,7 +129,6 @@ public class
             new StyleOverride("ExtractionPoints", Variant.DARKER),
             new StyleOverride("ExtractionPoints/ScrollView/Scrollbar", Variant.DARKEST),
             new StyleOverride("ExtractionPoints/ScrollView/Scrollbar/SlidingArea/Handle", Variant.LIGHTER)
-
         );
 
         foreach (var extractionPoint in extractionPoints)

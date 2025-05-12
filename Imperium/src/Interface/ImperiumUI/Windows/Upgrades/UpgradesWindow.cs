@@ -27,7 +27,7 @@ internal class UpgradesWindow : ImperiumWindow
         template = content.Find("Template").gameObject;
         template.SetActive(false);
 
-        transform.Find("TitleBox/Info").AddComponent<ImpTooltipTrigger>().Init(new TooltipDefinition()
+        transform.Find("TitleBox/Info").AddComponent<ImpTooltipTrigger>().Init(new TooltipDefinition
         {
             Title = "Disclaimer!",
             Description = "You need to restart the level\nto apply the upgrades.",

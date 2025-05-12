@@ -6,7 +6,6 @@ using System.Linq;
 using BepInEx.Configuration;
 using Imperium.API.Types;
 using Imperium.Types;
-using Imperium.Util;
 using Imperium.Visualizers.Objects;
 using Librarium;
 using Librarium.Binding;

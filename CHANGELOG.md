@@ -20,6 +20,7 @@
 - Fixed a bug with night vision when crouching.
 - Fixed the field of view slider in the control center.
 - Fixed the minimap being black after loading into a level for the first time.
+- Fixed the spawning of multiple enemies with one spawn command.
 
 
 ### QoL Changes
@@ -27,6 +28,10 @@
 - Made it so items and valuables no longer spawn beneath the floor or behind walls.
 - Made it so input fields now submit on value change instead of on submit.
 - Various optimizations and consistency fixes around UI elements.
+
+### Compatibility
+
+Compatible with REPO release version  `v0.1.2` and beta version `v0.1.2.23_beta`.
 
 ## Imperium v0.1.4 - Bug fixes and QoL improvements
 

@@ -1,8 +1,8 @@
 #region
 
-#endregion
-
 using Imperium.API.Types;
+
+#endregion
 
 namespace Imperium.Core.EventLogging;
 

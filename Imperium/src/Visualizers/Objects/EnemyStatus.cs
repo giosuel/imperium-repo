@@ -1,7 +1,11 @@
+#region
+
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem.Utilities;
 using UnityEngine.UI;
+
+#endregion
 
 namespace Imperium.Visualizers.Objects;
 
@@ -116,8 +120,8 @@ public class EnemyStatus : MonoBehaviour
             var detectionPercentage = Mathf.Min(currentVisions / (float)maxVisions, 1);
             detectionBar.localScale = detectionBar.localScale with { x = detectionPercentage };
 
-            detectionBarText.text = currentVisions >= maxVisions ?
-                leFunniDuck ? "Ducktected!" : "Detected!"
+            detectionBarText.text = currentVisions >= maxVisions
+                ? leFunniDuck ? "Ducktected!" : "Detected!"
                 : currentVisions == 0
                     ? "Idle"
                     : $"{Mathf.Min(currentVisions, maxVisions)}/{maxVisions}";

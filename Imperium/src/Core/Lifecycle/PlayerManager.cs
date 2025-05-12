@@ -68,8 +68,9 @@ internal class PlayerManager : ImpLifecycleObject
     protected override void OnLevelLoad()
     {
         if (TruckTPAnchor == null)
-            TruckTPAnchor = new(() => GameObject.Find("Truck Item Shelf")?.transform.position);
-        
+            TruckTPAnchor =
+                new ImpExternalBinding<Vector3?, bool>(() => GameObject.Find("Truck Item Shelf")?.transform.position);
+
         TruckTPAnchor.Refresh();
 
         // Load grabber and render settings as they are reset when the level is loaded

@@ -235,6 +235,8 @@ internal class InsightDefinitionImpl<T> : InsightDefinition<T> where T : Compone
     public void SetPersonalNameGeneratorFromParent(Func<T, string> generator) =>
         PersonalNameGenerator ??= obj => generator((T)obj);
 
-    public void SetIsDisabledGeneratorFromParent(Func<T, bool> generator) => IsDisabledGenerator ??= obj => generator((T)obj);
+    public void SetIsDisabledGeneratorFromParent(Func<T, bool> generator) =>
+        IsDisabledGenerator ??= obj => generator((T)obj);
+
     public void SetPositionOverrideFromParent(Func<T, Vector3> @override) => PositionOverride ??= obj => @override((T)obj);
 }

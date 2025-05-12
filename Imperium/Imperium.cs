@@ -93,24 +93,21 @@ public class Imperium : BaseUnityPlugin
 
     /// <summary>
     ///     Binding that indicates whether the game has finished loading the current level.
-    ///
-    ///     Triggers after every call to <see cref="LoadingUI.StartLoading"/> and <see cref="LoadingUI.StopLoading"/>.
+    ///     Triggers after every call to <see cref="LoadingUI.StartLoading" /> and <see cref="LoadingUI.StopLoading" />.
     /// </summary>
     internal static ImpBinaryBinding IsLevelLoaded { get; private set; }
 
     /// <summary>
-    /// Binding that indicates whether the currently loaded level is a game level and not the main menu or lobby.
-    ///
-    /// Is updated every time <see cref="IsLevelLoaded"/> is udpated.
+    ///     Binding that indicates whether the currently loaded level is a game level and not the main menu or lobby.
+    ///     Is updated every time <see cref="IsLevelLoaded" /> is udpated.
     /// </summary>
     internal static IBinding<bool> IsGameLevel { get; private set; }
 
     internal static GameObject GameObject { get; private set; }
 
     /// <summary>
-    /// A reference to the currently active camera.
-    ///
-    /// Can be null during level loading.
+    ///     A reference to the currently active camera.
+    ///     Can be null during level loading.
     /// </summary>
     internal static ImpBinding<Camera> ActiveCamera;
 

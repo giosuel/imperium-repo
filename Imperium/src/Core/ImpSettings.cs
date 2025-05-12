@@ -2,7 +2,6 @@
 
 using BepInEx.Configuration;
 using Imperium.Core.Settings;
-using Librarium.Binding;
 
 #endregion
 

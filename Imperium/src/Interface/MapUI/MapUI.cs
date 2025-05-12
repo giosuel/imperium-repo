@@ -4,7 +4,6 @@ using Imperium.Core;
 using Imperium.Extensions;
 using Imperium.Interface.Common;
 using Imperium.Types;
-using Librarium;
 using Librarium.Binding;
 using UnityEngine;
 using UnityEngine.InputSystem;

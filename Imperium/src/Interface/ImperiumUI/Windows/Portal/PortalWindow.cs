@@ -3,14 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BepInEx.Bootstrap;
 using HarmonyLib;
 using Imperium.API.Types.Portals;
-using Imperium.Core;
 using Imperium.Interface.Common;
 using Imperium.Types;
-using Imperium.Util;
-using Librarium.Binding;
 using TMPro;
 using UnityEngine;
 

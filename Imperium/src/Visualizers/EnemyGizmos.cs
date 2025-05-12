@@ -7,7 +7,6 @@ using Imperium.API.Types;
 using Imperium.Visualizers.Objects;
 using Librarium.Binding;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 #endregion
 

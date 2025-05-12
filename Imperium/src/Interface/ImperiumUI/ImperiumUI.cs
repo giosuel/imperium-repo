@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using AsmResolver.PE.Imports;
 using Imperium.Interface.Common;
 using Imperium.Interface.ImperiumUI.Windows.ArenaControl;
 using Imperium.Interface.ImperiumUI.Windows.ControlCenter;

@@ -1,6 +1,10 @@
+#region
+
 using Imperium.API.Types.Portals;
 using Librarium.Binding;
 using UnityEngine;
+
+#endregion
 
 namespace Imperium.API.Examples;
 
@@ -12,16 +16,16 @@ internal class PortalExample : MonoBehaviour
         var dropdownBinding = new ImpBinding<int>(0);
         var movementSpeedBinding = new ImpBinding<float>(1f);
 
-        API.Portal.ForGuid(LCMPluginInfo.PLUGIN_GUID)
+        Portal.ForGuid(LCMPluginInfo.PLUGIN_GUID)
             .InSection("General Config")
             .Register(
                 new ImpPortalTextField("Global Modifier", inputFieldBinding, "Generated")
                     .SetTooltip(new ImpPortalTooltip("Global Modifier", "Bla bla bla"))
-                    .SetInteractableBinding(API.State.IsGameLevel),
+                    .SetInteractableBinding(State.IsGameLevel),
                 new ImpPortalSlider("Global Speed", new ImpBinding<float>(5f), 10, 100)
             );
 
-        API.Portal.ForGuid(LCMPluginInfo.PLUGIN_GUID)
+        Portal.ForGuid(LCMPluginInfo.PLUGIN_GUID)
             .InSection("Example Enemy")
             .Register(
                 new ImpPortalDropdown("Behaviour", dropdownBinding, ["Passive", "Active"], "Generated", allowReset: false),
@@ -35,8 +39,12 @@ internal class PortalExample : MonoBehaviour
                 new ImpPortalToggle("Hearing Enabled", new ImpBinding<bool>()),
                 new ImpPortalToggle("Disabled", new ImpBinding<bool>()),
                 new ImpPortalSlider("Spawn Chance", movementSpeedBinding, 0, 100, valueUnit: "%"),
-                new ImpPortalButton("Spawn", () => {}),
-                new ImpPortalButton("Despawn", () => {})
+                new ImpPortalButton("Spawn", () =>
+                {
+                }),
+                new ImpPortalButton("Despawn", () =>
+                {
+                })
             );
     }
 }

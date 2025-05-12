@@ -1,9 +1,11 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using BepInEx.Bootstrap;
-using ExitGames.Client.Photon.StructWrapping;
 using Imperium.API.Types.Portals;
-using Librarium.Binding;
+
+#endregion
 
 namespace Imperium.Core.Portal;
 

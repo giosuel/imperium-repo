@@ -1,6 +1,5 @@
 #region
 
-using System;
 using System.Linq;
 using HarmonyLib;
 
@@ -36,8 +35,6 @@ internal static class LevelGeneratorPatch
                 case Module.Type.DeadEnd:
                 case Module.Type.Extraction:
                     LevelGenerator.Instance.DebugDeadEnd = true;
-                    break;
-                default:
                     break;
             }
         }
