@@ -28,16 +28,6 @@ public abstract class BaseUI : MonoBehaviour
     protected RectTransform rect;
 
     /// <summary>
-    ///     Whether the UI should be closed when a movement input is detected
-    /// </summary>
-    private bool closeOnMove { get; set; } = true;
-
-    /// <summary>
-    ///     Whether the UI should not react to tab inputs
-    /// </summary>
-    internal bool IgnoreTab { get; private set; }
-
-    /// <summary>
     ///     The binding that controls the theme of the UI component.
     ///     UIs can implement the function <see cref="OnThemePrimaryUpdate" /> to style components.
     ///     It is called every time the theme binding updates.
@@ -49,6 +39,8 @@ public abstract class BaseUI : MonoBehaviour
     internal event Action<bool> onOpen;
     internal event Action onClose;
 
+    internal IBinding<bool>[] CanOpenBindings;
+
     /// <summary>
     ///     The interface manager this UI belongs to, if it belongs to a manager.
     /// </summary>
@@ -57,15 +49,13 @@ public abstract class BaseUI : MonoBehaviour
     public virtual void InitUI(
         ImpBinding<ImpTheme> themeBinding,
         ImpTooltip impTooltip = null,
-        bool closeOnMovement = false,
-        bool ignoreTab = false
+        IBinding<bool>[] canOpenBindings = null
     )
     {
         container = transform.Find("Container");
         rect = transform.Find("Container")?.GetComponent<RectTransform>();
         tooltip = impTooltip;
-        closeOnMove = closeOnMovement;
-        IgnoreTab = ignoreTab;
+        CanOpenBindings = canOpenBindings ?? [];
 
         onOpen += OnOpen;
         onClose += OnClose;
@@ -149,10 +139,6 @@ public abstract class BaseUI : MonoBehaviour
         IsOpen = false;
 
         onClose?.Invoke();
-        if (closeOnMove)
-        {
-            // Imperium.IngamePlayerSettings.playerInput.actions.FindAction("Move").performed -= CloseEvent;
-        }
     }
 
     internal void OnUIOpen()
@@ -164,11 +150,6 @@ public abstract class BaseUI : MonoBehaviour
 
         onOpen?.Invoke(wasOpen);
         if (Imperium.Settings.Preferences.PlaySounds.Value) GameUtils.PlayClip(ImpAssets.OpenClick);
-
-        if (closeOnMove)
-        {
-            // Imperium.IngamePlayerSettings.playerInput.actions.FindAction("Move").performed += CloseEvent;
-        }
     }
 
     /// <summary>

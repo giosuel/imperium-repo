@@ -1,11 +1,15 @@
+#region
+
 using Imperium.API.Types;
+
+#endregion
 
 namespace Imperium.API;
 
 public static class EventLog
 {
     /// <summary>
-    /// Adds a new message to the event log.
+    ///     Adds a new message to the event log.
     /// </summary>
     /// <param name="log">The event log message</param>
     public static void Add(EventLogMessage log)

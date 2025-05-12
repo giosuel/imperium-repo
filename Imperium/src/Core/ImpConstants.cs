@@ -67,4 +67,17 @@ public struct ImpConstants
         "Recording",
         "Tutorial"
     ];
+
+    internal static readonly Dictionary<string, string> PlayerUpgradeNameMap = new()
+    {
+        { "playerUpgradeHealth", "Health" },
+        { "playerUpgradeStamina", "Stamina" },
+        { "playerUpgradeExtraJump", "Jump" },
+        { "playerUpgradeLaunch", "Launch" },
+        { "playerUpgradeMapPlayerCount", "Map Count" },
+        { "playerUpgradeSpeed", "Speed" },
+        { "playerUpgradeStrength", "Strength" },
+        { "playerUpgradeRange", "Range" },
+        { "playerUpgradeThrow", "Throw" },
+    };
 }

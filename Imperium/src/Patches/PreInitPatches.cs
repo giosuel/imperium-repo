@@ -25,21 +25,20 @@ internal static class PreInitPatches
         // Ignore if avatar isn't local avatar
         if (!PlayerAvatar.instance || !Imperium.IsImperiumInitialized) return;
 
-        if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu ||
-            RunManager.instance.levelCurrent == RunManager.instance.levelLobbyMenu)
+        if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu)
         {
-            Imperium.Unload();
-        }
-        else if (!Imperium.IsImperiumLaunched)
-        {
-            if (!SemiFunc.IsMultiplayer())
+            if (!Imperium.IsImperiumLaunched)
             {
                 if (!ImpUtils.RunSafe(Imperium.Launch, "Imperium startup failed")) Imperium.DisableImperium();
             }
             else
             {
-                Imperium.Networking.RequestImperiumAccess();
+                Imperium.EnableImperium();
             }
+        }
+        else if (RunManager.instance.levelCurrent == RunManager.instance.levelLobbyMenu)
+        {
+            Imperium.Networking.RequestImperiumAccess();
         }
     }
 

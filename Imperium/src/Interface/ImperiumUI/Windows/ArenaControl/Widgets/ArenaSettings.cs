@@ -77,7 +77,7 @@ public class ArenaSettings : ImpWidget
         );
 
         ImpInput.Bind(
-            "SpawnTimer/Input",
+            "SpawnTimer",
             transform,
             Imperium.ArenaManager.SpawnTimer,
             theme: theme,
@@ -92,7 +92,7 @@ public class ArenaSettings : ImpWidget
         );
 
         ImpInput.Bind(
-            "DespawnTimer/Input",
+            "DespawnTimer",
             transform,
             Imperium.ArenaManager.DespawnTimer,
             theme: theme,

@@ -1,7 +1,3 @@
-#region
-
-#endregion
-
 namespace Imperium.Core;
 
 /// <summary>

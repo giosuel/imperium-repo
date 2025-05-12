@@ -1,5 +1,39 @@
 # Changelog
 
+## Imperium v0.2.0 - Portal API and Upgrades
+
+### Changes
+
+- Introduction of the Portal API for mod developers to add their own UI elements.
+  - More information in the Imperium API [documentation](<https://giosuel.github.io/imperium-repo/api/portal.html>).
+- Added a new window to add and remove player upgrades.
+- Added a health bar and player detection bar to enemies.
+- Added damage indicators for enemies.
+- Made it so Imperium can now be used from the main menu and the lobby.
+- Added an option to force the game to spawn valuables in all possible spawn locations.
+
+### Bug Fixes
+
+- Fixed some bugs that caused errors in the development version of the game.
+- Fixed a bug that made disabled elements look enabled after the theme has been changed.
+- Fixed an issue where the Spawning UI was not scaling properly on wide monitors.
+- Fixed a bug that made it so the hide despawned insight setting didn't work properly.
+- Fixed a bug with night vision when crouching.
+- Fixed the field of view slider in the control center.
+- Fixed the minimap being black after loading into a level for the first time.
+- Fixed the spawning of multiple enemies with one spawn command.
+
+
+### QoL Changes
+
+- Made it so items and valuables no longer spawn beneath the floor or behind walls.
+- Made it so input fields now submit on value change instead of on submit.
+- Various optimizations and consistency fixes around UI elements.
+
+### Compatibility
+
+Compatible with REPO release version  `v0.1.2` and beta version `v0.1.2.23_beta`.
+
 ## Imperium v0.1.4 - Bug fixes and QoL improvements
 
 ### Changes

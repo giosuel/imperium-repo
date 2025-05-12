@@ -2,7 +2,6 @@
 
 using System.Linq;
 using Imperium.API.Types;
-using Imperium.Core.EventLogging;
 using Imperium.Interface.Common;
 using Imperium.Util;
 using TMPro;
@@ -82,8 +81,8 @@ internal class EventLogEntry : MonoBehaviour
 
     private void OnExit()
     {
-        hover.SetActive(false);
         if (tooltip) tooltip.Deactivate();
+        hover.SetActive(false);
     }
 
     internal void OnClose() => hover.SetActive(false);

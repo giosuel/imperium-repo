@@ -18,7 +18,7 @@ The following code accesses the insight definition for `EnemyParent` objects and
 ```csharp
 Imperium.API.Visualization.InsightsFor<EnemyParent>()
     .SetNameGenerator(enemy => enemy.enemyName) // (1)!
-    .SetIsDeadGenerator(enemy => !enemy.Spawned) // (2)!
+    .SetIsDisabledGenerator(enemy => !enemy.Spawned) // (2)!
     .RegisterInsight("Health", enemy => $"{enemy.Enemy.Health.health} HP") // (3)!
     .RegisterInsight(
         "Spawn Timer",
@@ -36,7 +36,7 @@ Imperium.API.Visualization.InsightsFor<EnemyParent>()
 ```
 
 1. A function to get the name of the object. This will be the title of the insight panel.
-2. A function to return a bool that indicates whether the object is currently dead or despawned.
+2. A function to return a bool that indicates whether the object is currently disabled or despawned.
 3. Registers an insight with the name "Health" and a function that gets an enemy's current health.
 4. Registers an insight with the name "Spawn Timer" and a function that gets an enemy's current spawn timer. Also utilizes a Librarium function to format seconds into a readable string (e.g. `2m 12s`).
 5. Sets the config key for the registered insight. The user can toggle groups of insights in the visualization UI.

@@ -19,7 +19,10 @@ The main Imperium UI that provides access to the windows that contain the majori
 
 A console that allows you to spawn enemies, valuables or items into the game.
 
-**Command Syntax:** `objectName [amount] [health / value]`
+**Command Syntax:** `objectName [amount]`
+
+!!! tip
+    If you press the enter key and the input field is empty, Imperium will repeat your last spawn command!
 
 ![Imperium Spawning](https://github.com/giosuel/imperium-repo/blob/main/assets/screenshots/spawning.png?raw=true)
 
@@ -52,7 +55,7 @@ The tape measure is a virtual tool to measure distances in the game. The tape me
 ## Global Keybinds
 
 !!! info "Customizable Keybinds"
-Currently, no keybind rebinding mod exists for REPO. Due to this, all keybinds in Imperium are hard-coded and can't be changed as of right now.
+    Currently, no keybind rebinding mod exists for REPO. Due to this, all keybinds in Imperium are hard-coded and can't be changed as of right now.
 
 | Keybind         | Description                                              |
 | --------------- | -------------------------------------------------------- |

@@ -8,8 +8,7 @@ using Librarium.Binding;
 
 namespace Imperium.Core.Settings;
 
-internal class GrabberSettings(ConfigFile config, IBinding<bool> isSceneLoaded, IBinding<bool> isEnabled)
-    : SettingsContainer(config)
+internal class GrabberSettings(ConfigFile config) : SettingsContainer(config)
 {
     internal readonly ImpConfig<bool> StickyGrabber = new(
         config,

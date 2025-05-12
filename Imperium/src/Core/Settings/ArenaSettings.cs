@@ -9,8 +9,7 @@ using Librarium.Binding;
 
 namespace Imperium.Core.Settings;
 
-internal class ArenaSettings(ConfigFile config, IBinding<bool> isSceneLoaded, IBinding<bool> isEnabled)
-    : SettingsContainer(config)
+internal class ArenaSettings(ConfigFile config) : SettingsContainer(config)
 {
     [ImpAttributes.HostMasterBinding] internal readonly ImpConfig<bool> DisableGameOver = new(
         config,

@@ -11,20 +11,23 @@ internal static class RunManagerPatch
 {
     [HarmonyPrefix]
     [HarmonyPatch("ChangeLevel")]
-    private static bool ChangeLevelPrefixPatch(RunManager __instance, bool _levelFailed, RunManager.ChangeLevelType _changeLevelType)
+    private static bool ChangeLevelPrefixPatch(RunManager __instance, bool _levelFailed,
+        RunManager.ChangeLevelType _changeLevelType)
     {
-        if (Imperium.GameManager.CustomLevelNumber.Value > 0)
-        {
-
-        }
-
         return !_levelFailed || !Imperium.ArenaManager.DisableGameOver.Value;
     }
 
     [HarmonyPostfix]
     [HarmonyPatch("ChangeLevel")]
-    private static void ChangeLevelPostfixPatch(RunManager __instance, bool _levelFailed, RunManager.ChangeLevelType _changeLevelType)
+    private static void ChangeLevelPostfixPatch(
+        RunManager __instance,
+        bool _completedLevel,
+        bool _levelFailed,
+        RunManager.ChangeLevelType _changeLevelType
+    )
     {
+        Imperium.EventLog.GameEvents.ChangeLevel(_completedLevel, _levelFailed, _changeLevelType);
+
         if (_levelFailed || Imperium.GameManager.CustomLevelNumber.Value <= 0) return;
 
         __instance.levelsCompleted = Imperium.GameManager.CustomLevelNumber.Value - 1;

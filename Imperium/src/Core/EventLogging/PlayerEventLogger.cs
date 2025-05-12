@@ -1,7 +1,3 @@
-#region
-
-#endregion
-
 namespace Imperium.Core.EventLogging;
 
 internal class PlayerEventLogger(ImpEventLog log)

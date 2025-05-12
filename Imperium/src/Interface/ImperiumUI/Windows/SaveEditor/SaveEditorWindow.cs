@@ -156,7 +156,7 @@ internal class SaveEditorWindow : ImperiumWindow
         var binding = new ImpBinding<string>(ES3.Load(settingName, fileName).ToString());
         binding.OnUpdate += value => ES3.Save(settingName, value, fileName);
 
-        ImpInput.Bind("Input", element, binding, theme);
+        ImpInput.Bind("Input", element, binding, theme: theme);
         element.Find("Input").GetComponent<TMP_InputField>().contentType = contentType;
     }
 
@@ -172,6 +172,6 @@ internal class SaveEditorWindow : ImperiumWindow
             ES3.KeyExists(settingName, fileName) && (bool)ES3.Load(settingName, fileName)
         );
         binding.OnUpdate += value => ES3.Save(settingName, value, fileName);
-        ImpToggle.Bind("", element, binding, theme);
+        ImpToggle.Bind("", element, binding, theme: theme);
     }
 }

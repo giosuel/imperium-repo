@@ -7,6 +7,9 @@ using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
 using Imperium.Core;
+using Imperium.Interface;
+using Imperium.Interface.Common;
+using Librarium;
 using Librarium.Binding;
 using Newtonsoft.Json;
 using TMPro;
@@ -88,40 +91,6 @@ public abstract class ImpUtils
         return layers.Aggregate(layerMask, ToggleLayerInMask);
     }
 
-    // public static string GetEntityLocationText(EnemyAI entity)
-    // {
-    //     return entity.isInsidePlayerShip
-    //         ? "In Ship"
-    //         : entity.isOutside
-    //             ? "Outdoors"
-    //             : "Indoors";
-    // }
-
-    // public static string GetPlayerLocationText(PlayerControllerB player) => GetPlayerLocationText(player, false);
-    //
-    // public static string GetPlayerLocationText(PlayerControllerB player, bool locationOnly)
-    // {
-    //     var isNearOtherPlayers = player.NearOtherPlayers(Imperium.Player, 17f);
-    //     var isHearingOthers = player.PlayerIsHearingOthersThroughWalkieTalkie(Imperium.Player);
-    //
-    //     var isAlone = !locationOnly && !isNearOtherPlayers && !isHearingOthers ? " (Alone)" : "";
-    //     if (PlayerAvatar.instance.isInHangarShipRoom) return "Ship" + isAlone;
-    //     if (PlayerAvatar.instance.isInElevator) return "Elevator" + isAlone;
-    //
-    //     return (PlayerAvatar.instance.isInsideFactory ? "Indoors" : "Outdoors") + isAlone;
-    // }
-
-    // public static string GetItemLocationText(GrabbableObject item)
-    // {
-    //     return item.isInShipRoom
-    //         ? "In Ship"
-    //         : item.isInElevator
-    //             ? "Elevator"
-    //             : item.isInFactory
-    //                 ? "Indoors"
-    //                 : "Outdoors";
-    // }
-
     public static bool RunSafe(Action action, string logTitle = null)
     {
         return RunSafe(action, out _, logTitle);
@@ -173,8 +142,9 @@ public abstract class ImpUtils
             deserializedObj = JsonConvert.DeserializeObject<T>(jsonString);
             return deserializedObj != null;
         }
-        catch (Exception)
+        catch (Exception e)
         {
+            Imperium.IO.LogError($"[JSON] Exception: {e.Message}");
             deserializedObj = default;
             return false;
         }
@@ -210,32 +180,27 @@ public abstract class ImpUtils
         }
 
         /**
-         * Binds an inputs' interactability to a binding. Includes title and text, if present.
+         * Adds an ImpTooltip to a UI element.
          */
-        internal static void BindInputInteractable(IBinding<bool> binding, Transform parent, bool inverted = false)
+        internal static void AddTooltip(TooltipDefinition tooltipDefinition, Transform element)
         {
-            if (!parent)
+            if (!tooltipDefinition.Tooltip)
             {
-                Imperium.IO.LogWarning("Failed to bind input interactable for parent. Ignoring.");
+                Imperium.IO.LogWarning(
+                    $"[UI] Failed to initialize tooltip for '{Debugging.GetTransformPath(element)}'. No tooltip provided."
+                );
                 return;
             }
 
-            var input = parent.Find("Input").GetComponent<TMP_InputField>();
-            input.interactable = inverted ? !binding.Value : binding.Value;
+            var interactable = element.gameObject.AddComponent<ImpInteractable>();
 
-            var title = parent.Find("Title")?.GetComponent<TMP_Text>();
-            if (title) ToggleTextActive(title, inverted ? !binding.Value : binding.Value);
-
-            var text = parent.Find("Input/Text Area/Text")?.GetComponent<TMP_Text>();
-            if (text) ToggleTextActive(text, inverted ? !binding.Value : binding.Value);
-
-            binding.OnUpdate += isActive =>
-            {
-                input.interactable = inverted ? !isActive : isActive;
-
-                if (title) ToggleTextActive(title, inverted ? !isActive : isActive);
-                if (text) ToggleTextActive(text, inverted ? !isActive : isActive);
-            };
+            interactable.onOver += position => tooltipDefinition.Tooltip.SetPosition(
+                tooltipDefinition.Title,
+                tooltipDefinition.Description,
+                position,
+                tooltipDefinition.HasAccess
+            );
+            interactable.onExit += () => tooltipDefinition.Tooltip.Deactivate();
         }
 
         internal static void ToggleImageActive(Image image, bool isActive)

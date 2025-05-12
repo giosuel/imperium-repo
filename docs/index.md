@@ -23,7 +23,7 @@ This is the official R.E.P.O. port of the original [Imperium for Lethal Company]
 
     Imperium fully supports multiplayer as long as the host has it installed. I strongly stand against cheating and trolling in public lobbies. If you really want to cheat, at least put some effort into making your own hacked client!
 
-## Features
+## ✨ Main Features
 
 * **Modular and User-Centered UI**  
     The user-interface is the core of Imperium and ensures a smooth and simple experience when using the many features it offers. Now with the brand new themes REPO and Shade!
@@ -49,3 +49,30 @@ This is the official R.E.P.O. port of the original [Imperium for Lethal Company]
     Imperium provides an API that allows mod developers to add custom visualizers for the enemies or objects their mods add to the game.
 * **Fully Compatible with Unity Explorer**  
     Unity Explorer can be used alongside Imperium for more in-depth research or manipulation of the game.
+
+## 🪲 Bug Reports and Feature Requests
+
+Feel free to submit bug reports or feature requests asissues on Imperium's [Github](https://github.com/giosuel/imperium-repo/issues) page. Please include your BepInEx log file or an excerpt to make my life easier.
+
+## 🙏 Credits
+
+Imperium Repo was designed and implemented by the Imperium team ([giosuel](https://github.com/giosuel)).
+
+Various icons were provided by [FlatIcon](https://www.flaticon.com/).
+
+### Special Thanks To
+
+- [alter ego](https://www.youtube.com/@alteregosocial) for helping me with testing and being an amazing motivation!
+- [Hamunii](https://github.com/hamunii) for helping me and being awesome!
+- [Rune580](https://github.com/Rune580) for providing the amazing [RepoSteamNetworking](https://github.com/Rune580/RepoSteamNetworking)!
+- [Adi](https://thunderstore.io/c/lethal-company/p/AdiBTW/) for helping with the [LoS](https://github.com/AdalynBlack/LC-EnemyDebug) visualizers!
+- [chboo1](https://github.com/chboo1-chickadoo) for helping me with the data mining.
+- [NikkiDarkMatter](https://www.youtube.com/@NikkiDarkMatter) for helping me with the level point visualization!
+- [1A3](https://github.com/1A3Dev) for helping me with the development build of the game.
+- [Nilaier](https://github.com/NilaierMusic) for le awesome readme inspiration.
+- [Nebby](https://github.com/nebulaetrix), [Swaggies](https://thunderstore.io/c/lethal-company/p/Swaggies), [aminoob](https://thunderstore.io/c/lethal-company/p/aminoob/) and star0138 for the help with the testing of Imperium!
+- [sinai-dev](https://github.com/sinai-dev) for creating [Unity Explorer](https://github.com/sinai-dev/UnityExplorer), my favorite mod of all time!
+
+## 📜 License
+
+Imperium and all its asvoisets are distributed under the [GNU GPL-3.0 license](https://www.gnu.org/licenses/gpl-3.0.en.html).

@@ -93,6 +93,11 @@ public class EnemyGizmo : MonoBehaviour
             size: 6f * 2,
             spawnDisabled: true
         );
+
+        var enemyStatus = Instantiate(ImpAssets.EnemyStatus, transform);
+        enemyStatus.AddComponent<EnemyStatus>().Init(enemyParent, entityConfig);
+
+        if (enemyParent.Enemy.HasVision) InitVisionObjects(enemyParent.Enemy.Vision);
     }
 
     private void InitVisionObjects(EnemyVision vision)
@@ -141,9 +146,9 @@ public class EnemyGizmo : MonoBehaviour
         }
         else
         {
+            activeCone = coneStanding;
             activeSphere = proximitySphereStanding;
 
-            activeCone = coneStanding;
             coneCrouching.SetActive(false);
             coneCrawling.SetActive(false);
             proximitySphereCrouching.SetActive(false);
@@ -191,7 +196,7 @@ public class EnemyGizmo : MonoBehaviour
 
         if (entityConfig.Hearing.Value)
         {
-            Geometry.SetLinePositions(lastHeardNoiseLine, enemyParent.transform.position, origin);
+            Geometry.SetLinePositions(lastHeardNoiseLine, enemyParent.Enemy.transform.position, origin);
             lastHeardNoiseDot.gameObject.transform.position = origin;
         }
     }
@@ -252,10 +257,11 @@ public class EnemyGizmo : MonoBehaviour
         DrawNoiseLine(entityConfig.Hearing.Value && enemyParent.enabled);
         DrawPlayerCloseSpheres();
 
-        // Vision object is sometimes not set right away so we just do it as soon as possible.
-        if (!hasInitializedVision && enemyParent.Enemy.Vision) InitVisionObjects(enemyParent.Enemy.Vision);
+        var uniqueId = SemiFunc.IsMultiplayer()
+            ? enemyParent.photonView.ViewID
+            : enemyParent.gameObject.GetInstanceID();
 
-        if (!Imperium.ObjectManager.DisabledObjects.Value.Contains(enemyParent.photonView.ViewID))
+        if (!Imperium.ObjectManager.DisabledObjects.Value.Contains(uniqueId))
         {
             lastUpdateTimer -= Time.deltaTime;
         }
@@ -341,6 +347,7 @@ internal class EntityGizmoConfig
     internal readonly ImpConfig<bool> Proximity;
     internal readonly ImpConfig<bool> Vision;
     internal readonly ImpConfig<bool> Hearing;
+    internal readonly ImpConfig<bool> Vitality;
     internal readonly ImpConfig<bool> Custom;
 
     internal EntityGizmoConfig(string entityName, ConfigFile config)
@@ -361,6 +368,7 @@ internal class EntityGizmoConfig
         Proximity = new ImpConfig<bool>(config, "Visualization.EntityGizmos.Proximity", escapedEntityName, false);
         Vision = new ImpConfig<bool>(config, "Visualization.EntityGizmos.Vision", escapedEntityName, false);
         Hearing = new ImpConfig<bool>(config, "Visualization.EntityGizmos.Hearing", escapedEntityName, false);
+        Vitality = new ImpConfig<bool>(config, "Visualization.EntityGizmos.Vitality", escapedEntityName, false);
         Custom = new ImpConfig<bool>(config, "Visualization.EntityGizmos.Custom", escapedEntityName, false);
     }
 }

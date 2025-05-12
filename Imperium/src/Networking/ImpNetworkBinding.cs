@@ -15,9 +15,13 @@ namespace Imperium.Networking;
 public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
 {
     public event Action<T> OnUpdate;
+
+    // For ImpNetworkBinding, secondary updates are only ever executed on the local client that initiated the update
     public event Action<T> OnUpdateSecondary;
 
     public event Action OnTrigger;
+
+    // For ImpNetworkBinding, secondary triggers are only ever executed on the local client that initiated the update
     public event Action OnTriggerSecondary;
 
     private readonly Action<T> onUpdateServer;
@@ -89,9 +93,6 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
             return;
         }
 
-        // Invoke optional custom binding (e.g. Calls to vanilla client RPCs)
-        // if (request.InvokeServerUpdate) onUpdateServer?.Invoke(request.Payload);
-
         networking.SendPacket(identifier, request, NetworkDestination.ClientsOnly);
         OnClientReceived(request);
     }
@@ -101,26 +102,19 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
         Imperium.IO.LogDebug($"[NET] Client received binding update {identifier}.");
         Value = updatedValue.Payload;
 
-        if (updatedValue.InvokeUpdate)
+        if (updatedValue.InvokePrimaryUpdate)
         {
             OnUpdate?.Invoke(Value);
             OnTrigger?.Invoke();
         }
     }
 
-    public void Sync(T updatedValue) => Set(updatedValue, false, false);
-
     public void Set(T updatedValue, bool invokePrimary = true, bool invokeSecondary = true)
-    {
-        SyncedSet(updatedValue, invokePrimary, true);
-    }
-
-    private void SyncedSet(T updatedValue, bool invokeUpdate, bool invokeServerUpdate)
     {
         Value = updatedValue;
         if (masterBinding != null && SemiFunc.IsMasterClientOrSingleplayer()) masterBinding.Set(updatedValue);
 
-        if (invokeUpdate)
+        if (invokeSecondary)
         {
             OnUpdateSecondary?.Invoke(updatedValue);
             OnTriggerSecondary?.Invoke();
@@ -129,8 +123,7 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
         networking.SendPacket(identifier, new BindingUpdateRequest<T>
         {
             Payload = updatedValue,
-            InvokeUpdate = invokeUpdate,
-            InvokeServerUpdate = invokeServerUpdate
+            InvokePrimaryUpdate = invokePrimary,
         });
     }
 
@@ -156,7 +149,7 @@ public class ImpNetworkBinding<T> : IBinding<T>, INetworkSubscribable
         networking.SendPacket(identifier, new BindingUpdateRequest<T>
         {
             Payload = Value,
-            InvokeUpdate = true
+            InvokePrimaryUpdate = true,
         }, destination: NetworkDestination.PacketTarget, clientId);
     }
 }

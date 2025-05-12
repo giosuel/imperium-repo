@@ -10,8 +10,7 @@ using UnityEngine.Rendering.PostProcessing;
 
 namespace Imperium.Core.Settings;
 
-internal class RenderingSettings(ConfigFile config, IBinding<bool> isSceneLoaded, IBinding<bool> isEnabled)
-    : SettingsContainer(config)
+internal class RenderingSettings(ConfigFile config) : SettingsContainer(config)
 {
     // internal readonly ImpConfig<float> FogStart = new(
     //     config,

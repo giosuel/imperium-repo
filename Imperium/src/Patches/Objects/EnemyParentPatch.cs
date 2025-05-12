@@ -2,8 +2,6 @@
 
 using System.Reflection;
 using HarmonyLib;
-using Imperium.API.Types;
-using Librarium;
 using MonoMod.Utils;
 
 #endregion
@@ -58,7 +56,11 @@ internal static class EnemyParentPatch
     {
         var instance = logicEnemyParentField.GetValue(__instance) as EnemyParent;
 
-        if (Imperium.ObjectManager.DisabledObjects.Value.Contains(instance!.photonView.ViewID))
+        var uniqueId = SemiFunc.IsMultiplayer()
+            ? instance!.photonView.ViewID
+            : instance!.gameObject.GetInstanceID();
+
+        if (Imperium.ObjectManager.DisabledObjects.Value.Contains(uniqueId))
         {
             __result = true;
             return false;
@@ -74,7 +76,11 @@ internal static class EnemyParentPatch
     {
         var instance = playerCloseLogicEnemyParentField.GetValue(__instance) as EnemyParent;
 
-        if (Imperium.ObjectManager.DisabledObjects.Value.Contains(instance!.photonView.ViewID))
+        var uniqueId = SemiFunc.IsMultiplayer()
+            ? instance!.photonView.ViewID
+            : instance!.gameObject.GetInstanceID();
+
+        if (Imperium.ObjectManager.DisabledObjects.Value.Contains(uniqueId))
         {
             __result = true;
             return false;

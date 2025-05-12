@@ -1,4 +1,4 @@
-# Event Log
+# Event Log API
 
 The event log is a database of events that can be fired by the game or any mod using it.
 

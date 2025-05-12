@@ -34,9 +34,9 @@ internal class PlayerManager : ImpLifecycleObject
         "TeleportPlayer", Imperium.Networking, true
     );
 
-    internal readonly ImpExternalBinding<Vector3?, bool> TruckTPAnchor = new(
-        () => GameObject.Find("Truck Item Shelf")?.transform.position
-    );
+    internal ImpExternalBinding<Vector3?, bool> TruckTPAnchor;
+
+    internal readonly Dictionary<string, ImpBinding<int>> PlayerUpgradeBinding = [];
 
     internal bool FlyIsAscending;
     internal bool FlyIsDescending;
@@ -65,8 +65,12 @@ internal class PlayerManager : ImpLifecycleObject
         }
     }
 
-    protected override void OnSceneLoad()
+    protected override void OnLevelLoad()
     {
+        if (TruckTPAnchor == null)
+            TruckTPAnchor =
+                new ImpExternalBinding<Vector3?, bool>(() => GameObject.Find("Truck Item Shelf")?.transform.position);
+
         TruckTPAnchor.Refresh();
 
         // Load grabber and render settings as they are reset when the level is loaded
@@ -92,7 +96,7 @@ internal class PlayerManager : ImpLifecycleObject
 
     internal static void ToggleLocalAvatar(bool isShown)
     {
-        if (!Imperium.IsArenaLoaded) return;
+        if (!Imperium.IsLevelLoaded) return;
 
         PlayerAvatar.instance.playerAvatarVisuals.animator.enabled = isShown;
         PlayerAvatar.instance.playerAvatarVisuals.meshParent.SetActive(value: isShown);
@@ -117,9 +121,11 @@ internal class PlayerManager : ImpLifecycleObject
         }
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        if (!Mathf.Approximately(Imperium.Settings.Player.CustomFieldOfView.Value, 70))
+        if (!Imperium.IsGameLevel.Value || !Imperium.ActiveCamera.Value) return;
+
+        if (!Mathf.Approximately(Imperium.Settings.Player.CustomFieldOfView.Value, ImpConstants.DefaultFOV))
         {
             Imperium.ActiveCamera.Value.fieldOfView = Imperium.Settings.Player.CustomFieldOfView.Value;
         }

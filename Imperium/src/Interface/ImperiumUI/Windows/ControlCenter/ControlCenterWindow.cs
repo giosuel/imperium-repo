@@ -1,11 +1,8 @@
 #region
 
-using Imperium.Core;
 using Imperium.Interface.Common;
 using Imperium.Interface.ImperiumUI.Windows.ControlCenter.Widgets;
 using Imperium.Types;
-using Imperium.Util;
-using Librarium;
 using TMPro;
 using UnityEngine;
 
@@ -43,20 +40,21 @@ internal class ControlCenterWindow : ImperiumWindow
             "Right/PlayerSettings/InfiniteEnergy",
             content,
             Imperium.Settings.Player.InfiniteEnergy,
-            theme
+            theme: theme
         );
 
         ImpToggle.Bind(
             "Right/PlayerSettings/GodMode",
             content,
             Imperium.Settings.Player.GodMode,
-            theme
+            theme: theme
         );
 
         ImpToggle.Bind(
             "Right/PlayerSettings/Invisibility",
             content,
-            Imperium.Settings.Player.Invisibility, theme,
+            Imperium.Settings.Player.Invisibility,
+            theme: theme,
             tooltipDefinition: new TooltipDefinition
             {
                 Title = "Invisibility",
@@ -69,7 +67,7 @@ internal class ControlCenterWindow : ImperiumWindow
             "Right/PlayerSettings/Muted",
             content,
             Imperium.Settings.Player.Muted,
-            theme,
+            theme: theme,
             tooltipDefinition: new TooltipDefinition
             {
                 Title = "Muted",
@@ -82,11 +80,11 @@ internal class ControlCenterWindow : ImperiumWindow
             "Right/PlayerSettings/NoTumbleMode",
             content,
             Imperium.Settings.Player.NoTumbleMode,
-            theme,
+            theme: theme,
             tooltipDefinition: new TooltipDefinition
             {
                 Title = "No Tumble Mode",
-                Description = "Disables tumbling when hit",
+                Description = "Disables tumbling when getting hit.",
                 Tooltip = tooltip
             }
         );
@@ -95,68 +93,67 @@ internal class ControlCenterWindow : ImperiumWindow
             "Right/PlayerSettings/EnableFlying",
             content,
             Imperium.Settings.Player.EnableFlying,
-            theme
-        );
-
-        ImpToggle.Bind(
-            "Right/PlayerSettings/DevMode",
-            content,
-            Imperium.Settings.Player.DevMode,
-            theme
+            theme: theme,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Title = "WIP",
+                Description = "Flying is not implemented yet.",
+                Tooltip = tooltip
+            }
         );
 
         ImpToggle.Bind(
             "Right/PlayerSettings/SlowMode",
             content,
             Imperium.Settings.Player.SlowMode,
-            theme
+            theme: theme
+        );
+
+        ImpSlider.Bind(
+            path: "Right/NightVision",
+            container: content,
+            minValue: 0,
+            maxValue: 100,
+            valueBinding: Imperium.Settings.Player.NightVision,
+            valueUnit: "%",
+            theme: theme
         );
 
         ImpSlider.Bind(
             path: "Right/FieldOfView",
             container: content,
             valueBinding: Imperium.Settings.Player.CustomFieldOfView,
-            defaultValueOverride: ImpConstants.DefaultFOV,
-            indicatorUnit: "°",
+            minValue: 50,
+            maxValue: 160,
+            valueUnit: "°",
+            useWholeNumbers: true,
             theme: theme
         );
 
         ImpSlider.Bind(
             path: "Right/MovementSpeed",
             container: content,
-            theme: theme,
-            valueBinding: Imperium.Settings.Player.MovementSpeed
-        );
-
-        ImpSlider.Bind(
-            path: "Right/SlideTime",
-            container: content,
-            theme: theme,
-            indicatorFormatter: value => $"{Formatting.FormatFloatToThreeDigits(value)}",
-            valueBinding: Imperium.Settings.Player.SlideTime
+            valueBinding: Imperium.Settings.Player.MovementSpeed,
+            minValue: 0,
+            maxValue: 10,
+            theme: theme
         );
 
         ImpSlider.Bind(
             path: "Right/JumpForce",
             container: content,
-            theme: theme,
-            valueBinding: Imperium.Settings.Player.JumpForce
+            valueBinding: Imperium.Settings.Player.JumpForce,
+            minValue: 0,
+            maxValue: 100,
+            theme: theme
         );
 
-        ImpSlider.Bind(
-            path: "Right/FlyingSpeed",
-            container: content,
-            theme: theme,
-            valueBinding: Imperium.Settings.Player.FlyingSpeed
-        );
-
-        ImpSlider.Bind(
-            path: "Right/NightVision",
-            container: content,
-            theme: theme,
-            valueBinding: Imperium.Settings.Player.NightVision,
-            indicatorUnit: "%"
-        );
+        // ImpSlider.Bind(
+        //     path: "Right/FlyingSpeed",
+        //     container: content,
+        //     theme: theme,
+        //     valueBinding: Imperium.Settings.Player.FlyingSpeed
+        // );
     }
 
     protected override void OnOpen()

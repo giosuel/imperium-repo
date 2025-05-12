@@ -1,8 +1,8 @@
 #region
 
-#endregion
-
 using Imperium.API.Types;
+
+#endregion
 
 namespace Imperium.Core.EventLogging;
 
@@ -18,6 +18,35 @@ internal class GameEventLogger(ImpEventLog log)
             Details = details,
             Type = EventLogType.Game
         });
+    }
+
+
+    internal void ChangeLevel(bool levelCompleted, bool levelFailed, RunManager.ChangeLevelType levelType)
+    {
+        LogGameEvent(
+            "The game has loaded a new level",
+            "Change Level",
+            new EventLogDetail
+            {
+                Title = "Level Type",
+                Text = levelType.ToString()
+            },
+            new EventLogDetail
+            {
+                Title = "Level Name",
+                Text = RunManager.instance.levelCurrent.NarrativeName
+            },
+            new EventLogDetail
+            {
+                Title = "Level Completed",
+                Text = $"{levelCompleted}"
+            },
+            new EventLogDetail
+            {
+                Title = "Level Failed",
+                Text = $"{levelFailed}"
+            }
+        );
     }
 
     // internal void SpawnEnemyFromVent(EnemyVent vent)

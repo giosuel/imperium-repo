@@ -32,7 +32,6 @@ internal class ImpInterfaceManager : MonoBehaviour
     // between the Escape and Tab character due to some UIs overriding the tab button callback.
     // Unfortunately the native OpenMenu action can be either of the keys.
     private KeyboardShortcut escShortcut = new(KeyCode.Escape);
-    private KeyboardShortcut tabShortcut = new(KeyCode.Tab);
 
     internal static ImpInterfaceManager Create(ImpConfig<string> themeConfig, Transform parent)
     {
@@ -53,7 +52,7 @@ internal class ImpInterfaceManager : MonoBehaviour
         ).AddComponent<ImperiumDock>();
         interfaceManager.imperiumDock.InitUI(interfaceManager.Theme, interfaceManager.tooltip);
 
-        Imperium.IsArenaLoaded.OnTrigger += interfaceManager.InvokeOnOpen;
+        Imperium.IsLevelLoaded.OnTrigger += interfaceManager.InvokeOnOpen;
 
         return interfaceManager;
     }
@@ -62,19 +61,19 @@ internal class ImpInterfaceManager : MonoBehaviour
     {
         if (!OpenInterface.Value) return;
 
-        if (escShortcut.IsDown() || !OpenInterface.Value.IgnoreTab && tabShortcut.IsDown())
+        if (escShortcut.IsDown())
         {
             UnityExplorerIntegration.CloseUI();
             Close();
         }
     }
 
-    internal void RegisterInterface<T>(GameObject obj) where T : BaseUI
+    internal void RegisterInterface<T>(GameObject obj, params IBinding<bool>[] canOpenBindings) where T : BaseUI
     {
         if (interfaceControllers.ContainsKey(typeof(T))) return;
 
         var interfaceObj = Instantiate(obj, transform).AddComponent<T>();
-        interfaceObj.InitUI(Theme, tooltip);
+        interfaceObj.InitUI(Theme, tooltip, canOpenBindings);
 
         interfaceObj.interfaceManager = this;
         interfaceControllers[typeof(T)] = interfaceObj;
@@ -89,7 +88,7 @@ internal class ImpInterfaceManager : MonoBehaviour
         params IBinding<bool>[] canOpenBindings
     ) where T : BaseUI
     {
-        RegisterInterface<T>(obj);
+        RegisterInterface<T>(obj, canOpenBindings);
 
         if (imperiumDock)
         {
@@ -182,7 +181,7 @@ internal class ImpInterfaceManager : MonoBehaviour
         {
             Close(toggleCursorState);
         }
-        else
+        else if (controller.CanOpenBindings.All(binding => binding.Value))
         {
             Open<T>(toggleCursorState, closeOthers);
         }
@@ -211,7 +210,7 @@ internal class ImpInterfaceManager : MonoBehaviour
         // Close Unity Explorer menus
         UnityExplorerIntegration.CloseUI();
 
-        MenuManager.instance.PageCloseAll();
+        //MenuManager.instance.PageCloseAll();
 
         if (closeOthers)
         {

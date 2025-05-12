@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using Imperium.Core;
 using Imperium.Types;
@@ -19,8 +18,8 @@ namespace Imperium.Interface.Common;
 
 public class ImpSlider : MonoBehaviour
 {
-    public Slider Slider { get; private set; }
-    private TMP_Text indicatorText;
+    private Slider slider;
+    private TMP_Text handleText;
 
     private string indicatorUnit;
     private Func<float, string> indicatorFormatter;
@@ -29,249 +28,184 @@ public class ImpSlider : MonoBehaviour
     private Coroutine debounceCoroutine;
 
     /// <summary>
-    ///     Factory method to create and bind an ImpSlider to a valid slider object.
-    ///     Required UI Layout:
-    ///     Root
-    ///     "Reset" (Button?) - Optional reset button
-    ///     "Slider" (Slider)
-    ///     "SliderArea" (Image)
-    ///     "SlideArea"
-    ///     "Handle" (Image)
-    ///     "Text" (TMP_Text) - Optional indicator text
+    ///     Represents a slider in the Imperium UI, the UI structure should look like this.
+    ///     Parent (RectTransform)
+    ///     - Label (TMP_Text)
+    ///     - Slider (Slider)
+    ///     - (Slider Stuff)
+    ///     - MinValue (TMP_Text) [Optional]
+    ///     - MaxValue (TMP_Text) [Optional]
+    ///     - Reset (Button) [Optional]
     /// </summary>
     /// <param name="path">The path to the UI element relative to the parent.</param>
     /// <param name="container">The parent object of the UI elmeent.</param>
     /// <param name="valueBinding">The binding that the value of the slider will be bound to</param>
+    /// <param name="minValue">The slider range's lower bound</param>
+    /// <param name="maxValue">The slider range's upper bound</param>
+    /// <param name="label">The label that is shown next to the slider</param>
+    /// <param name="debounceTime">Debounce time for slider updates, useful when value binding is a network binding</param>
+    /// <param name="valueUnit">The displayed unit of the value (e.g. % or units)</param>
+    /// <param name="handleFormatter">Formatter for a custom handle text</param>
+    /// <param name="useWholeNumbers">Whether the slider should only allow the input of whole values</param>
+    /// <param name="negativeIsDefault">Whether the default value should be displayed when the binding value is negative</param>
+    /// <param name="allowReset">Whether to show a reset button next to the slider</param>
+    /// <param name="playClickSound">Whether to play a click sound when the slider value is changed</param>
     /// <param name="theme">The theme the slider will use</param>
-    /// <param name="useLogarithmicScale">If the slider uses a logarithmic scale</param>
-    /// <param name="indicatorUnit">Slider value unit (e.g. % or degrees)</param>
-    /// <param name="defaultValueOverride">Overwrites the default value on the slider</param>
-    /// <param name="defaultValueOverrideFunc">Function that is used to get the default value.</param>
-    /// <param name="indicatorFormatter">Formatter for custom indicator text</param>
-    /// <param name="debounceTime">Debounce time for slider updates</param>
-    /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
-    /// <param name="options">Override options with provided labels</param>
-    /// <param name="clickAudio">The audio clip that is played when the slider value is changed.</param>
-    /// <param name="playClickSound">Whether the click sound playes when the slider value is changed.</param>
-    /// <param name="tooltipDefinition">The tooltip definition of the toggle tooltip.</param>
-    /// <param name="negativeIsDefault">
-    ///     When set to true and the binding value is negative, the default value will be displayed
-    ///     instead.
-    /// </param>
+    /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the slider is interactable</param>
+    /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     internal static ImpSlider Bind(
         string path,
         Transform container,
         IBinding<float> valueBinding,
-        IBinding<ImpTheme> theme = null,
-        bool useLogarithmicScale = false,
-        string indicatorUnit = "",
-        float? defaultValueOverride = null,
-        Func<float> defaultValueOverrideFunc = null,
-        Func<float, string> indicatorFormatter = null,
+        float minValue,
+        float maxValue,
+        string label = "",
         float debounceTime = 0f,
-        bool interactableInvert = false,
-        IBinding<List<string>> options = null,
-        AudioClip clickAudio = null,
-        bool playClickSound = true,
-        TooltipDefinition tooltipDefinition = null,
+        string valueUnit = "",
+        Func<float, string> handleFormatter = null,
+        bool useWholeNumbers = false,
         bool negativeIsDefault = false,
+        bool allowReset = true,
+        bool playClickSound = true,
+        IBinding<ImpTheme> theme = null,
+        TooltipDefinition tooltipDefinition = null,
+        bool interactableInvert = false,
         params IBinding<bool>[] interactableBindings
     )
     {
-        var sliderObject = container.Find(path);
-        if (!sliderObject)
+        var sliderParent = container.Find(path);
+        if (!sliderParent)
         {
             Imperium.IO.LogInfo($"[UI] Failed to bind slider '{Debugging.GetTransformPath(container)}/{path}'");
             return null;
         }
 
-        var impSlider = sliderObject.gameObject.AddComponent<ImpSlider>();
+        var impSlider = sliderParent.gameObject.AddComponent<ImpSlider>();
         impSlider.debounceTime = debounceTime;
-        impSlider.indicatorFormatter = indicatorFormatter;
-        impSlider.indicatorUnit = indicatorUnit;
-        impSlider.Slider = sliderObject.Find("Slider").GetComponent<Slider>();
-        impSlider.indicatorText = sliderObject.Find("Slider/SlideArea/Handle/Text").GetComponent<TMP_Text>();
+        impSlider.indicatorFormatter = handleFormatter;
+        impSlider.indicatorUnit = valueUnit;
+        impSlider.slider = sliderParent.Find("Slider").GetComponent<Slider>();
+        impSlider.handleText = sliderParent.Find("Slider/SlideArea/Handle/Text").GetComponent<TMP_Text>();
 
-        indicatorFormatter ??= value => $"{Mathf.RoundToInt(value)}";
-        clickAudio ??= ImpAssets.ButtonClick;
+        handleFormatter ??= value => $"{Mathf.RoundToInt(value)}";
 
-        var sliderArea = sliderObject.Find("Slider/SliderArea").GetComponent<Image>();
+        // Set the min and max values
+        impSlider.slider.minValue = minValue;
+        impSlider.slider.maxValue = maxValue;
 
-        var currentValue = useLogarithmicScale ? (float)Math.Log10(valueBinding.Value) : valueBinding.Value;
+        var minValueText = sliderParent.Find("MinValue")?.GetComponent<TMP_Text>();
+        if (minValueText) minValueText.text = $"{minValue:0.#}{valueUnit}";
 
-        if (negativeIsDefault && currentValue < 0) currentValue = GetDefaultValue();
-        impSlider.Slider.value = currentValue;
+        var maxValueText = sliderParent.Find("MaxValue")?.GetComponent<TMP_Text>();
+        if (maxValueText) maxValueText.text = $"{maxValue:0.#}{valueUnit}";
 
-        if (options is { Value: not null, Value.Count: > 0 })
+        impSlider.slider.wholeNumbers = useWholeNumbers;
+
+        // Set label test if label element exists
+        var labelText = sliderParent.Find("Text")?.GetComponent<TMP_Text>();
+        if (labelText && !string.IsNullOrEmpty(label)) labelText.text = label;
+
+        var sliderArea = sliderParent.Find("Slider/SliderArea").GetComponent<Image>();
+
+        SetSliderValue(valueBinding.Value);
+        valueBinding.OnUpdate += SetSliderValue;
+
+        // This has to be in local, so we can manually skip the click sound by disabling send local
+        valueBinding.OnTriggerSecondary += () =>
         {
-            impSlider.Slider.minValue = 0;
-            impSlider.Slider.maxValue = options.Value.Count - 1;
+            if (Imperium.Settings.Preferences.PlaySounds.Value && playClickSound) GameUtils.PlayClip(ImpAssets.ButtonClick);
+        };
 
-            impSlider.indicatorText.text = $"{options.Value[(int)valueBinding.Value]}{indicatorUnit}";
-
-            options.OnUpdate += newOptions =>
-            {
-                impSlider.Slider.minValue = 0;
-                impSlider.Slider.maxValue = newOptions.Count - 1;
-
-                impSlider.indicatorText.text = $"{newOptions[(int)valueBinding.Value]}{indicatorUnit}";
-            };
-        }
-        else
+        impSlider.slider.onValueChanged.AddListener(value =>
         {
-            impSlider.indicatorText.text = $"{indicatorFormatter(valueBinding.Value)}{indicatorUnit}";
-        }
+            // Skip the update if the binding value is already set to the current slider value
+            if (Mathf.Approximately(value, valueBinding.Value)) return;
 
-        impSlider.Slider.onValueChanged.AddListener(newValue =>
-        {
             // Fixes weird null pointer error after respawning UI
-            if (!impSlider) return;
-
-            // Use option label if options are used
-            impSlider.indicatorText.text = options is { Value: not null, Value.Count: > 0 }
-                ? $"{options.Value[(int)newValue]}{indicatorUnit}"
-                : $"{indicatorFormatter(newValue)}{indicatorUnit}";
-
-            var bindingValue = useLogarithmicScale ? (float)Math.Pow(10, newValue) : newValue;
+            // if (!impSlider) return;
 
             if (debounceTime > 0)
             {
                 if (impSlider.debounceCoroutine != null) impSlider.StopCoroutine(impSlider.debounceCoroutine);
                 impSlider.debounceCoroutine = impSlider.StartCoroutine(
-                    impSlider.DebounceSlider(valueBinding, bindingValue, clickAudio)
+                    impSlider.DebounceSlider(valueBinding, value, ImpAssets.ButtonClick)
                 );
             }
             else
             {
-                valueBinding.Set(bindingValue);
+                valueBinding.Set(value);
             }
         });
 
-        // This has to be in local, so we can manually skip the click sound by disabling send local
-        valueBinding.OnTriggerSecondary += () =>
+        // Bind reset button if available
+        var resetButtonObj = sliderParent.Find("Reset");
+        if (resetButtonObj)
         {
-            if (Imperium.Settings.Preferences.PlaySounds.Value && playClickSound)
+            if (allowReset)
             {
-                GameUtils.PlayClip(clickAudio);
-            }
-        };
-
-        valueBinding.OnUpdate += newValue =>
-        {
-            var updatedValue = useLogarithmicScale ? (float)Math.Log10(newValue) : newValue;
-            if (negativeIsDefault && updatedValue < 0)
-            {
-                updatedValue = GetDefaultValue();
-                newValue = updatedValue;
-            }
-
-            impSlider.Slider.value = updatedValue;
-
-            // Use option label if options are used
-            impSlider.indicatorText.text = options is { Value: not null, Value.Count: > 0 }
-                ? $"{options.Value[(int)newValue]}{indicatorUnit}"
-                : $"{indicatorFormatter(newValue)}{indicatorUnit}";
-        };
-
-        var resetButton = ImpButton.Bind(
-            "Reset", sliderObject, () =>
-            {
-                var defaultValue = GetDefaultValue();
-
-                impSlider.Slider.value = useLogarithmicScale ? (float)Math.Log10(defaultValue) : defaultValue;
-
-                // Use option label if options are used
-                impSlider.indicatorText.text = options is { Value: not null, Value.Count: > 0 }
-                    ? $"{options.Value[(int)defaultValue]}{indicatorUnit}"
-                    : $"{indicatorFormatter(defaultValue)}{indicatorUnit}";
-
-                valueBinding.Reset();
-            },
-            theme: theme,
-            playClickSound: false,
-            interactableInvert: interactableInvert,
-            interactableBindings: interactableBindings
-        );
-
-        if (sliderObject.transform.Find("Override"))
-        {
-            var overrideBinding = new ImpBinding<bool>(valueBinding.Value < 0);
-
-            ImpToggle.Bind(
-                "Override",
-                sliderObject,
-                overrideBinding,
-                theme
-            );
-
-            overrideBinding.OnUpdate += isOverridden =>
-            {
-                valueBinding.Set(isOverridden ? impSlider.Slider.value : -1);
-                ToggleInteractable(impSlider.Slider, sliderArea, isOverridden, interactableInvert);
-
-                // Toggle reset button manually
-                if (resetButton)
-                {
-                    var text = resetButton.transform.Find("Text")?.GetComponent<TMP_Text>() ??
-                               resetButton.transform.Find("Text (TMP)")?.GetComponent<TMP_Text>();
-                    ImpButton.ToggleInteractable(
-                        resetButton, null, text,
-                        isOverridden, false
-                    );
-                }
-            };
-            overrideBinding.Refresh();
-        }
-
-        if (tooltipDefinition != null)
-        {
-            var interactable = sliderObject.gameObject.AddComponent<ImpInteractable>();
-
-            if (!tooltipDefinition.Tooltip)
-            {
-                var togglePath = $"{Debugging.GetTransformPath(container)}/{path}";
-                Imperium.IO.LogWarning(
-                    $"[UI] Failed to initialize tooltip for '{togglePath}'. No tooltip provided."
+                ImpButton.Bind(
+                    "Reset",
+                    sliderParent,
+                    () => valueBinding.Reset(),
+                    theme: theme,
+                    interactableInvert: interactableInvert,
+                    interactableBindings: interactableBindings
                 );
             }
-
-            interactable.onOver += position => tooltipDefinition.Tooltip.SetPosition(
-                tooltipDefinition.Title,
-                tooltipDefinition.Description,
-                position,
-                tooltipDefinition.HasAccess
-            );
-            interactable.onExit += () => tooltipDefinition.Tooltip.Deactivate();
+            else
+            {
+                resetButtonObj.gameObject.SetActive(false);
+            }
         }
 
+        // Add tooltip to parent element if tooltip is provided
+        if (tooltipDefinition != null) ImpUtils.Interface.AddTooltip(tooltipDefinition, sliderParent);
+
+        // Bind all interactable bindings if any were provided
         if (interactableBindings.Length > 0)
         {
             ToggleInteractable(
-                impSlider.Slider, sliderArea,
-                interactableBindings.All(entry => entry.Value), interactableInvert
+                impSlider.slider, sliderArea,
+                interactableBindings.All(entry => entry == null || entry.Value),
+                interactableInvert
             );
+
             foreach (var interactableBinding in interactableBindings)
             {
+                if (interactableBinding == null) continue;
+
                 interactableBinding.OnUpdate += value =>
                 {
-                    ToggleInteractable(impSlider.Slider, sliderArea, value, interactableInvert);
+                    ToggleInteractable(impSlider.slider, sliderArea, value, interactableInvert);
                 };
             }
         }
 
         if (theme != null)
         {
-            theme.OnUpdate += value => OnThemeUpdate(value, sliderObject);
-            OnThemeUpdate(theme.Value, sliderObject);
+            OnThemeUpdate(theme.Value, sliderParent);
+            theme.OnUpdate += value =>
+            {
+                OnThemeUpdate(value, sliderParent);
+
+                // Fix interactability after theme update
+                ToggleInteractable(
+                    impSlider.slider, sliderArea,
+                    interactableBindings.All(entry => entry == null || entry.Value),
+                    interactableInvert
+                );
+            };
         }
 
         return impSlider;
 
-        float GetDefaultValue()
+        void SetSliderValue(float value)
         {
-            if (defaultValueOverrideFunc != null) return defaultValueOverrideFunc();
-            return defaultValueOverride ?? valueBinding.DefaultValue;
+            var updatedValue = value < 0 && negativeIsDefault ? valueBinding.DefaultValue : value;
+
+            impSlider.slider.value = updatedValue;
+            impSlider.handleText.text = $"{handleFormatter(updatedValue)}{valueUnit}";
         }
     }
 
@@ -294,14 +228,14 @@ public class ImpSlider : MonoBehaviour
 
     private void SetIndicatorText(float value)
     {
-        indicatorText.text = indicatorFormatter != null
+        handleText.text = indicatorFormatter != null
             ? indicatorFormatter(value)
             : $"{Mathf.RoundToInt(value)}{indicatorUnit}";
     }
 
     public void SetValue(float value)
     {
-        Slider.value = value;
+        slider.value = value;
         SetIndicatorText(value);
     }
 

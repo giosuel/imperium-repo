@@ -24,4 +24,18 @@
       vertical-align: top;
   }
 }
+
+@media screen and (min-width: 500px) {
+  .float-right-img {
+    float: right;
+    margin: 0 0 0 16px !important;
+  }
+  .float-right-img img {
+    width: 380px;
+  }
+}
+
+figcaption {
+  margin: 0 auto !important;
+}
   

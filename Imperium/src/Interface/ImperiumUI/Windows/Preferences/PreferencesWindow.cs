@@ -25,17 +25,16 @@ internal class PreferencesWindow : ImperiumWindow
         content = transform.Find("Content");
 
         var general = content.Find("Grid/General/General");
-        ImpToggle.Bind("LoggingToggle", general, Imperium.Settings.Preferences.GeneralLogging, theme);
-        ImpToggle.Bind("LeftHandedToggle", general, Imperium.Settings.Preferences.LeftHandedMode, theme);
-        ImpToggle.Bind("CustomWelcome", general, Imperium.Settings.Preferences.CustomWelcome, theme);
-        ImpToggle.Bind("TooltipsToggle", general, Imperium.Settings.Preferences.ShowTooltips, theme);
+        ImpToggle.Bind("LoggingToggle", general, Imperium.Settings.Preferences.GeneralLogging, theme: theme);
+        ImpToggle.Bind("LeftHandedToggle", general, Imperium.Settings.Preferences.LeftHandedMode, theme: theme);
+        ImpToggle.Bind("TooltipsToggle", general, Imperium.Settings.Preferences.ShowTooltips, theme: theme);
 
         // Play click sounds needs to be the opposite of the setting here, as we are about to toggle it
         ImpToggle.Bind(
             "SoundsToggle",
             general,
             Imperium.Settings.Preferences.PlaySounds,
-            theme,
+            theme: theme,
             playClickSound:
             !Imperium.Settings.Preferences.PlaySounds.Value
         );
@@ -44,7 +43,7 @@ internal class PreferencesWindow : ImperiumWindow
             "UEMouseFixToggle",
             general,
             Imperium.Settings.Preferences.UnityExplorerMouseFix,
-            theme,
+            theme: theme,
             interactableBindings: new ImpBinding<bool>(Chainloader.PluginInfos.ContainsKey("com.sinai.unityexplorer")),
             tooltipDefinition: new TooltipDefinition
             {
@@ -54,12 +53,25 @@ internal class PreferencesWindow : ImperiumWindow
             }
         );
 
+        ImpToggle.Bind(
+            "SkipLoading",
+            general,
+            Imperium.Settings.Preferences.SkipLoading,
+            theme: theme
+            // tooltipDefinition: new TooltipDefinition
+            // {
+            //     Title = " Explorer Mouse Fix",
+            //     Description = "Makes it so the camera doesn't follow the mouse\nwhen unity explorer is open.",
+            //     Tooltip = tooltip
+            // }
+        );
+
         var hosting = content.Find("Grid/Hosting/Hosting");
         ImpToggle.Bind(
             "AllowClients",
             hosting,
             Imperium.Settings.Preferences.AllowClients,
-            theme,
+            theme: theme,
             interactableBindings: new ImpBinding<bool>(SemiFunc.IsMasterClientOrSingleplayer()),
             tooltipDefinition: new TooltipDefinition
             {
@@ -70,20 +82,68 @@ internal class PreferencesWindow : ImperiumWindow
         );
 
         var notifications = content.Find("Grid/Notifications/Notifications");
-        ImpToggle.Bind("GodModeToggle", notifications, Imperium.Settings.Preferences.NotificationsGodMode, theme);
-        ImpToggle.Bind("OracleToggle", notifications, Imperium.Settings.Preferences.NotificationsOracle, theme);
-        ImpToggle.Bind("SpawnReportsToggle", notifications, Imperium.Settings.Preferences.NotificationsSpawnReports, theme);
-        ImpToggle.Bind("ConfirmationToggle", notifications, Imperium.Settings.Preferences.NotificationsConfirmation, theme);
-        ImpToggle.Bind("EntitiesToggle", notifications, Imperium.Settings.Preferences.NotificationsEntities, theme);
-        ImpToggle.Bind("SpawningToggle", notifications, Imperium.Settings.Preferences.NotificationsSpawning, theme);
-        ImpToggle.Bind("AccessControl", notifications, Imperium.Settings.Preferences.NotificationsAccessControl, theme);
-        ImpToggle.Bind("OtherToggle", notifications, Imperium.Settings.Preferences.NotificationsOther, theme);
+        ImpToggle.Bind(
+            "GodModeToggle",
+            notifications,
+            Imperium.Settings.Preferences.NotificationsGodMode,
+            theme: theme
+        );
+
+        ImpToggle.Bind(
+            "OracleToggle",
+            notifications,
+            Imperium.Settings.Preferences.NotificationsOracle,
+            theme: theme
+        );
+
+        ImpToggle.Bind(
+            "SpawnReportsToggle",
+            notifications,
+            Imperium.Settings.Preferences.NotificationsSpawnReports,
+            theme: theme
+        );
+
+        ImpToggle.Bind(
+            "ConfirmationToggle",
+            notifications,
+            Imperium.Settings.Preferences.NotificationsConfirmation,
+            theme: theme
+        );
+
+        ImpToggle.Bind(
+            "EntitiesToggle",
+            notifications,
+            Imperium.Settings.Preferences.NotificationsEntities,
+            theme: theme
+        );
+
+        ImpToggle.Bind(
+            "SpawningToggle",
+            notifications,
+            Imperium.Settings.Preferences.NotificationsSpawning,
+            theme: theme
+        );
+
+        ImpToggle.Bind(
+            "AccessControl",
+            notifications,
+            Imperium.Settings.Preferences.NotificationsAccessControl,
+            theme: theme
+        );
+
+        ImpToggle.Bind(
+            "OtherToggle",
+            notifications,
+            Imperium.Settings.Preferences.NotificationsOther,
+            theme: theme
+        );
+
 
         InitQuickload();
         InitThemes();
 
-        ImpButton.Bind("Buttons/FactoryReset", content, Imperium.Settings.FactoryReset, theme);
-        ImpButton.Bind("Buttons/ResetUI", content, Imperium.Interface.ResetUI, theme);
+        ImpButton.Bind("Buttons/FactoryReset", content, Imperium.Settings.FactoryReset, theme: theme);
+        ImpButton.Bind("Buttons/ResetUI", content, Imperium.Interface.ResetUI, theme: theme);
     }
 
     private void InitQuickload()
@@ -93,7 +153,7 @@ internal class PreferencesWindow : ImperiumWindow
             "AutoLaunchToggle",
             quickloadToggles,
             Imperium.Settings.Preferences.QuickloadAutoLaunch,
-            theme,
+            theme: theme,
             tooltipDefinition: new TooltipDefinition
             {
                 Title = "Quickload Auto Launch",

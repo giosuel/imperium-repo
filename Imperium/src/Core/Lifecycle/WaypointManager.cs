@@ -32,11 +32,11 @@ public class WaypointManager : ImpLifecycleObject
         Imperium.InputBindings.BaseMap.DeleteWaypoint.performed -= OnWaypointDelete;
     }
 
-    protected override void OnSceneLoad()
+    protected override void OnLevelLoad()
     {
     }
 
-    protected override void OnSceneUnload()
+    protected override void OnLevelUnload()
     {
     }
 

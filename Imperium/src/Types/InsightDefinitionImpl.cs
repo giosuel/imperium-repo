@@ -35,7 +35,7 @@ internal class InsightDefinitionImpl<T> : InsightDefinition<T> where T : Compone
     public ImpBinding<Dictionary<string, Func<Component, string>>> Insights { get; } = new([]);
     public Func<Component, string> NameGenerator { get; private set; }
     public Func<Component, string> PersonalNameGenerator { get; private set; }
-    public Func<Component, bool> IsDeadGenerator { get; private set; }
+    public Func<Component, bool> IsDisabledGenerator { get; private set; }
     public Func<Component, Vector3> PositionOverride { get; private set; }
     public ImpBinding<bool> VisibilityBinding { get; private set; }
 
@@ -54,10 +54,10 @@ internal class InsightDefinitionImpl<T> : InsightDefinition<T> where T : Compone
         return this;
     }
 
-    public InsightDefinition<T> SetIsDeadGenerator(Func<T, bool> generator)
+    public InsightDefinition<T> SetIsDisabledGenerator(Func<T, bool> generator)
     {
-        IsDeadGenerator = obj => generator((T)obj);
-        PropagateIsDeadGenerator(obj => generator((T)obj));
+        IsDisabledGenerator = obj => generator((T)obj);
+        PropagateIsDisabledGenerator(obj => generator((T)obj));
         return this;
     }
 
@@ -124,7 +124,7 @@ internal class InsightDefinitionImpl<T> : InsightDefinition<T> where T : Compone
 
                 NameGenerator ??= parentDefinition.NameGenerator;
                 PersonalNameGenerator ??= parentDefinition.PersonalNameGenerator;
-                IsDeadGenerator ??= parentDefinition.IsDeadGenerator;
+                IsDisabledGenerator ??= parentDefinition.IsDisabledGenerator;
                 PositionOverride ??= parentDefinition.PositionOverride;
 
                 VisibilityBinding ??= parentDefinition.VisibilityBinding;
@@ -189,15 +189,15 @@ internal class InsightDefinitionImpl<T> : InsightDefinition<T> where T : Compone
     }
 
     /// <summary>
-    ///     Propagates the is dead generator to child types that don't have their own.
+    ///     Propagates the is disabled generator to child types that don't have their own.
     /// </summary>
-    private void PropagateIsDeadGenerator(Func<Component, bool> generator)
+    private void PropagateIsDisabledGenerator(Func<Component, bool> generator)
     {
         foreach (var (type, typeInsights) in globalInsights)
         {
             if (type.IsSubclassOf(typeof(T)))
             {
-                typeInsights.SetIsDeadGeneratorFromParent(generator);
+                typeInsights.SetIsDisabledGeneratorFromParent(generator);
             }
         }
     }
@@ -235,6 +235,8 @@ internal class InsightDefinitionImpl<T> : InsightDefinition<T> where T : Compone
     public void SetPersonalNameGeneratorFromParent(Func<T, string> generator) =>
         PersonalNameGenerator ??= obj => generator((T)obj);
 
-    public void SetIsDeadGeneratorFromParent(Func<T, bool> generator) => IsDeadGenerator ??= obj => generator((T)obj);
+    public void SetIsDisabledGeneratorFromParent(Func<T, bool> generator) =>
+        IsDisabledGenerator ??= obj => generator((T)obj);
+
     public void SetPositionOverrideFromParent(Func<T, Vector3> @override) => PositionOverride ??= obj => @override((T)obj);
 }

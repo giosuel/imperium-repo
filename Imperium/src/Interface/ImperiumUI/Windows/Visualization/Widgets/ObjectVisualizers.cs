@@ -61,9 +61,8 @@ internal class ObjectVisualizers : ImpWidget
             isIconButton: true,
             tooltipDefinition: new TooltipDefinition
             {
-                Tooltip = tooltip,
                 Title = "Pathfinding",
-                HasAccess = true
+                Tooltip = tooltip,
             }
         );
         ImpButton.Bind(
@@ -74,10 +73,9 @@ internal class ObjectVisualizers : ImpWidget
             isIconButton: true,
             tooltipDefinition: new TooltipDefinition
             {
-                Tooltip = tooltip,
                 Title = "Proximity",
                 Description = "The range at which enemies can detect you",
-                HasAccess = true
+                Tooltip = tooltip
             }
         );
         ImpButton.Bind(
@@ -88,9 +86,8 @@ internal class ObjectVisualizers : ImpWidget
             isIconButton: true,
             tooltipDefinition: new TooltipDefinition
             {
-                Tooltip = tooltip,
                 Title = "Line Of Sight",
-                HasAccess = true
+                Tooltip = tooltip
             }
         );
         ImpButton.Bind(
@@ -101,9 +98,21 @@ internal class ObjectVisualizers : ImpWidget
             isIconButton: true,
             tooltipDefinition: new TooltipDefinition
             {
-                Tooltip = tooltip,
                 Title = "Noise Detection",
-                HasAccess = true
+                Tooltip = tooltip
+            }
+        );
+        ImpButton.Bind(
+            "EntitiesHeader/Icons/Vitality",
+            transform,
+            () => ToggleEntityConfigs(config => config.Vitality),
+            theme: theme,
+            isIconButton: true,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Title = "Vitality",
+                Description = "Enemy HP bars, detection bars and damage indicators.",
+                Tooltip = tooltip,
             }
         );
         ImpButton.Bind(
@@ -114,9 +123,8 @@ internal class ObjectVisualizers : ImpWidget
             isIconButton: true,
             tooltipDefinition: new TooltipDefinition
             {
-                Tooltip = tooltip,
                 Title = "Custom",
-                HasAccess = true
+                Tooltip = tooltip
             }
         );
 

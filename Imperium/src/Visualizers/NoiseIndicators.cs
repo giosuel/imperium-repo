@@ -43,7 +43,7 @@ internal class NoiseIndicators : ImpScript
     internal void AddNoise(Vector3 position, float radius, bool isMuted)
     {
         if (!Imperium.Settings.Visualization.NoiseIndicators.Value
-            || !Imperium.IsArenaLoaded
+            || !Imperium.IsLevelLoaded
             || Imperium.GameManager.IsGameLoading)
         {
             return;

@@ -9,12 +9,11 @@ using Librarium.Binding;
 
 namespace Imperium.Core.Settings;
 
-internal class VisualizationSettings(ConfigFile config, IBinding<bool> isSceneLoaded, IBinding<bool> isEnabled)
-    : SettingsContainer(config)
+internal class VisualizationSettings(ConfigFile config) : SettingsContainer(config)
 {
-    /// <summary>
-    ///     Visualization Settings
-    /// </summary>
+    /*
+     * Settings
+     */
     internal readonly ImpConfig<bool> SmoothAnimations = new(
         config,
         "Visualization.Visualizers",
@@ -36,10 +35,10 @@ internal class VisualizationSettings(ConfigFile config, IBinding<bool> isSceneLo
         true
     );
 
-    internal readonly ImpConfig<bool> SSHideInactive = new(
+    internal readonly ImpConfig<bool> SSHideDespawned = new(
         config,
         "Visualization.Insights",
-        "HideInactive",
+        "HideDespawned",
         false
     );
 
@@ -50,6 +49,9 @@ internal class VisualizationSettings(ConfigFile config, IBinding<bool> isSceneLo
         1
     );
 
+    /*
+     * Overlays
+     */
     internal readonly ImpConfig<bool> NavMeshSurfaces = new(
         config,
         "Visualization.Overlays",
@@ -57,9 +59,9 @@ internal class VisualizationSettings(ConfigFile config, IBinding<bool> isSceneLo
         false
     );
 
-    /// <summary>
-    ///     Gizmos
-    /// </summary>
+    /*
+     * Gizmos
+     */
     internal readonly ImpConfig<bool> NoiseIndicators = new(
         config,
         "Visualization.Gizmos",

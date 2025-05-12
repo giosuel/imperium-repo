@@ -2,7 +2,6 @@
 
 using Imperium.Extensions;
 using Imperium.Types;
-using Imperium.Util;
 using Librarium;
 using TMPro;
 using UnityEngine;
@@ -121,7 +120,7 @@ internal class MinimapOverlay : BaseUI
             || Imperium.Freecam.IsFreecamEnabled.Value
             || !Imperium.IsImperiumEnabled.Value
             || Imperium.GameManager.IsGameLoading
-            || !Imperium.IsArenaLoaded.Value
+            || !Imperium.IsGameLevel.Value
            )
         {
             if (IsOpen) Close();

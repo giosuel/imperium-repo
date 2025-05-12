@@ -13,15 +13,22 @@ internal static class LoadingUIPatch
     [HarmonyPatch("StartLoading")]
     private static void StartLoadingPatch(LoadingUI __instance)
     {
-        Imperium.IsArenaLoaded.SetFalse();
+        Imperium.IsLevelLoaded.SetFalse();
         Imperium.GameManager.IsGameLoading = true;
     }
 
     [HarmonyPostfix]
-    [HarmonyPatch("LevelAnimationComplete")]
-    private static void LevelAnimationCompletePatch(LoadingUI __instance)
+    [HarmonyPatch(typeof(LoadingUI), "StopLoading")]
+    private static void StopLoadingPatch(LoadingUI __instance)
     {
-        Imperium.IsArenaLoaded.SetTrue();
+        Imperium.IsLevelLoaded.SetTrue();
         Imperium.GameManager.IsGameLoading = false;
+    }
+
+    [HarmonyPrefix]
+    [HarmonyPatch(typeof(LoadingUI), "LevelAnimationStart")]
+    private static void LevelAnimationStartPatch(LoadingUI __instance)
+    {
+        if (Imperium.Settings.Preferences.SkipLoading.Value) __instance.debugDisableLevelAnimation = true;
     }
 }

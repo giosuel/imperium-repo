@@ -43,11 +43,4 @@ internal static class SemiFuncPatch
     // {
     //     if (Imperium.Freecam.IsFreecamEnabled.Value || Imperium.Interface.IsOpen()) __result = 0;
     // }
-
-    [HarmonyPostfix]
-    [HarmonyPatch("DebugDev")]
-    private static void DebugDevPatch(ref bool __result)
-    {
-        if (Imperium.Settings.Player.DevMode.Value) __result = true;
-    }
 }
