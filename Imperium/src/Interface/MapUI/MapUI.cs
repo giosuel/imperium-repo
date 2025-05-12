@@ -4,6 +4,7 @@ using Imperium.Core;
 using Imperium.Extensions;
 using Imperium.Interface.Common;
 using Imperium.Types;
+using Librarium;
 using Librarium.Binding;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -13,7 +14,8 @@ using UnityEngine.UI;
 
 namespace Imperium.Interface.MapUI;
 
-internal class MapUI : BaseUI
+internal class
+    MapUI : BaseUI
 {
     private GameObject compass;
     private Transform compassNorth;
@@ -58,6 +60,7 @@ internal class MapUI : BaseUI
         Imperium.Settings.Map.RotationLock.OnTrigger += OnRotationLockChange;
 
         selectedPlayer.Set(Imperium.Player);
+        Imperium.IsLevelLoaded.OnTrue += () => selectedPlayer.Set(Imperium.Player);
     }
 
     private void OnDrag(Vector3 delta)

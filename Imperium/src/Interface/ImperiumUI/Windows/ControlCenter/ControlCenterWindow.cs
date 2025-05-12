@@ -87,7 +87,7 @@ internal class ControlCenterWindow : ImperiumWindow
             tooltipDefinition: new TooltipDefinition
             {
                 Title = "No Tumble Mode",
-                Description = "Disables tumbling when hit",
+                Description = "Disables tumbling when getting hit.",
                 Tooltip = tooltip
             }
         );
@@ -96,7 +96,13 @@ internal class ControlCenterWindow : ImperiumWindow
             "Right/PlayerSettings/EnableFlying",
             content,
             Imperium.Settings.Player.EnableFlying,
-            theme: theme
+            theme: theme,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Title = "WIP",
+                Description = "Flying is not implemented yet.",
+                Tooltip = tooltip
+            }
         );
 
         ImpToggle.Bind(

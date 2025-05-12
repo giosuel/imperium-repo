@@ -17,6 +17,7 @@ internal class GameManager : ImpLifecycleObject
     internal readonly ImpNetworkBinding<int> CustomModuleAmount = new("CustomModuleAmount", Imperium.Networking, -1);
     internal readonly ImpNetworkBinding<int> CustomLevelNumber = new("CustomLevelNumber", Imperium.Networking, -1);
     internal readonly ImpNetworkBinding<int> OverrideModuleType = new("OverrideModuleType", Imperium.Networking);
+    internal readonly ImpNetworkBinding<int> CustomValuableSpawns = new("CustomValuableSpawns", Imperium.Networking);
 
     internal readonly ImpNetworkBinding<int> GroupCurrency = new(
         "GroupCurrency",
@@ -64,11 +65,6 @@ internal class GameManager : ImpLifecycleObject
 
     internal static bool IsGameLevel()
     {
-        Imperium.IO.LogInfo($"is lobby menu: {RunManager.instance.levelCurrent == RunManager.instance.levelLobbyMenu}");
-        Imperium.IO.LogInfo($"is main menu: {RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu}");
-        Imperium.IO.LogInfo($"is lobby: {RunManager.instance.levelCurrent == RunManager.instance.levelLobby}");
-        Imperium.IO.LogInfo($"is tutorial: {RunManager.instance.levelCurrent == RunManager.instance.levelTutorial}");
-
         return RunManager.instance.levelCurrent != RunManager.instance.levelLobbyMenu &&
                RunManager.instance.levelCurrent != RunManager.instance.levelMainMenu &&
                RunManager.instance.levelCurrent != RunManager.instance.levelLobby &&

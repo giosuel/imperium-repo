@@ -120,9 +120,11 @@ internal class PlayerManager : ImpLifecycleObject
         }
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        if (!Mathf.Approximately(Imperium.Settings.Player.CustomFieldOfView.Value, 70))
+        if (!Imperium.IsGameLevel.Value || !Imperium.ActiveCamera.Value) return;
+
+        if (!Mathf.Approximately(Imperium.Settings.Player.CustomFieldOfView.Value, ImpConstants.DefaultFOV))
         {
             Imperium.ActiveCamera.Value.fieldOfView = Imperium.Settings.Player.CustomFieldOfView.Value;
         }

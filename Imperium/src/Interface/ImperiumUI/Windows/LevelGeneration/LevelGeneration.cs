@@ -73,6 +73,7 @@ internal class LevelGeneration : ImperiumWindow
         );
 
         InitLevelOverride(disabledBinding);
+        InitValuableSpawns(disabledBinding);
         InitModuleOverride(disabledBinding);
 
         // Module type should also be disabled if no override module is selected
@@ -178,6 +179,30 @@ internal class LevelGeneration : ImperiumWindow
             {
                 Title = "Module Override",
                 Description = "Makes the level to be generated from a single module.\nCaution! Can cause faulty levels.",
+                Tooltip = tooltip
+            },
+            interactableInvert: true,
+            interactableBindings: disabledBinding
+        );
+    }
+
+    private void InitValuableSpawns(ImpBinaryBinding disabledBinding)
+    {
+        var options = Enum.GetValues(typeof(ValuableDirector.ValuableDebug))
+            .Cast<ValuableDirector.ValuableDebug>()
+            .OrderBy(value => value)
+            .Select(type => type.ToString());
+
+        ImpDropdown.Bind(
+            "ValuableSpawns",
+            content,
+            Imperium.GameManager.CustomValuableSpawns,
+            options,
+            theme: theme,
+            tooltipDefinition: new TooltipDefinition
+            {
+                Title = "Valuable Spawns",
+                Description = "Customize how valuables will spawn in the level.",
                 Tooltip = tooltip
             },
             interactableInvert: true,

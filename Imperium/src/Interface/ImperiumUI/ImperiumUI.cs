@@ -293,8 +293,6 @@ public class ImperiumUI : BaseUI
             // Update the dock button binding
             dockButtonBindings[existingDefinition.WindowType].Set(windowDefinition.IsOpen);
 
-            Imperium.IO.LogInfo($"window: {windowDefinition.WindowType.Name} is open: {windowDefinition.IsOpen}");
-
             // Inform the window of the new state
             existingDefinition.Controller.PlaceWindow(
                 windowDefinition.Position,

@@ -315,34 +315,37 @@ internal class ObjectManager : ImpLifecycleObject
             return;
         }
 
-        foreach (var spawnObject in enemySetup.GetSortedSpawnObjects())
+        for (var i = 0; i < request.Amount; i++)
         {
-            if (spawnObject == null)
+            foreach (var spawnObject in enemySetup.GetSortedSpawnObjects())
             {
-                Imperium.IO.LogError($"[SPAWN] [R] Unable to spawn prefab for requested entity '{request.Name}'.");
-                continue;
+                if (!spawnObject)
+                {
+                    Imperium.IO.LogError($"[SPAWN] [R] Unable to spawn prefab for requested entity '{request.Name}'.");
+                    continue;
+                }
+
+                var prefabId = ResourcesHelper.GetEnemyPrefabPath(spawnObject);
+                var obj = NetworkPrefabs.SpawnNetworkPrefab(prefabId, request.SpawnPosition, Quaternion.identity);
+                if (!obj || !obj.TryGetComponent(out EnemyParent enemyParent)) continue;
+
+                enemyParent.SetupDone = true;
+
+                var enemy = obj.GetComponentInChildren<Enemy>();
+                if (enemy) enemy.EnemyTeleported(request.SpawnPosition);
             }
 
-            var prefabId = ResourcesHelper.GetEnemyPrefabPath(spawnObject);
-            var obj = NetworkPrefabs.SpawnNetworkPrefab(prefabId, request.SpawnPosition, Quaternion.identity);
-            if (!obj || !obj.TryGetComponent(out EnemyParent enemyParent)) continue;
-
-            enemyParent.SetupDone = true;
-
-            var enemy = obj.GetComponentInChildren<Enemy>();
-            if (enemy) enemy.EnemyTeleported(request.SpawnPosition);
-        }
-
-        if (request.SendNotification)
-        {
-            var mountString = request.Amount == 1 ? "A" : $"{request.Amount.ToString()}x";
-            var verbString = request.Amount == 1 ? "has" : "have";
-
-            Imperium.Networking.SendLog(new NetworkNotification
+            if (request.SendNotification)
             {
-                Message = $"{mountString} loyal {request.Name} {verbString} been spawned!",
-                Type = NotificationType.Spawning
-            });
+                var mountString = request.Amount == 1 ? "A" : $"{request.Amount.ToString()}x";
+                var verbString = request.Amount == 1 ? "has" : "have";
+
+                Imperium.Networking.SendLog(new NetworkNotification
+                {
+                    Message = $"{mountString} loyal {request.Name} {verbString} been spawned!",
+                    Type = NotificationType.Spawning
+                });
+            }
         }
 
         objectsChangedEvent.DispatchToClients();

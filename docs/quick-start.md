@@ -19,7 +19,10 @@ The main Imperium UI that provides access to the windows that contain the majori
 
 A console that allows you to spawn enemies, valuables or items into the game.
 
-**Command Syntax:** `objectName [amount] [health / value]`
+**Command Syntax:** `objectName [amount]`
+
+!!! tip
+    If you press the enter key and the input field is empty, Imperium will repeat your last spawn command!
 
 ![Imperium Spawning](https://github.com/giosuel/imperium-repo/blob/main/assets/screenshots/spawning.png?raw=true)
 

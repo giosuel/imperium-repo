@@ -1,6 +1,7 @@
 #region
 
 using HarmonyLib;
+using Imperium.Interface.MapUI;
 
 #endregion
 

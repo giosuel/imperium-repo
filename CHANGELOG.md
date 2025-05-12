@@ -17,6 +17,9 @@
 - Fixed a bug that made disabled elements look enabled after the theme has been changed.
 - Fixed an issue where the Spawning UI was not scaling properly on wide monitors.
 - Fixed a bug that made it so the hide despawned insight setting didn't work properly.
+- Fixed a bug with night vision when crouching.
+- Fixed the field of view slider in the control center.
+- Fixed the minimap being black after loading into a level for the first time.
 
 
 ### QoL Changes

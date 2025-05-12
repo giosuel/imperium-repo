@@ -146,13 +146,14 @@ public class ObjectInsight : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!targetObject || !insightPanelCanvasRect)
+        var camera = Imperium.ActiveCamera.Value;
+
+        if (!camera || !targetObject || !insightPanelCanvasRect)
         {
             Destroy(gameObject);
             return;
         }
 
-        var camera = Imperium.ActiveCamera.Value;
         var cameraTexture = camera.activeTexture;
 
         if (!InsightDefinition.VisibilityBinding.Value ||

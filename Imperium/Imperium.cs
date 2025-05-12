@@ -107,6 +107,11 @@ public class Imperium : BaseUnityPlugin
 
     internal static GameObject GameObject { get; private set; }
 
+    /// <summary>
+    /// A reference to the currently active camera.
+    ///
+    /// Can be null during level loading.
+    /// </summary>
     internal static ImpBinding<Camera> ActiveCamera;
 
     /// <summary>
@@ -120,10 +125,6 @@ public class Imperium : BaseUnityPlugin
 
         IsLevelLoaded = new ImpBinaryBinding(false);
         IsGameLevel = new ImpExternalBinding<bool, bool>(Core.Lifecycle.GameManager.IsGameLevel, IsLevelLoaded);
-
-        IsLevelLoaded.OnUpdate += value => IO.LogInfo($"Is level loaded : {value}");
-        IsGameLevel.OnUpdate += value => IO.LogInfo($"Is game level : {value}");
-
         IsImperiumEnabled = new ImpBinaryBinding(false);
 
         Settings = new ImpSettings(Config);
@@ -133,7 +134,6 @@ public class Imperium : BaseUnityPlugin
         StartupManager = new StartupManager();
         Networking = new ImpNetworking();
         PortalManager = new PortalManager();
-        PortalManager.RegisterTestPortal();
 
         if (!ImpAssets.Load()) return;
 
