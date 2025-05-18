@@ -44,8 +44,8 @@ internal class ConsoleManager : ImpLifecycleObject
             NormalizeCommand(actionName),
             new ImpCommandAction(
                 actionName, onExec, displayNameOverride,
-                interfacePath, customIcon, enabledBindingInverted,
-                enabledBinding
+                interfacePath, customIcon,
+                enabledBindingInverted, enabledBinding
             )
         );
     }
@@ -233,14 +233,14 @@ internal class ConsoleManager : ImpLifecycleObject
         return matchesKeyword && entry.Key.Contains(query.Query);
     }
 
-    private static bool IsLevelKeyword(QueryKeyword? keyword)
-    {
-        return keyword is QueryKeyword.Level or QueryKeyword.Load;
-    }
-
     private static bool IsActionKeyword(QueryKeyword? keyword)
     {
         return keyword is null;
+    }
+
+    private static bool IsLevelKeyword(QueryKeyword? keyword)
+    {
+        return keyword is QueryKeyword.Level or QueryKeyword.Load;
     }
 
     private static bool IsWindowKeyword(QueryKeyword? keyword)

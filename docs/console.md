@@ -24,7 +24,9 @@ Commands don't need to be typed out fully. When the input field is submitted, th
 
 The console comes with a dropdown-like menu that provides a list of auto-complete suggestions. The search query **does not need to exactly match the command**. As long as the desired command is in the auto-complete list and selected, it will be executed. Entries in the list can also be clicked, which will have the same effect as submitting the input field with that command selected.
 
-For example, submitting the following input field will still spawn ten asdfadsf, even though the search query does not exactly match the spawn command's name.
+For example, submitting the following input field will still spawn ten ducks, even though the search query does not exactly match the spawn command's name.
+
+![Imperium Console Autocomplete](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/console-autocomplete.png?raw=true)
 
 !!! tip "Settings Locator"
     The icon on the left of *setting commands* that also have a UI element bound to their `IBinding` (e.g. Night Vision) can be clicked to open the location of the corresponding UI element.
@@ -169,6 +171,8 @@ load <level> [<level-number>]
 ### Action Commands
 
 Action commands are simple function commands that execute arbitrary functionality with optional parameters.
+
+![Imperium Console Action](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/console-action.png?raw=true)
 
 #### Syntax
 

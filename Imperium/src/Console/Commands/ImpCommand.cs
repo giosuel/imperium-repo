@@ -28,11 +28,11 @@ internal abstract class ImpCommand(
 
         switch (enabledBinding.Value)
         {
-            case false when enabledBindingInverted:
             case true when !enabledBindingInverted:
-                return false;
-            default:
+            case false when enabledBindingInverted:
                 return true;
+            default:
+                return false;
         }
     }
 

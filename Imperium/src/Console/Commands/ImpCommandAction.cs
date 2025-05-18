@@ -22,6 +22,7 @@ internal class ImpCommandAction(
     IBinding<bool> enabledBinding = null
 ) : ImpCommand(name, customIcon, enabledBindingInverted, enabledBinding)
 {
+    internal override string DisplayType => "Action";
     internal override Sprite Icon => customIcon ?? ImpAssets.IconCommandAction;
 
     internal override bool Execute(ConsoleQuery query)
