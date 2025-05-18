@@ -11,6 +11,21 @@ namespace Imperium.Core.Settings;
 
 internal class PlayerSettings(ConfigFile config) : SettingsContainer(config)
 {
+    internal readonly ImpConfig<bool> GodMode = new(
+        config,
+        "Player",
+        "GodMode",
+        false,
+        primaryUpdate: value =>
+        {
+            if (!PlayerAvatar.instance.playerHealth) return;
+
+            // Restore health to full before turning on god mode
+            if (value) PlayerAvatar.instance.playerHealth.Heal(100);
+            PlayerAvatar.instance.playerHealth.godMode = value;
+        }
+    );
+
     internal readonly ImpConfig<bool> InfiniteEnergy = new(
         config,
         "Player",
@@ -18,8 +33,6 @@ internal class PlayerSettings(ConfigFile config) : SettingsContainer(config)
         false,
         primaryUpdate: value => PlayerController.instance.DebugEnergy = value
     );
-
-    internal readonly ImpConfig<bool> DisableLocking = new(config, "Player", "DisableLocking", false);
 
     internal readonly ImpConfig<bool> Invisibility = new(config, "Player", "Invisibility", false);
     internal readonly ImpConfig<bool> Muted = new(config, "Player", "Muted", false);
@@ -43,34 +56,11 @@ internal class PlayerSettings(ConfigFile config) : SettingsContainer(config)
         }
     );
 
-    internal readonly ImpConfig<bool> SlowMode = new(
-        config,
-        "Player",
-        "SlowMode",
-        false,
-        primaryUpdate: value => PlayerController.instance.debugSlow = value
-    );
-
     internal readonly ImpConfig<float> CustomFieldOfView = new(
         config,
         "Player",
         "FieldOfView",
         ImpConstants.DefaultFOV
-    );
-
-    internal readonly ImpConfig<bool> GodMode = new(
-        config,
-        "Player",
-        "GodMode",
-        false,
-        primaryUpdate: value =>
-        {
-            if (!PlayerAvatar.instance.playerHealth) return;
-
-            // Restore health to full before turning on god mode
-            if (value) PlayerAvatar.instance.playerHealth.Heal(100);
-            PlayerAvatar.instance.playerHealth.godMode = value;
-        }
     );
 
     internal readonly ImpConfig<float> MovementSpeed = new(

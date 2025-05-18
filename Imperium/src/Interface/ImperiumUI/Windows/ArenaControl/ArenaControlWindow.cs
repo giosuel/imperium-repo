@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace Imperium.Interface.ImperiumUI.Windows.ArenaControl;
 
-internal class ArenaControlWindow : ImperiumWindow
+internal class GameControlWindow : ImperiumWindow
 {
     private Transform content;
 
@@ -17,7 +17,7 @@ internal class ArenaControlWindow : ImperiumWindow
     {
         InitQuotaAndCredits();
 
-        RegisterWidget<ArenaSettings>(transform, "Left");
+        RegisterWidget<GameSettings>(transform, "Left");
     }
 
     protected override void OnThemeUpdate(ImpTheme themeUpdate)

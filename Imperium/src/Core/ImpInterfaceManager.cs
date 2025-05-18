@@ -19,13 +19,10 @@ namespace Imperium.Core;
 
 internal class ImpInterfaceManager : MonoBehaviour
 {
+    private ImpTooltip tooltip;
     private readonly Dictionary<Type, BaseUI> interfaceControllers = [];
 
-    private ImpTooltip tooltip;
-
     internal readonly ImpBinding<BaseUI> OpenInterface = new();
-
-    private ImperiumDock imperiumDock;
     internal ImpBinding<ImpTheme> Theme { get; private set; }
 
     // We implement the exiting from UIs with bepinex controls as we have to differentiate
@@ -46,12 +43,6 @@ internal class ImpInterfaceManager : MonoBehaviour
         interfaceManager.tooltip.Init(interfaceManager.Theme, interfaceManager.tooltip);
         interfaceManager.tooltip.gameObject.SetActive(false);
 
-        // Instantiate Imperium Dock
-        interfaceManager.imperiumDock = Instantiate(
-            ImpAssets.ImperiumDockObject, interfaceManager.transform
-        ).AddComponent<ImperiumDock>();
-        interfaceManager.imperiumDock.InitUI(interfaceManager.Theme, interfaceManager.tooltip);
-
         Imperium.IsLevelLoaded.OnTrigger += interfaceManager.InvokeOnOpen;
 
         return interfaceManager;
@@ -68,7 +59,11 @@ internal class ImpInterfaceManager : MonoBehaviour
         }
     }
 
-    internal void RegisterInterface<T>(GameObject obj, params IBinding<bool>[] canOpenBindings) where T : BaseUI
+    internal void RegisterInterface<T>(
+        GameObject obj,
+        InputAction keybind = null,
+        params IBinding<bool>[] canOpenBindings
+    ) where T : BaseUI
     {
         if (interfaceControllers.ContainsKey(typeof(T))) return;
 
@@ -77,32 +72,12 @@ internal class ImpInterfaceManager : MonoBehaviour
 
         interfaceObj.interfaceManager = this;
         interfaceControllers[typeof(T)] = interfaceObj;
-    }
 
-    internal void RegisterInterface<T>(
-        GameObject obj,
-        string dockButtonPath,
-        string interfaceName,
-        string interfaceDescription,
-        InputAction keybind,
-        params IBinding<bool>[] canOpenBindings
-    ) where T : BaseUI
-    {
-        RegisterInterface<T>(obj, canOpenBindings);
-
-        if (imperiumDock)
+        if (keybind != null)
         {
-            imperiumDock.RegisterDockButton<T>(
-                dockButtonPath,
-                this,
-                interfaceName,
-                interfaceDescription,
-                canOpenBindings
-            );
+            keybind.performed += Toggle<T>;
+            keybinds.Add((keybind, Toggle<T>));
         }
-
-        keybind.performed += Toggle<T>;
-        keybinds.Add((keybind, Toggle<T>));
     }
 
     private readonly List<(InputAction, Action<InputAction.CallbackContext>)> keybinds = [];
@@ -158,7 +133,6 @@ internal class ImpInterfaceManager : MonoBehaviour
     {
         if (!OpenInterface.Value) return;
 
-        imperiumDock.OnUIClose();
         OpenInterface.Value.OnUIClose();
         OpenInterface.Set(null);
 
@@ -203,17 +177,19 @@ internal class ImpInterfaceManager : MonoBehaviour
         if (controller.IsOpen || !controller.CanOpen()) return;
 
         controller.OnUIOpen();
-        imperiumDock.OnUIOpen();
 
         OpenInterface.Set(controller);
 
         // Close Unity Explorer menus
         UnityExplorerIntegration.CloseUI();
 
-        //MenuManager.instance.PageCloseAll();
+        // Close the menu only if current level is not a menu level
+        if (Imperium.IsGameLevel.Value) MenuManager.instance.PageCloseAll();
 
         if (closeOthers)
         {
+            tooltip.Deactivate();
+
             interfaceControllers.Values
                 .Where(interfaceController => interfaceController != controller && interfaceController)
                 .Do(interfaceController => interfaceController.OnUIClose());

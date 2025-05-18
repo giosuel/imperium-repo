@@ -46,7 +46,7 @@ public abstract class BaseUI : MonoBehaviour
     /// </summary>
     [CanBeNull] internal ImpInterfaceManager interfaceManager;
 
-    public virtual void InitUI(
+    public void InitUI(
         ImpBinding<ImpTheme> themeBinding,
         ImpTooltip impTooltip = null,
         IBinding<bool>[] canOpenBindings = null

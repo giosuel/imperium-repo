@@ -42,6 +42,12 @@ internal class PortalWindow : ImperiumWindow
         content = transform.Find("Content/Viewport/Content");
 
         placeholder = transform.Find("Placeholder").gameObject;
+        ImpButton.Bind(
+            "DocsButton",
+            placeholder.transform,
+            onClick: () => Application.OpenURL("https://giosuel.github.io/imperium-repo/api/portal.html"),
+            theme: theme
+        );
 
         portalTitleTemplate = content.Find("PortalTitle").gameObject;
         portalTitleTemplate.SetActive(false);

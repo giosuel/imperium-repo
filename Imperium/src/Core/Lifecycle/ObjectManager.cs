@@ -177,6 +177,51 @@ internal class ObjectManager : ImpLifecycleObject
     [ImpAttributes.RemoteMethod]
     internal void InvokeObjectsChanged() => objectsChangedEvent.DispatchToClients();
 
+    [ImpAttributes.RemoteMethod]
+    internal void Spawn(
+        string objectName,
+        SpawnObjectType spawnType,
+        Vector3 position,
+        int amount,
+        int value
+    )
+    {
+        switch (spawnType)
+        {
+            case SpawnObjectType.Entity:
+                SpawnEntity(new EntitySpawnRequest
+                {
+                    Name = objectName,
+                    SpawnPosition = position,
+                    Amount = amount,
+                    Health = value,
+                    SendNotification = true
+                });
+                break;
+            case SpawnObjectType.Item:
+                SpawnItem(new ItemSpawnRequest
+                {
+                    Name = objectName,
+                    SpawnPosition = position,
+                    Amount = amount,
+                    SendNotification = true
+                });
+                break;
+            case SpawnObjectType.Valuable:
+                SpawnValuable(new ValuableSpawnRequest
+                {
+                    Name = objectName,
+                    SpawnPosition = position,
+                    Amount = amount,
+                    Value = value,
+                    SendNotification = true
+                });
+                break;
+            default:
+                return;
+        }
+    }
+
     private GameObject FindObject(string objName)
     {
         if (ObjectCache.TryGetValue(objName, out var obj) && obj) return obj;
@@ -519,4 +564,11 @@ internal class ObjectManager : ImpLifecycleObject
     }
 
     #endregion
+}
+
+internal enum SpawnObjectType
+{
+    Entity,
+    Item,
+    Valuable,
 }

@@ -4,6 +4,8 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using Imperium.Console;
+using Imperium.Console.Registries;
 using Imperium.Core;
 using Imperium.Core.EventLogging;
 using Imperium.Core.Input;
@@ -11,9 +13,9 @@ using Imperium.Core.Lifecycle;
 using Imperium.Core.Portal;
 using Imperium.Core.Scripts;
 using Imperium.Integration;
+using Imperium.Interface.ConsoleUI;
 using Imperium.Interface.ImperiumUI;
 using Imperium.Interface.MapUI;
-using Imperium.Interface.SpawningUI;
 using Imperium.Networking;
 using Imperium.Patches;
 using Imperium.Util;
@@ -52,6 +54,7 @@ public class Imperium : BaseUnityPlugin
     internal static ImpNetworking Networking { get; set; }
     internal static StartupManager StartupManager { get; private set; }
     internal static PortalManager PortalManager { get; private set; }
+    internal static ConsoleManager ConsoleManager { get; private set; }
 
     /*
      * Lifecycle systems. Instantiated when Imperium is launched (Stage 2).
@@ -183,6 +186,11 @@ public class Imperium : BaseUnityPlugin
         WaypointManager = ImpLifecycleObject.Create<WaypointManager>(
             GameObject.transform, IsLevelLoaded, ImpNetworking.ConnectedPlayers
         );
+        ConsoleManager = ImpLifecycleObject.Create<ConsoleManager>(
+            GameObject.transform, IsLevelLoaded, ImpNetworking.ConnectedPlayers
+        );
+        ConsoleSettingsRegistry.RegisterSettings(ConsoleManager, Settings);
+        ConsoleActionRegistry.RegisterActions(ConsoleManager);
 
         Visualization = new Visualization(GameObject.transform, ObjectManager, configFile);
 
@@ -288,24 +296,14 @@ public class Imperium : BaseUnityPlugin
 
         Interface.RegisterInterface<ImperiumUI>(
             ImpAssets.ImperiumUIObject,
-            "ImperiumUI",
-            "Imperium UI",
-            "Imperium's main interface.",
             InputBindings.InterfaceMap.ImperiumUI
         );
-        Interface.RegisterInterface<SpawningUI>(
-            ImpAssets.SpawningUIObject,
-            "SpawningUI",
-            "Spawning",
-            "Allows you to spawn objects\nsuch as Scrap or Entities.",
-            InputBindings.InterfaceMap.SpawningUI,
-            canOpenBindings: IsGameLevel
+        Interface.RegisterInterface<ConsoleUI>(
+            ImpAssets.ConsoleUIObject,
+            InputBindings.InterfaceMap.SpawningUI
         );
         Interface.RegisterInterface<MapUI>(
             ImpAssets.MapUIObject,
-            "MapUI",
-            "Map",
-            "Imperium's built-in map.",
             InputBindings.InterfaceMap.MapUI,
             canOpenBindings: IsGameLevel
         );

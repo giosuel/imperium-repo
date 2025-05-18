@@ -85,5 +85,5 @@ internal class EventLogEntry : MonoBehaviour
         hover.SetActive(false);
     }
 
-    internal void OnClose() => hover.SetActive(false);
+    internal void OnOpen() => hover.SetActive(false);
 }

@@ -3,6 +3,7 @@
 using System;
 using System.Linq;
 using Imperium.Core;
+using Imperium.Interface.ImperiumUI;
 using Imperium.Types;
 using Imperium.Util;
 using JetBrains.Annotations;
@@ -29,6 +30,10 @@ public abstract class ImpButton
     /// <param name="playClickSound">Whether to play a click sound when the button is clicked</param>
     /// <param name="theme">The theme the button will use</param>
     /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the button is interactable</param>
     internal static Button Bind(
@@ -40,11 +45,12 @@ public abstract class ImpButton
         bool playClickSound = true,
         IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
+        ImperiumWindow parentWindow = null,
         bool interactableInvert = false,
         params IBinding<bool>[] interactableBindings
     )
     {
-        var buttonParent = container.Find(path);
+        var buttonParent = container.Find(path)?.GetComponent<RectTransform>();
         if (!buttonParent || !buttonParent.TryGetComponent<Button>(out var button))
         {
             Imperium.IO.LogInfo($"[UI] Failed to bind button '{Debugging.GetTransformPath(container)}/{path}'");
@@ -75,6 +81,9 @@ public abstract class ImpButton
 
         // Add tooltip to parent element if tooltip is provided
         if (tooltipDefinition != null) ImpUtils.Interface.AddTooltip(tooltipDefinition, buttonParent);
+
+        // Register element in parent if parent was provided
+        if (parentWindow) parentWindow.RegisterElement(path, buttonParent);
 
         if (theme != null)
         {

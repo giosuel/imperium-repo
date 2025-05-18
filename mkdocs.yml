@@ -9,6 +9,7 @@ repo_url: https://github.com/giosuel/imperium-repo
 nav:
  - Home: 'index.md'
  - Quick Start: 'quick-start.md'
+ - The Console: 'console.md'
  - Imperium API:
     - 'api/index.md'
     - Visualization API:

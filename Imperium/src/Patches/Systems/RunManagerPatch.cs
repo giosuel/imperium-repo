@@ -28,9 +28,17 @@ internal static class RunManagerPatch
     {
         Imperium.EventLog.GameEvents.ChangeLevel(_completedLevel, _levelFailed, _changeLevelType);
 
-        if (_levelFailed || Imperium.GameManager.CustomLevelNumber.Value <= 0) return;
+        if (Imperium.GameManager.NextLevelNumberOverride > 0)
+        {
+            __instance.levelsCompleted = Imperium.GameManager.NextLevelNumberOverride - 1;
+            SemiFunc.StatSetRunLevel(__instance.levelsCompleted);
 
-        __instance.levelsCompleted = Imperium.GameManager.CustomLevelNumber.Value - 1;
-        SemiFunc.StatSetRunLevel(__instance.levelsCompleted);
+            Imperium.GameManager.NextLevelNumberOverride = 0;
+        }
+        else if (Imperium.GameManager.CustomLevelNumber.Value > 0)
+        {
+            __instance.levelsCompleted = Imperium.GameManager.CustomLevelNumber.Value - 1;
+            SemiFunc.StatSetRunLevel(__instance.levelsCompleted);
+        }
     }
 }

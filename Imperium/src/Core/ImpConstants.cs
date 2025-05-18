@@ -1,6 +1,19 @@
 #region
 
+using System;
 using System.Collections.Generic;
+using Imperium.Interface.ImperiumUI.Windows.ArenaControl;
+using Imperium.Interface.ImperiumUI.Windows.ControlCenter;
+using Imperium.Interface.ImperiumUI.Windows.EventLog;
+using Imperium.Interface.ImperiumUI.Windows.LevelGeneration;
+using Imperium.Interface.ImperiumUI.Windows.ObjectExplorer;
+using Imperium.Interface.ImperiumUI.Windows.Portal;
+using Imperium.Interface.ImperiumUI.Windows.Preferences;
+using Imperium.Interface.ImperiumUI.Windows.Rendering;
+using Imperium.Interface.ImperiumUI.Windows.Teleport;
+using Imperium.Interface.ImperiumUI.Windows.Upgrades;
+using Imperium.Interface.ImperiumUI.Windows.Visualization;
+using Imperium.Util;
 using UnityEngine;
 
 #endregion
@@ -46,6 +59,27 @@ public struct ImpConstants
     internal static readonly LayerMask IndicatorMask = LayerMask.GetMask("Default", "PhysGrabObjectHinge");
 
     internal static readonly LayerMask TapeIndicatorMask = LayerMask.GetMask("Default", "PhysGrabObjectHinge");
+
+    public static readonly HashSet<string> TrueStrings = ["y", "yes", "on", "t", "true", "e", "enable"];
+    public static readonly HashSet<string> FalseStrings = ["n", "no", "off", "f", "false", "d", "disable"];
+    public static readonly HashSet<string> ResetStrings = ["r", "reset", "default", "def"];
+
+    public const string GreyedOutColor = "#A6A6A6";
+
+    internal static readonly Dictionary<Type, Sprite> WindowIconMap = new()
+    {
+        { typeof(ControlCenterWindow), ImpAssets.IconControlCenter },
+        { typeof(EventLogWindow), ImpAssets.IconEventLog },
+        { typeof(GameControlWindow), ImpAssets.IconGameControl },
+        { typeof(LevelGeneration), ImpAssets.IconLevelGeneration },
+        { typeof(ObjectExplorerWindow), ImpAssets.IconObjectExplorer },
+        { typeof(PortalWindow), ImpAssets.IconPortal },
+        { typeof(PreferencesWindow), ImpAssets.IconPreferences },
+        { typeof(RenderingWindow), ImpAssets.IconRendering },
+        { typeof(TeleportWindow), ImpAssets.IconTeleportation },
+        { typeof(UpgradesWindow), ImpAssets.IconUpgrades },
+        { typeof(VisualizationWindow), ImpAssets.IconVisualizers }
+    };
 
     /*
      * Maps the class names of default insights to more recognizable names.

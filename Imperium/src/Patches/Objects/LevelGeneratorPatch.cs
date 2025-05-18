@@ -39,6 +39,13 @@ internal static class LevelGeneratorPatch
             }
         }
 
+        if (Imperium.GameManager.NextLevelOverride)
+        {
+            // The user manually switched to a level so we ignore the override here
+            RunManager.instance.levelCurrent = Imperium.GameManager.NextLevelOverride;
+            Imperium.GameManager.NextLevelOverride = null;
+        }
+
         LevelGenerator.Instance.DebugLevelSize = Imperium.GameManager.CustomLevelSize.Value > 0
             ? Imperium.GameManager.CustomLevelSize.Value
             : 1;

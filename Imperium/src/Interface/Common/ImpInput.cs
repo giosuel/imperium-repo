@@ -2,6 +2,7 @@
 
 using System.Globalization;
 using System.Linq;
+using Imperium.Interface.ImperiumUI;
 using Imperium.Types;
 using Imperium.Util;
 using JetBrains.Annotations;
@@ -39,6 +40,10 @@ public abstract class ImpInput
     /// <param name="allowReset">Whether to show a reset button next to the input field</param>
     /// <param name="theme">The theme the input field will use</param>
     /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the button is interactable</param>
     internal static TMP_InputField Bind(
@@ -54,11 +59,12 @@ public abstract class ImpInput
         bool allowReset = true,
         IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
+        ImperiumWindow parentWindow = null,
         bool interactableInvert = false,
         params IBinding<bool>[] interactableBindings
     )
     {
-        var inputParent = container.Find(path);
+        var inputParent = container.Find(path)?.GetComponent<RectTransform>();
         if (!inputParent)
         {
             Imperium.IO.LogInfo($"[UI] Failed to bind input element '{Debugging.GetTransformPath(container)}/{path}'");
@@ -114,13 +120,19 @@ public abstract class ImpInput
         }
 
         // Add tooltip to parent element if tooltip is provided
-        if (tooltipDefinition != null) ImpUtils.Interface.AddTooltip(tooltipDefinition, inputParent);
+        if (tooltipDefinition != null)
+        {
+            ImpUtils.Interface.AddTooltip(tooltipDefinition, labelText?.transform ?? inputParent);
+        }
 
         // Bind all interactable bindings if any were provided
         if (interactableBindings.Length > 0)
         {
             BindInteractableBindings(input, labelText, placeholderText, interactableInvert, interactableBindings);
         }
+
+        // Register element in parent if parent was provided
+        if (parentWindow) parentWindow.RegisterElement(path, inputParent);
 
         if (theme != null)
         {
@@ -178,6 +190,10 @@ public abstract class ImpInput
     /// <param name="allowReset">Whether to show a reset button next to the input field</param>
     /// <param name="theme">The theme the input field will use</param>
     /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the button is interactable</param>
     internal static TMP_InputField Bind(
@@ -193,11 +209,12 @@ public abstract class ImpInput
         bool allowReset = false,
         IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
+        ImperiumWindow parentWindow = null,
         bool interactableInvert = false,
         params IBinding<bool>[] interactableBindings
     )
     {
-        var inputParent = container.Find(path);
+        var inputParent = container.Find(path)?.GetComponent<RectTransform>();
         if (!inputParent)
         {
             Imperium.IO.LogInfo($"[UI] Failed to bind input element '{Debugging.GetTransformPath(container)}/{path}'");
@@ -263,13 +280,19 @@ public abstract class ImpInput
         }
 
         // Add tooltip to parent element if tooltip is provided
-        if (tooltipDefinition != null) ImpUtils.Interface.AddTooltip(tooltipDefinition, inputParent);
+        if (tooltipDefinition != null)
+        {
+            ImpUtils.Interface.AddTooltip(tooltipDefinition, labelText?.transform ?? inputParent);
+        }
 
         // Bind all interactable bindings if any were provided
         if (interactableBindings.Length > 0)
         {
             BindInteractableBindings(input, labelText, placeholderText, interactableInvert, interactableBindings);
         }
+
+        // Register element in parent if parent was provided
+        if (parentWindow) parentWindow.RegisterElement(path, inputParent);
 
         if (theme != null)
         {
@@ -318,6 +341,10 @@ public abstract class ImpInput
     /// <param name="allowReset">Whether to show a reset button next to the input field</param>
     /// <param name="theme">The theme the input field will use</param>
     /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the button is interactable</param>
     internal static TMP_InputField Bind(
@@ -330,11 +357,12 @@ public abstract class ImpInput
         bool allowReset = false,
         IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
+        ImperiumWindow parentWindow = null,
         bool interactableInvert = false,
         params IBinding<bool>[] interactableBindings
     )
     {
-        var inputParent = container.Find(path);
+        var inputParent = container.Find(path)?.GetComponent<RectTransform>();
         if (!inputParent)
         {
             Imperium.IO.LogInfo($"[UI] Failed to bind input element '{Debugging.GetTransformPath(container)}/{path}'");
@@ -389,13 +417,19 @@ public abstract class ImpInput
         }
 
         // Add tooltip to parent element if tooltip is provided
-        if (tooltipDefinition != null) ImpUtils.Interface.AddTooltip(tooltipDefinition, inputParent);
+        if (tooltipDefinition != null)
+        {
+            ImpUtils.Interface.AddTooltip(tooltipDefinition, labelText?.transform ?? inputParent);
+        }
 
         // Bind all interactable bindings if any were provided
         if (interactableBindings.Length > 0)
         {
             BindInteractableBindings(input, labelText, placeholderText, interactableInvert, interactableBindings);
         }
+
+        // Register element in parent if parent was provided
+        if (parentWindow) parentWindow.RegisterElement(path, inputParent);
 
         if (theme != null)
         {

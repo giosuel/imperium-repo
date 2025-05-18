@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Imperium.Core;
+using Imperium.Interface.ImperiumUI;
 using Imperium.Types;
 using Imperium.Util;
 using JetBrains.Annotations;
@@ -42,8 +43,12 @@ public static class ImpDropdown
     /// <param name="playClickSound">Whether to play a click sound when the dropdown value is changed</param>
     /// <param name="theme">The theme the dropdown will use</param>
     /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the dropdown is interactable</param>
-    /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
+    /// <param name="interactableInvert">Whether the inte/ractable binding values should be inverted</param>
     /// <returns></returns>
     internal static TMP_Dropdown Bind(
         string path,
@@ -56,11 +61,12 @@ public static class ImpDropdown
         bool playClickSound = true,
         IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
+        ImperiumWindow parentWindow = null,
         bool interactableInvert = false,
         params IBinding<bool>[] interactableBindings
     )
     {
-        var dropdownParent = container.Find(path);
+        var dropdownParent = container.Find(path)?.GetComponent<RectTransform>();
         if (!dropdownParent)
         {
             Imperium.IO.LogInfo($"[UI] Failed to bind dropdown element '{Debugging.GetTransformPath(container)}/{path}'");
@@ -122,7 +128,10 @@ public static class ImpDropdown
         }
 
         // Add tooltip to parent element if tooltip is provided
-        if (tooltipDefinition != null) ImpUtils.Interface.AddTooltip(tooltipDefinition, dropdownParent);
+        if (tooltipDefinition != null)
+        {
+            ImpUtils.Interface.AddTooltip(tooltipDefinition, labelText?.transform ?? dropdownParent);
+        }
 
         // Bind all interactable bindings if any were provided
         if (interactableBindings.Length > 0)
@@ -144,6 +153,9 @@ public static class ImpDropdown
                 );
             }
         }
+
+        // Register element in parent if parent was provided
+        if (parentWindow) parentWindow.RegisterElement(path, dropdownParent);
 
         if (theme != null)
         {

@@ -20,6 +20,7 @@
 
         <RepositoryUrl>https://github.com/giosuel/imperium-repo</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
+        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
 
     <ItemGroup>
@@ -34,8 +35,9 @@
 
         <PackageReference Include="Rune580.Mods.Repo.RepoSteamNetworking" Version="0.1.0" />
         <PackageReference Include="Zehs.REPOLib" Version="2.1.0" />
-        <PackageReference Include="rainbowblood.UniverseLib.Mono" Version="2.*" />
+        <PackageReference Include="rainbowblood.UniverseLib.Mono" Version="2.*" Publicize="true" />
         <PackageReference Include="R.E.P.O.GameLibs.Steam" Version="*-*" PrivateAssets="all" Publicize="true" />
+        <PackageReference Include="FuzzySharp" Version="*-*" />
 
         <PackageReference Include="MinVer" Version="4.3.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -44,7 +46,7 @@
 
         <ProjectReference Include="..\librarium\Librarium\Librarium.csproj" />
 
-        <Reference Include="UnityExplorer.BIE5.Mono" HintPath="..\deps\UnityExplorer.BIE5.Mono.dll" />
+        <Reference Include="UnityExplorer.BIE5.Mono" HintPath="..\deps\UnityExplorer.BIE5.Mono.dll" Publicize="true" />
     </ItemGroup>
 
     <!-- Enable debug symbols. This will show source code line numbers in stack traces. -->

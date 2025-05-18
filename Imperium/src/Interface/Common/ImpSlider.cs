@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using Imperium.Core;
+using Imperium.Interface.ImperiumUI;
 using Imperium.Types;
 using Imperium.Util;
 using Librarium;
@@ -52,6 +53,10 @@ public class ImpSlider : MonoBehaviour
     /// <param name="playClickSound">Whether to play a click sound when the slider value is changed</param>
     /// <param name="theme">The theme the slider will use</param>
     /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the slider is interactable</param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     internal static ImpSlider Bind(
@@ -70,11 +75,12 @@ public class ImpSlider : MonoBehaviour
         bool playClickSound = true,
         IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
+        ImperiumWindow parentWindow = null,
         bool interactableInvert = false,
         params IBinding<bool>[] interactableBindings
     )
     {
-        var sliderParent = container.Find(path);
+        var sliderParent = container.Find(path)?.GetComponent<RectTransform>();
         if (!sliderParent)
         {
             Imperium.IO.LogInfo($"[UI] Failed to bind slider '{Debugging.GetTransformPath(container)}/{path}'");
@@ -181,6 +187,9 @@ public class ImpSlider : MonoBehaviour
                 };
             }
         }
+
+        // Register element in parent if parent was provided
+        if (parentWindow) parentWindow.RegisterElement(path, sliderParent);
 
         if (theme != null)
         {

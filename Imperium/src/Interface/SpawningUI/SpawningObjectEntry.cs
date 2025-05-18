@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Imperium.API.Types.Networking;
+using Imperium.Core.Lifecycle;
 using Imperium.Interface.Common;
 using Imperium.Types;
 using Librarium.Binding;
@@ -57,44 +57,6 @@ public class SpawningObjectEntry : MonoBehaviour
             new StyleOverride("", Variant.FOREGROUND),
             new StyleOverride("Selected", Variant.FADED)
         );
-    }
-
-    internal void Spawn(Vector3 position, int amount, int value, bool spawnInInventory)
-    {
-        switch (spawnType)
-        {
-            case SpawnObjectType.Entity:
-                Imperium.ObjectManager.SpawnEntity(new EntitySpawnRequest
-                {
-                    Name = objectName,
-                    SpawnPosition = position,
-                    Amount = amount,
-                    Health = value,
-                    SendNotification = true
-                });
-                break;
-            case SpawnObjectType.Item:
-                Imperium.ObjectManager.SpawnItem(new ItemSpawnRequest
-                {
-                    Name = objectName,
-                    SpawnPosition = position,
-                    Amount = amount,
-                    SendNotification = true
-                });
-                break;
-            case SpawnObjectType.Valuable:
-                Imperium.ObjectManager.SpawnValuable(new ValuableSpawnRequest
-                {
-                    Name = objectName,
-                    SpawnPosition = position,
-                    Amount = amount,
-                    Value = value,
-                    SendNotification = true
-                });
-                break;
-            default:
-                return;
-        }
     }
 
     internal void SetShown(bool isShown)

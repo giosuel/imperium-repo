@@ -19,6 +19,7 @@ using Imperium.Types;
 using Imperium.Util;
 using Librarium.Binding;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -30,18 +31,23 @@ namespace Imperium.Interface.ImperiumUI;
 
 public class ImperiumUI : BaseUI
 {
+    private ImpHighlighter highlighter;
+
     private readonly Dictionary<Type, WindowDefinition> windowControllers = [];
     private readonly Dictionary<Type, ImpBinding<bool>> dockButtonBindings = [];
     private readonly Dictionary<Type, IBinding<bool>[]> canOpenBindingMap = [];
 
     private readonly ImpStack<WindowDefinition> controllerStack = [];
 
+    private readonly Dictionary<string, RegisteredElement> registeredElements = [];
+
     private RectTransform dockRect;
 
-    // ReSharper disable Unity.PerformanceAnalysis
     protected override void InitUI()
     {
         dockRect = container.Find("Dock").GetComponent<RectTransform>();
+
+        highlighter = transform.Find("Highlighter").AddComponent<ImpHighlighter>();
 
         RegisterImperiumWindow<ControlCenterWindow>(
             ImpAssets.ControlCenterWindowObject,
@@ -79,10 +85,10 @@ public class ImperiumUI : BaseUI
             "Upgrades",
             canOpenBindings: Imperium.IsGameLevel
         );
-        RegisterImperiumWindow<ArenaControlWindow>(
-            ImpAssets.ArenaControlWindowObject,
-            "Center/ArenaControl",
-            "Arena Control",
+        RegisterImperiumWindow<GameControlWindow>(
+            ImpAssets.GameControlWindowObject,
+            "Center/GameControl",
+            "Game Control",
             canOpenBindings: Imperium.IsGameLevel
         );
 
@@ -121,6 +127,25 @@ public class ImperiumUI : BaseUI
         LoadLayout();
     }
 
+    internal void RegisterElement(string elementPath, RegisteredElement element)
+    {
+        registeredElements[elementPath] = element;
+        Imperium.IO.LogInfo($"registering element: {elementPath}");
+    }
+
+    internal void HighlightElement(string elementPath)
+    {
+        if (registeredElements.TryGetValue(elementPath, out var registeredElement))
+        {
+            registeredElement.Window.OpenAndFocus();
+            highlighter.Highlight(registeredElement.Element);
+        }
+        else
+        {
+            Imperium.IO.LogInfo($"Unable to highlight element2: {elementPath}");
+        }
+    }
+
     protected override void OnThemePrimaryUpdate(ImpTheme themeUpdate)
     {
         ImpThemeManager.Style(
@@ -140,12 +165,18 @@ public class ImperiumUI : BaseUI
         return (T)windowControllers.FirstOrDefault(controller => controller.Value.Controller is T).Value.Controller;
     }
 
+    internal bool CanOpen<T>() where T : ImperiumWindow
+    {
+        return canOpenBindingMap[typeof(T)].All(value => value.Value);
+    }
+
     private void RegisterImperiumWindow<T>(
         GameObject obj,
         string dockButtonPath,
         string windowName,
         string windowDescription = null,
         InputAction keybind = null,
+        bool registerConsoleCommand = true,
         params IBinding<bool>[] canOpenBindings
     ) where T : ImperiumWindow
     {
@@ -224,6 +255,8 @@ public class ImperiumUI : BaseUI
             floatingWindow.openKeybind = keybind;
             floatingWindow.openKeybind.performed += windowDefinition.Controller.OnKeybindOpen;
         }
+
+        if (registerConsoleCommand) Imperium.ConsoleManager.RegisterWindow<T>(windowName);
     }
 
     protected override void OnClose() => SaveLayout();
@@ -302,11 +335,18 @@ public class ImperiumUI : BaseUI
     }
 }
 
+internal struct RegisteredElement
+{
+    internal ImperiumWindow Window { get; init; }
+    internal RectTransform Element { get; init; }
+}
+
 public record WindowDefinition
 {
-    internal ImperiumWindow Controller { get; init; }
     public Type WindowType { get; init; }
     public Vector2 Position { get; set; }
     public float ScaleFactor { get; set; } = 1;
     public bool IsOpen { get; set; }
+
+    internal ImperiumWindow Controller { get; init; }
 }
