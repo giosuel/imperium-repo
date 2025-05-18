@@ -3,9 +3,11 @@ hide:
   - navigation
 ---
 
-# Console
+# The Console
 
 The Console is an alternative way to interact with many of Imperium's features. It allows for quick executing of certain functionality or changing of settings.
+
+![Imperium Console](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/console.png?raw=true)
 
 !!! example "Experimental"
     The console is still WIP and more features and use cases will follow in the future.
@@ -59,6 +61,8 @@ For a full list of the keywords for each category, please refer to the category 
 
 Spawn commands are used to spawn *entities*, *items* and *valuables* into the current scene.
 
+![Imperium Console Spawn](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/console-spawn.png?raw=true)
+
 **Arguments:** Spawn commands take either no or one argument. If no argument is provided, a single object of the selected type is spawned.
 
 **Availability:** They are only available when a game level is loaded.
@@ -77,7 +81,9 @@ spawn <enemy|item|valuable> [<amount>]
 
 ### Toggle Commands
 
-Toggle commands are a simpler form of a setting command. They can change the value of a [`IBinding<bool>`](http://localhost:8000/imperium-repo/api/index.html#the-imperium-binding).
+Toggle commands are a simpler form of a setting command. They can change the value of a [`IBinding<bool>`](api/index.html#the-imperium-binding).
+
+![Imperium Console Toggle](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/console-toggle.png?raw=true)
 
 **Arguments:** Toggle commands take either no or one argument. If no argument is provided, the binding will swap its current state.
 
@@ -97,7 +103,9 @@ enable <setting>
 
 ### Setting Commands
 
-Setting commands are a bit more complex than toggle commands and can set the value of a [`IBinding<string>`](http://localhost:8000/imperium-repo/api/index.html#the-imperium-binding), [`IBinding<int>`](http://localhost:8000/imperium-repo/api/index.html#the-imperium-binding) or [`IBinding<float>`](http://localhost:8000/imperium-repo/api/index.html#the-imperium-binding).
+Setting commands are a bit more complex than toggle commands and can set the value of a [`IBinding<string>`](api/index.html#the-imperium-binding), [`IBinding<int>`](api/index.html#the-imperium-binding) or [`IBinding<float>`](api/index.html#the-imperium-binding).
+
+![Imperium Console Setting](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/console-setting.png?raw=true)
 
 **Arguments:**The setting commands do require at least one argument.
 
@@ -120,6 +128,8 @@ reset <setting>
 
 Window commands can be used to open an Imperium window within the Imperium UI.
 
+![Imperium Console Window](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/console-window.png?raw=true)
+
 **Availability:** The availability of window commands depends on the window. Some windows can be accessed at any point and some can only be accessed when a game level is loaded.
 
 **Keywords:** `open`
@@ -137,6 +147,8 @@ open <window>
 ### Level Commands
 
 Level commands can be used to make the game load a new level.
+
+![Imperium Console Level](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/console-level.png?raw=true)
 
 **Arguments:** Level commands take either no or one argument. If no argument is supplied, level number will be used instead.
 

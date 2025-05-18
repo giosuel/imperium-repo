@@ -6,7 +6,7 @@ A powerful all-in-one debugging and admin tool to test and explore game mechanic
 
 This is the official R.E.P.O. port of the original [Imperium for Lethal Company](https://github.com/giosuel/imperium).
 
-![Imperium UI](https://raw.githubusercontent.com/giosuel/imperium-repo/refs/heads/main/assets/screenshots/imperium.png)
+![Imperium UI](https://raw.githubusercontent.com/giosuel/imperium-repo/refs/heads/development/assets/screenshots/imperium.png)
 
 > [!IMPORTANT]
 > The Imperium mods were made with the intent to be tools to debug and explore game functionalities and provide more insight into the mechanics behind R.E.P.O. and Lethal Company.

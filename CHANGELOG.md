@@ -5,7 +5,7 @@
 ### Changes
 
 - Added the new Console UI that allows you to use Imperium via an in-game console.
-  - Please refer to the wiki for a detailed usage guide.
+  - Please refer to the [wiki](https://giosuel.github.io/imperium-repo/console.html) for a detailed usage guide.
 
 - Removed the Imperium dock on the left to make the UI more user-friendly.
 
@@ -18,6 +18,7 @@
 ### QoL Changes
 
 - Added icons to each window to increase memorability.
+- Changed the event log icon for a more fitting one.
 - Added a reference to the Portal API in the portal window.
 
 ## Imperium v0.2.0 - Portal API and Upgrades

@@ -1,3 +1,4 @@
+using System.Linq;
 using Imperium.Core.Lifecycle;
 using Imperium.Util;
 using UnityEngine;
@@ -21,14 +22,9 @@ internal sealed class ImpCommandSpawn(
 
     internal override bool Execute(ConsoleQuery query)
     {
-        if (query.Args.Length < 1 || !int.TryParse(query.Args[0], out var amount))
+        if (query.Args.Length < 1 || !int.TryParse(query.Args.Last(), out var amount))
         {
             amount = 1;
-        }
-
-        if (query.Args.Length < 2 || !int.TryParse(query.Args[1], out var value))
-        {
-            value = -1;
         }
 
         if (Imperium.Freecam.IsFreecamEnabled.Value || Imperium.PlayerManager.IsFlying.Value)
@@ -38,7 +34,7 @@ internal sealed class ImpCommandSpawn(
                 : PlayerAvatar.instance.localCamera.transform;
 
             Imperium.PositionIndicator.Activate(
-                position => Imperium.ObjectManager.Spawn(objectName, spawnType, position, amount, value),
+                position => Imperium.ObjectManager.Spawn(objectName, spawnType, position, amount, -1),
                 originTransform,
                 castGround: false
             );
@@ -58,13 +54,21 @@ internal sealed class ImpCommandSpawn(
                 }
             }
 
-            Imperium.ObjectManager.Spawn(objectName, spawnType, spawnPosition, amount, value);
+            Imperium.ObjectManager.Spawn(objectName, spawnType, spawnPosition, amount, -1);
         }
 
         return true;
     }
 
-    internal override string GetDisplayName(ConsoleQuery query) => $"Spawn {objectName}";
+    internal override string GetDisplayName(ConsoleQuery query)
+    {
+        if (query.Args.Length > 0 && int.TryParse(query.Args.Last(), out var amount))
+        {
+            return $"Spawn {amount}x {objectName}";
+        }
+
+        return $"Spawn {objectName}";
+    }
 
     internal override bool IsEnabled() => Imperium.IsGameLevel.Value;
 }
