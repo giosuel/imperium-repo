@@ -1,5 +1,25 @@
 # Changelog
 
+## Imperium v0.2.1 - The Console
+
+### Changes
+
+- Added the new Console UI that allows you to use Imperium via an in-game console.
+  - Please refer to the wiki for a detailed usage guide.
+
+- Removed the Imperium dock on the left to make the UI more user-friendly.
+
+### Bug Fixes
+
+- Fixed some buttons in the UI being covered by an invisible element.
+- Fixed the tooltip persisting when switching between Imperium UIs.
+- Fixed a bug that allowed players to kill and or revive themselves multiple times.
+
+### QoL Changes
+
+- Added icons to each window to increase memorability.
+- Added a reference to the Portal API in the portal window.
+
 ## Imperium v0.2.0 - Portal API and Upgrades
 
 ### Changes

@@ -177,9 +177,9 @@ internal class EventLogWindow : ImperiumWindow
         UpdateList(pauseScrolling: true);
     }
 
-    protected override void OnClose()
+    protected override void OnOpen()
     {
-        foreach (var entry in entryInstances) entry.OnClose();
+        foreach (var entry in entryInstances) entry.OnOpen();
     }
 
     private static bool IsMessageVisible(EventLogType type)

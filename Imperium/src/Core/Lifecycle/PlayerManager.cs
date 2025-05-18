@@ -154,85 +154,14 @@ internal class PlayerManager : ImpLifecycleObject
     private void OnKillPlayerServer(ulong playerId, ulong clientId)
     {
         var player = ((SteamId)playerId).GetPlayerAvatar();
-        if (player) player.PlayerDeath(-1);
+        if (player && player.deadSet == false) player.PlayerDeath(-1);
     }
 
     [ImpAttributes.HostOnly]
     private void OnRevivePlayerServer(ulong playerId, ulong clientId)
     {
         var player = ((SteamId)playerId).GetPlayerAvatar();
-        if (player) player.Revive();
-    }
-
-    [ImpAttributes.LocalMethod]
-    private static void OnRevivePlayerClient(ulong playerId)
-    {
-        // var player = Imperium.StartOfRound.allPlayerScripts.First(player => player.actualClientId == playerId);
-        //
-        // Imperium.StartOfRound.livingPlayers++;
-        //
-        // // ReSharper disable once Unity.PreferAddressByIdToGraphicsParams
-        // if (player.playerBodyAnimator) player.playerBodyAnimator.SetBool("Limp", value: false);
-        // // ReSharper disable once Unity.PreferAddressByIdToGraphicsParams
-        // HUDManager.Instance.gasHelmetAnimator.SetBool("gasEmitting", value: false);
-        // // ReSharper disable once Unity.PreferAddressByIdToGraphicsParams
-        // HUDManager.Instance.gameOverAnimator.SetTrigger("revive");
-        //
-        // player.isClimbingLadder = false;
-        // player.thisController.enabled = true;
-        // player.health = 100;
-        // player.carryWeight = 1;
-        // player.disableLookInput = false;
-        // player.isPlayerDead = false;
-        // player.isPlayerControlled = true;
-        // player.isInElevator = true;
-        // player.isInHangarShipRoom = true;
-        // player.isInsideFactory = false;
-        // player.parentedToElevatorLastFrame = false;
-        // player.setPositionOfDeadPlayer = false;
-        // player.criticallyInjured = false;
-        // player.bleedingHeavily = false;
-        // player.activatingItem = false;
-        // player.twoHanded = false;
-        // player.inSpecialInteractAnimation = false;
-        // player.disableSyncInAnimation = false;
-        // player.inAnimationWithEnemy = null;
-        // player.holdingWalkieTalkie = false;
-        // player.speakingToWalkieTalkie = false;
-        // player.isSinking = false;
-        // player.isUnderwater = false;
-        // player.sinkingValue = 0f;
-        // player.hasBegunSpectating = false;
-        // player.hinderedMultiplier = 1f;
-        // player.isMovementHindered = 0;
-        // player.sourcesCausingSinking = 0;
-        // player.spectatedPlayerScript = null;
-        // player.helmetLight.enabled = false;
-        //
-        // player.ResetPlayerBloodObjects(player.isPlayerDead);
-        // player.ResetZAndXRotation();
-        // player.TeleportPlayer(Imperium.StartOfRound.shipDoorNode.position);
-        // player.DisablePlayerModel(player.gameObject, enable: true, disableLocalArms: true);
-        // player.Crouch(crouch: false);
-        // player.statusEffectAudio.Stop();
-        // player.DisableJetpackControlsLocally();
-        // Imperium.StartOfRound.SetPlayerObjectExtrapolate(enable: false);
-        //
-        // HUDManager.Instance.RemoveSpectateUI();
-        // HUDManager.Instance.UpdateHealthUI(100, hurtPlayer: false);
-        //
-        // Imperium.StartOfRound.SetSpectateCameraToGameOverMode(enableGameOver: false, player);
-        //
-        // // Close interface if player has revived themselves
-        // if (playerId == NetworkManager.Singleton.LocalClientId) Imperium.Interface.Close();
-        //
-        // Imperium.StartOfRound.allPlayersDead = false;
-        // Imperium.StartOfRound.UpdatePlayerVoiceEffects();
-        // Imperium.StartOfRound.ResetMiscValues();
-        //
-        // // Respawn UI because for some reason this is not happening already
-        // Imperium.Settings.Rendering.PlayerHUD.Set(false);
-        // Imperium.Settings.Rendering.PlayerHUD.Set(true);
+        if (player && player.deadSet) player.Revive();
     }
 
     #endregion

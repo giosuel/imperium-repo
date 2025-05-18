@@ -232,13 +232,44 @@ public abstract class ImpUtils
             Cursor.visible = isShown;
         }
 
-        internal static IEnumerator SlideInAnimation(RectTransform rect, Vector2 direction)
+
+        internal static IEnumerator AnimateOpacityTo(
+            CanvasGroup group,
+            float duration,
+            float targetAlpha,
+            bool setInteractable = true
+        )
+        {
+            var startAlpha = group.alpha;
+            var elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                group.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / duration);
+
+                elapsedTime += Time.deltaTime;
+                yield return null;
+            }
+
+            group.alpha = targetAlpha;
+            group.interactable = setInteractable;
+            group.blocksRaycasts = setInteractable;
+        }
+
+        internal static IEnumerator SlideInAnimation(
+            RectTransform rect,
+            Vector2 direction,
+            float offsetValue = 50f,
+            CanvasGroup opacityGroup = null
+        )
         {
             const float slideDuration = 0.15f;
 
-            var offset = direction.normalized * 50;
+            var offset = direction.normalized * offsetValue;
             var startPos = rect.anchoredPosition - offset;
             var endPos = rect.anchoredPosition;
+
+            if (opacityGroup) opacityGroup.alpha = 0;
 
             var elapsed = 0f;
 
@@ -247,6 +278,7 @@ public abstract class ImpUtils
                 var t = elapsed / slideDuration;
 
                 rect.anchoredPosition = Vector2.Lerp(startPos, endPos, t * t);
+                if (opacityGroup) opacityGroup.alpha = Mathf.Lerp(0, 1, t);
                 elapsed += Time.deltaTime;
                 yield return null;
             }

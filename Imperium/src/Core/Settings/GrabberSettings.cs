@@ -27,7 +27,8 @@ internal class GrabberSettings(ConfigFile config) : SettingsContainer(config)
         {
             PhysGrabber.instance.grabStrength =
                 value + StatsManager.instance.playerUpgradeStrength[Imperium.Player.steamID] * 0.2f;
-        });
+        }
+    );
 
     internal readonly ImpConfig<float> ThrowStrength = new(
         config,
@@ -38,7 +39,8 @@ internal class GrabberSettings(ConfigFile config) : SettingsContainer(config)
         {
             PhysGrabber.instance.throwStrength =
                 value + StatsManager.instance.playerUpgradeThrow[Imperium.Player.steamID] * 0.3f;
-        });
+        }
+    );
 
     internal readonly ImpConfig<float> BaseRange = new(
         config,

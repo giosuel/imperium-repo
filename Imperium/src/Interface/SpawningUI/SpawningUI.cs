@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Imperium.Core.Lifecycle;
 using Imperium.Types;
 using Imperium.Util;
 using TMPro;
@@ -280,11 +281,11 @@ internal class SpawningUI : BaseUI
                 ? Imperium.Freecam.transform
                 : PlayerAvatar.instance.localCamera.transform;
 
-            Imperium.PositionIndicator.Activate(
-                position => spawningObjectEntry.Spawn(position, amount, value, false),
-                originTransform,
-                castGround: false
-            );
+            // Imperium.PositionIndicator.Activate(
+            //     position => spawningObjectEntry.Spawn(position, amount, value, false),
+            //     originTransform,
+            //     castGround: false
+            // );
         }
         else
         {
@@ -301,7 +302,7 @@ internal class SpawningUI : BaseUI
                 }
             }
 
-            spawningObjectEntry.Spawn(spawnPosition, amount, value, true);
+            // spawningObjectEntry.Spawn(spawnPosition, amount, value, true);
         }
 
         Close();
@@ -413,13 +414,6 @@ internal class SpawningUI : BaseUI
             new StyleOverride("Results/Template", Variant.DARKER)
         );
     }
-}
-
-internal enum SpawnObjectType
-{
-    Entity,
-    Item,
-    Valuable,
 }
 
 internal readonly struct SpawnInputParameters

@@ -39,6 +39,10 @@ internal class GameManager : ImpLifecycleObject
 
     internal bool IsGameLoading { get; set; } = true;
 
+    // Transient fields to temporarily set the level and level number for the next load. Used for the level console commands.
+    internal Level NextLevelOverride;
+    internal int NextLevelNumberOverride;
+
     /// <summary>
     ///     A list of value lost UI instances that were instantiated by Imperium when an enemy was damaged.
     ///     This is used to customize the UIs in <see cref="Patches.Objects.WorldSpaceUIValueLostPatch.StartPatch" />.
@@ -185,5 +189,23 @@ internal class GameManager : ImpLifecycleObject
         }
 
         return enemyParent.Enemy.CurrentState.ToString();
+    }
+
+    internal static void ReloadLevel()
+    {
+        RunManager.instance.ChangeLevel(_completedLevel: false, _levelFailed: false);
+    }
+
+    internal static void AdvanceLevel()
+    {
+        RunManager.instance.ChangeLevel(_completedLevel: true, _levelFailed: false);
+    }
+
+    internal static void LoadLevel(Level level, int? levelNumber)
+    {
+        Imperium.GameManager.NextLevelOverride = level;
+
+        if (levelNumber.HasValue) Imperium.GameManager.NextLevelNumberOverride = levelNumber.Value;
+        RunManager.instance.ChangeLevel(_completedLevel: false, _levelFailed: false);
     }
 }

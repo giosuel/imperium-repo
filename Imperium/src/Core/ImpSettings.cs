@@ -18,7 +18,7 @@ public class ImpSettings(ConfigFile config)
     internal readonly PlayerSettings Player = new(config);
     internal readonly GrabberSettings Grabber = new(config);
     internal readonly EventLogSettings EventLog = new(config);
-    internal readonly ArenaSettings Arena = new(config);
+    internal readonly GameSettings Game = new(config);
     internal readonly WaypointSettings Waypoint = new(config);
     internal readonly VisualizationSettings Visualization = new(config);
     internal readonly RenderingSettings Rendering = new(config);
@@ -31,7 +31,7 @@ public class ImpSettings(ConfigFile config)
         IsLoading = true;
 
         Player.Load();
-        Arena.Load();
+        Game.Load();
         EventLog.Load();
         Visualization.Load();
         Rendering.Load();
@@ -48,7 +48,7 @@ public class ImpSettings(ConfigFile config)
 
         Player.Reset();
         Grabber.Reset();
-        Arena.Reset();
+        Game.Reset();
         EventLog.Reset();
         Visualization.Reset();
         Rendering.Reset();

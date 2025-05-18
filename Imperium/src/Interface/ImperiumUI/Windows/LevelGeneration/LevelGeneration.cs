@@ -27,6 +27,7 @@ internal class LevelGeneration : ImperiumWindow
             Imperium.GameManager.CustomLevelSize,
             negativeIsEmpty: true,
             theme: theme,
+            parentWindow: this,
             interactableInvert: true,
             interactableBindings: disabledBinding
         );
@@ -37,6 +38,7 @@ internal class LevelGeneration : ImperiumWindow
             Imperium.GameManager.CustomModuleAmount,
             negativeIsEmpty: true,
             theme: theme,
+            parentWindow: this,
             interactableInvert: true,
             interactableBindings: disabledBinding
         );
@@ -47,6 +49,7 @@ internal class LevelGeneration : ImperiumWindow
             Imperium.GameManager.CustomLevelNumber,
             negativeIsEmpty: true,
             theme: theme,
+            parentWindow: this,
             interactableInvert: true,
             interactableBindings: disabledBinding
         );
@@ -54,8 +57,9 @@ internal class LevelGeneration : ImperiumWindow
         ImpButton.Bind(
             "ReloadLevel",
             content,
-            () => RunManager.instance.ChangeLevel(_completedLevel: false, _levelFailed: false),
+            Core.Lifecycle.GameManager.ReloadLevel,
             theme: theme,
+            parentWindow: this,
             interactableInvert: true,
             interactableBindings: disabledBinding
         );
@@ -63,8 +67,9 @@ internal class LevelGeneration : ImperiumWindow
         ImpButton.Bind(
             "AdvanceLevel",
             content,
-            () => RunManager.instance.ChangeLevel(_completedLevel: true, _levelFailed: false),
+            Core.Lifecycle.GameManager.AdvanceLevel,
             theme: theme,
+            parentWindow: this,
             interactableInvert: true,
             interactableBindings: disabledBinding
         );

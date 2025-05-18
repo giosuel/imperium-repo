@@ -2,22 +2,24 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Imperium.Core;
 using Imperium.Interface.Common;
 using Imperium.Types;
 using Imperium.Util;
+using Librarium;
 using Librarium.Binding;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 using Vector2 = System.Numerics.Vector2;
 
 #endregion
 
 namespace Imperium.Interface.ImperiumUI;
 
-internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler,
-    IPointerDownHandler
+public abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerDownHandler
 {
     protected ImpBinding<ImpTheme> theme;
 
@@ -90,6 +92,8 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
                 new StyleOverride("", Variant.BACKGROUND),
                 // Titlebox border color
                 new StyleOverride("TitleBox", Variant.DARKER),
+                new StyleOverride("TitleBox/Icon", Variant.LIGHTER
+                ),
                 // Window border color
                 new StyleOverride("Border", Variant.DARKER),
                 new StyleOverride("Content", Variant.DARKER),
@@ -116,6 +120,15 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         windowGroup.interactable = false;
         windowGroup.blocksRaycasts = false;
         isShown = false;
+    }
+
+    internal void RegisterElement(string elementPath, RectTransform element)
+    {
+        parent.RegisterElement(elementPath, new RegisteredElement
+        {
+            Window = this,
+            Element = element
+        });
     }
 
     private void OnDisable()
@@ -216,30 +229,12 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         windowGroup.blocksRaycasts = true;
     }
 
-    private IEnumerator animateOpacityTo(float duration, float targetAlpha, bool setInteractable = true)
-    {
-        var startAlpha = windowGroup.alpha;
-        var elapsedTime = 0f;
-
-        while (elapsedTime < duration)
-        {
-            windowGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsedTime / duration);
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        windowGroup.alpha = targetAlpha;
-        windowGroup.interactable = setInteractable;
-        windowGroup.blocksRaycasts = setInteractable;
-    }
-
     private void OnDestroy()
     {
         if (openKeybind != null) openKeybind.performed -= OnKeybindOpen;
     }
 
-    internal void OnKeybindOpen(InputAction.CallbackContext _)
+    internal void OpenAndFocus()
     {
         if (!parent.IsOpen) parent.Open();
 
@@ -253,6 +248,8 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
             Open();
         }
     }
+
+    internal void OnKeybindOpen(InputAction.CallbackContext _) => OpenAndFocus();
 
     internal void PlaceWindow(Vector2 position, float scale, bool isOpen)
     {
@@ -272,7 +269,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
 
     protected void RegisterWidget<T>(Transform container, string path) where T : ImpWidget
     {
-        container.Find(path).gameObject.AddComponent<T>().Init(theme, tooltip, ref onOpen, ref onClose, parent);
+        container.Find(path).gameObject.AddComponent<T>().Init(theme, tooltip, ref onOpen, ref onClose, parent, this);
     }
 
     /// <summary>
@@ -369,7 +366,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         if (windowGroup)
         {
             if (fadeAnimation != null) StopCoroutine(fadeAnimation);
-            fadeAnimation = StartCoroutine(animateOpacityTo(0.15f, 0.9f));
+            fadeAnimation = StartCoroutine(ImpUtils.Interface.AnimateOpacityTo(windowGroup, 0.15f, 0.9f));
         }
     }
 
@@ -380,7 +377,7 @@ internal abstract class ImperiumWindow : MonoBehaviour, IDragHandler, IBeginDrag
         if (windowGroup)
         {
             if (fadeAnimation != null) StopCoroutine(fadeAnimation);
-            fadeAnimation = StartCoroutine(animateOpacityTo(0.15f, 1f));
+            fadeAnimation = StartCoroutine(ImpUtils.Interface.AnimateOpacityTo(windowGroup, 0.15f, 1f));
         }
 
         SetWindowAnchors();

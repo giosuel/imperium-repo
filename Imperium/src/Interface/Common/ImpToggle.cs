@@ -2,6 +2,7 @@
 
 using System.Linq;
 using Imperium.Core;
+using Imperium.Interface.ImperiumUI;
 using Imperium.Types;
 using Imperium.Util;
 using JetBrains.Annotations;
@@ -33,6 +34,7 @@ public abstract class ImpToggle
     /// <param name="label">The label that is shown next to the input field</param>
     /// <param name="theme">The theme the button will use</param>
     /// <param name="playClickSound">Whether the click sound playes when the button is clicked.</param>
+    /// <param name="parentWindow">The window that the element is placed in. Setting this allows the highlighter to highlight this element</param>
     /// <param name="tooltipDefinition">The tooltip definition of the toggle tooltip.</param>
     /// <param name="interactableBindings">List of bindings that decide if the button is interactable</param>
     internal static Toggle Bind(
@@ -42,11 +44,12 @@ public abstract class ImpToggle
         string label = "",
         IBinding<ImpTheme> theme = null,
         bool playClickSound = true,
+        ImperiumWindow parentWindow = null,
         TooltipDefinition tooltipDefinition = null,
         params IBinding<bool>[] interactableBindings
     )
     {
-        var toggleParent = container.Find(path);
+        var toggleParent = container.Find(path)?.GetComponent<RectTransform>();
         if (!toggleParent)
         {
             Imperium.IO.LogInfo($"[UI] Failed to bind toggle element '{Debugging.GetTransformPath(container)}/{path}'");
@@ -65,6 +68,8 @@ public abstract class ImpToggle
             if (value == valueBinding.Value) return;
 
             valueBinding.Set(value);
+
+            Imperium.IO.LogInfo($"Toggle changed: {Debugging.GetTransformPath(toggleParent)}");
         });
 
         valueBinding.OnUpdate += value => toggle.isOn = value;
@@ -104,6 +109,9 @@ public abstract class ImpToggle
 
         // Add tooltip to parent element if tooltip is provided
         if (tooltipDefinition != null) ImpUtils.Interface.AddTooltip(tooltipDefinition, toggleParent);
+
+        // Register element in parent if parent was provided
+        if (parentWindow) parentWindow.RegisterElement(path, toggleParent);
 
         if (theme != null)
         {

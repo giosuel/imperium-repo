@@ -6,12 +6,12 @@ using Imperium.Interface.Common;
 
 namespace Imperium.Interface.ImperiumUI.Windows.ArenaControl.Widgets;
 
-public class ArenaSettings : ImpWidget
+public class GameSettings : ImpWidget
 {
     protected override void InitWidget()
     {
         ImpToggle.Bind(
-            "ArenaSettings/DisableGameOver",
+            "GameSettings/DisableGameOver",
             transform,
             Imperium.ArenaManager.DisableGameOver,
             theme: theme,
@@ -24,7 +24,7 @@ public class ArenaSettings : ImpWidget
         );
 
         ImpToggle.Bind(
-            "ArenaSettings/DisableEnemies",
+            "GameSettings/DisableEnemies",
             transform,
             Imperium.ArenaManager.DisableEnemies,
             theme: theme
@@ -124,6 +124,6 @@ public class ArenaSettings : ImpWidget
     protected override void OnOpen()
     {
         // Update this here as it can change from outside of Imperium
-        Imperium.Settings.Arena.DisableVision.Set(EnemyDirector.instance.debugNoVision);
+        Imperium.Settings.Game.DisableVision.Set(EnemyDirector.instance.debugNoVision);
     }
 }

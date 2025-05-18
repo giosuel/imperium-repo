@@ -1,5 +1,6 @@
 #region
 
+using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using BepInEx.Bootstrap;
@@ -46,7 +47,14 @@ public static class UnityExplorerIntegration
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
     private static void CloseUIInternal()
     {
-        UniversalUI.SetUIActive(ExplorerCore.GUID, false);
+        // If this is called before the UE window is registered it will throw an error
+        try
+        {
+            UniversalUI.SetUIActive(ExplorerCore.GUID, false);
+        }
+        catch (ArgumentException)
+        {
+        }
     }
 
     [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]

@@ -4,6 +4,7 @@ using System;
 using Imperium.Util;
 using RepoSteamNetworking.API;
 using RepoSteamNetworking.Networking;
+using UnityEngine.Device;
 
 #endregion
 
@@ -56,6 +57,7 @@ public class ImpNetMessage<T> : INetworkSubscribable
         if (!SemiFunc.IsMasterClientOrSingleplayer())
         {
             Imperium.IO.LogError("[NET] Trying to dispatch to clients from non-host. Blocked by Imperium policy.");
+            Imperium.IO.LogError(Environment.StackTrace);
             return;
         }
 
