@@ -1,3 +1,5 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +9,8 @@ using Imperium.Core.Lifecycle;
 using Imperium.Interface.ImperiumUI;
 using Librarium.Binding;
 using UnityEngine;
+
+#endregion
 
 namespace Imperium.Console;
 
@@ -133,7 +137,7 @@ internal class ConsoleManager : ImpLifecycleObject
     }
 
     /// <summary>
-    /// Tokenizes and parses a console query.
+    ///     Tokenizes and parses a console query.
     /// </summary>
     /// <param name="rawQuery">The query string from the user input</param>
     internal static ConsoleQuery ParseQuery(string rawQuery)
@@ -189,7 +193,7 @@ internal class ConsoleManager : ImpLifecycleObject
     }
 
     /// <summary>
-    /// Searches through all registered commands with a provided query.
+    ///     Searches through all registered commands with a provided query.
     /// </summary>
     /// <param name="query">The parsed console query from the user</param>
     internal ImpCommand[] Search(ConsoleQuery query)
@@ -321,14 +325,13 @@ internal readonly struct ConsoleQuery
 }
 
 /// <summary>
-/// Keywords are dynamic parts of the command's display name.
-/// For example, toggle commands dynamically show "Enable XYZ" or "Disable XYZ" depending on their binding's current state.
-///
-/// Keywords make it so the user can to query for these keywords "enable" and "disable" to get all commands of the type
-/// ImpCommandSettingToggle without actually including their names in the query.
-///
-/// The keywords are matched via substring searching and are traversed from top to bottom. This means that the order of
-/// this enum matters (e.g. why "Set" comes before "Reset").
+///     Keywords are dynamic parts of the command's display name.
+///     For example, toggle commands dynamically show "Enable XYZ" or "Disable XYZ" depending on their binding's current
+///     state.
+///     Keywords make it so the user can to query for these keywords "enable" and "disable" to get all commands of the type
+///     ImpCommandSettingToggle without actually including their names in the query.
+///     The keywords are matched via substring searching and are traversed from top to bottom. This means that the order of
+///     this enum matters (e.g. why "Set" comes before "Reset").
 /// </summary>
 internal enum QueryKeyword
 {

@@ -1,11 +1,15 @@
+#region
+
 using Imperium.Core;
 using Imperium.Interface.ImperiumUI;
 using UnityEngine;
 
+#endregion
+
 namespace Imperium.Console.Commands;
 
 /// <summary>
-/// Console command to open a window within the Imperium UI.
+///     Console command to open a window within the Imperium UI.
 /// </summary>
 /// <param name="name">The name of the window</param>
 /// <typeparam name="T">The type of the window</typeparam>

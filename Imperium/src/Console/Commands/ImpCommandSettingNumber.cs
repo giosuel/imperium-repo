@@ -1,3 +1,5 @@
+#region
+
 using System;
 using System.Linq;
 using Imperium.Core;
@@ -6,10 +8,12 @@ using Imperium.Util;
 using Librarium.Binding;
 using UnityEngine;
 
+#endregion
+
 namespace Imperium.Console.Commands;
 
 /// <summary>
-/// Console command to change the value of an int binding.
+///     Console command to change the value of an int binding.
 /// </summary>
 /// <param name="name">The display name of the command</param>
 /// <param name="binding">The binding that will be changed</param>

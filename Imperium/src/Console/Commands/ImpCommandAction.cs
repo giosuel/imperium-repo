@@ -1,13 +1,17 @@
+#region
+
 using System;
 using Imperium.Interface.ImperiumUI;
 using Imperium.Util;
 using Librarium.Binding;
 using UnityEngine;
 
+#endregion
+
 namespace Imperium.Console.Commands;
 
 /// <summary>
-/// Console command to execute an arbitrary action.
+///     Console command to execute an arbitrary action.
 /// </summary>
 /// <param name="name">The display name of the action</param>
 /// <param name="onExec">A function that is called when the command is executed</param>

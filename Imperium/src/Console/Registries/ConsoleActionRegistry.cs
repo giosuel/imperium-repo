@@ -1,5 +1,9 @@
+#region
+
 using Imperium.Util;
 using RepoSteamNetworking.API;
+
+#endregion
 
 namespace Imperium.Console.Registries;
 

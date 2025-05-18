@@ -1,8 +1,12 @@
+#region
+
 using Imperium.Core;
 using Imperium.Interface.ImperiumUI;
 using Imperium.Util;
 using Librarium.Binding;
 using UnityEngine;
+
+#endregion
 
 namespace Imperium.Console.Commands;
 

@@ -43,7 +43,10 @@ public static class ImpDropdown
     /// <param name="playClickSound">Whether to play a click sound when the dropdown value is changed</param>
     /// <param name="theme">The theme the dropdown will use</param>
     /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
-    /// <param name="parentWindow">The window that the element is placed in. Setting this allows the highlighter to highlight this element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the dropdown is interactable</param>
     /// <param name="interactableInvert">Whether the inte/ractable binding values should be inverted</param>
     /// <returns></returns>

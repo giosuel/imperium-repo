@@ -16,7 +16,6 @@ using Imperium.Integration;
 using Imperium.Interface.ConsoleUI;
 using Imperium.Interface.ImperiumUI;
 using Imperium.Interface.MapUI;
-using Imperium.Interface.SpawningUI;
 using Imperium.Networking;
 using Imperium.Patches;
 using Imperium.Util;

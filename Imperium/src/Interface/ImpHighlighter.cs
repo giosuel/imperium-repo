@@ -55,6 +55,7 @@ internal class ImpHighlighter : ImpWidget
             panelGroup.alpha = Mathf.Lerp(0, 1, t / highlightFadeInTime);
             yield return null;
         }
+
         panelGroup.alpha = 1;
 
         var originalSize = panelRect.sizeDelta;
@@ -80,6 +81,7 @@ internal class ImpHighlighter : ImpWidget
             panelGroup.alpha = Mathf.Lerp(1, 0, t / highlightFadeOutTime);
             yield return null;
         }
+
         panelGroup.alpha = 0;
         isShown = false;
     }

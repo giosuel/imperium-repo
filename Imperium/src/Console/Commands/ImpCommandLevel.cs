@@ -1,11 +1,15 @@
+#region
+
 using System.Linq;
 using Imperium.Util;
 using UnityEngine;
 
+#endregion
+
 namespace Imperium.Console.Commands;
 
 /// <summary>
-/// Console command to execute an arbitrary action.
+///     Console command to execute an arbitrary action.
 /// </summary>
 /// <param name="level">The level to load when the command is executed</param>
 internal class ImpCommandLevel(Level level) : ImpCommand(level.NarrativeName)

@@ -40,7 +40,10 @@ public abstract class ImpInput
     /// <param name="allowReset">Whether to show a reset button next to the input field</param>
     /// <param name="theme">The theme the input field will use</param>
     /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
-    /// <param name="parentWindow">The window that the element is placed in. Setting this allows the highlighter to highlight this element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the button is interactable</param>
     internal static TMP_InputField Bind(
@@ -187,7 +190,10 @@ public abstract class ImpInput
     /// <param name="allowReset">Whether to show a reset button next to the input field</param>
     /// <param name="theme">The theme the input field will use</param>
     /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
-    /// <param name="parentWindow">The window that the element is placed in. Setting this allows the highlighter to highlight this element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the button is interactable</param>
     internal static TMP_InputField Bind(
@@ -335,7 +341,10 @@ public abstract class ImpInput
     /// <param name="allowReset">Whether to show a reset button next to the input field</param>
     /// <param name="theme">The theme the input field will use</param>
     /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
-    /// <param name="parentWindow">The window that the element is placed in. Setting this allows the highlighter to highlight this element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the button is interactable</param>
     internal static TMP_InputField Bind(

@@ -1,12 +1,16 @@
+#region
+
 using System.Linq;
 using Imperium.Core.Lifecycle;
 using Imperium.Util;
 using UnityEngine;
 
+#endregion
+
 namespace Imperium.Console.Commands;
 
 /// <summary>
-/// Console command to spawn a game object.
+///     Console command to spawn a game object.
 /// </summary>
 /// <param name="name">The display name of the object to spawn</param>
 /// <param name="objectName">The internal name of the object to spawn</param>

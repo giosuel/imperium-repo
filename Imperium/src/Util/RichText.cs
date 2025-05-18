@@ -1,4 +1,8 @@
+#region
+
 using Imperium.Core;
+
+#endregion
 
 namespace Imperium.Util;
 

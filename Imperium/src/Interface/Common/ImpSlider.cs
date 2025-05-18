@@ -3,7 +3,6 @@
 using System;
 using System.Collections;
 using System.Linq;
-using ExitGames.Client.Photon.StructWrapping;
 using Imperium.Core;
 using Imperium.Interface.ImperiumUI;
 using Imperium.Types;
@@ -54,7 +53,10 @@ public class ImpSlider : MonoBehaviour
     /// <param name="playClickSound">Whether to play a click sound when the slider value is changed</param>
     /// <param name="theme">The theme the slider will use</param>
     /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
-    /// <param name="parentWindow">The window that the element is placed in. Setting this allows the highlighter to highlight this element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the slider is interactable</param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     internal static ImpSlider Bind(

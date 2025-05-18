@@ -30,7 +30,10 @@ public abstract class ImpButton
     /// <param name="playClickSound">Whether to play a click sound when the button is clicked</param>
     /// <param name="theme">The theme the button will use</param>
     /// <param name="tooltipDefinition">The definition of the tooltip that is shown when the cursor hovers over the element</param>
-    /// <param name="parentWindow">The window that the element is placed in. Setting this allows the highlighter to highlight this element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="interactableInvert">Whether the interactable binding values should be inverted</param>
     /// <param name="interactableBindings">List of boolean bindings that decide if the button is interactable</param>
     internal static Button Bind(

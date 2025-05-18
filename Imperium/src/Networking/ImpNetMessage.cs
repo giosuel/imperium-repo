@@ -4,7 +4,6 @@ using System;
 using Imperium.Util;
 using RepoSteamNetworking.API;
 using RepoSteamNetworking.Networking;
-using UnityEngine.Device;
 
 #endregion
 

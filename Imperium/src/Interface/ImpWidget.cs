@@ -53,7 +53,6 @@ public abstract class ImpWidget : MonoBehaviour
 
     protected void RegisterElement(string elementPath)
     {
-
     }
 
     protected void CloseParent() => parent?.Close();

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Imperium.API.Types.Networking;
 using Imperium.Extensions;
-using Imperium.Interface.SpawningUI;
 using Imperium.Networking;
 using Imperium.Types;
 using Imperium.Util;

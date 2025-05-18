@@ -1,6 +1,10 @@
+#region
+
 using Imperium.Core;
 using Imperium.Util;
 using UnityEngine;
+
+#endregion
 
 namespace Imperium.Console.Registries;
 

@@ -34,7 +34,10 @@ public abstract class ImpToggle
     /// <param name="label">The label that is shown next to the input field</param>
     /// <param name="theme">The theme the button will use</param>
     /// <param name="playClickSound">Whether the click sound playes when the button is clicked.</param>
-    /// <param name="parentWindow">The window that the element is placed in. Setting this allows the highlighter to highlight this element</param>
+    /// <param name="parentWindow">
+    ///     The window that the element is placed in. Setting this allows the highlighter to highlight
+    ///     this element
+    /// </param>
     /// <param name="tooltipDefinition">The tooltip definition of the toggle tooltip.</param>
     /// <param name="interactableBindings">List of bindings that decide if the button is interactable</param>
     internal static Toggle Bind(

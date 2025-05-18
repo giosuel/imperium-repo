@@ -1,9 +1,13 @@
+#region
+
 using Imperium.Console;
 using Imperium.Types;
 using Imperium.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
+#endregion
 
 namespace Imperium.Interface.ConsoleUI;
 
