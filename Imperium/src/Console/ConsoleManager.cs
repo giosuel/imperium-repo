@@ -32,7 +32,7 @@ internal class ConsoleManager : ImpLifecycleObject
 
     internal void RegisterAction(
         string actionName,
-        Action<ConsoleQuery> onExec,
+        Func<ConsoleQuery, bool> onExec,
         Func<ConsoleQuery, string> displayNameOverride = null,
         string interfacePath = null,
         Sprite customIcon = null,
@@ -91,6 +91,7 @@ internal class ConsoleManager : ImpLifecycleObject
         IBinding<int> binding,
         int? minValue = null,
         int? maxValue = null,
+        string valueUnit = null,
         string interfacePath = null,
         Sprite customIcon = null,
         bool enabledBindingInverted = false,
@@ -101,7 +102,7 @@ internal class ConsoleManager : ImpLifecycleObject
             NormalizeCommand(commandName),
             new ImpCommandSettingNumber(
                 commandName, binding,
-                minValue, maxValue,
+                minValue, maxValue, valueUnit,
                 interfacePath, customIcon,
                 enabledBindingInverted, enabledBinding
             )
@@ -113,6 +114,7 @@ internal class ConsoleManager : ImpLifecycleObject
         IBinding<float> binding,
         float? minValue = null,
         float? maxValue = null,
+        string valueUnit = null,
         string interfacePath = null,
         Sprite customIcon = null,
         bool enabledBindingInverted = false,
@@ -123,7 +125,7 @@ internal class ConsoleManager : ImpLifecycleObject
             NormalizeCommand(commandName),
             new ImpCommandSettingDecimal(
                 commandName, binding,
-                minValue, maxValue,
+                minValue, maxValue, valueUnit,
                 interfacePath, customIcon,
                 enabledBindingInverted, enabledBinding
             )
@@ -199,14 +201,7 @@ internal class ConsoleManager : ImpLifecycleObject
         var matchesSetting = IsSettingKeyword(query.Keyword);
         var matchesToggle = IsToggleKeyword(query.Keyword);
 
-        return registeredWindowCommands
-            .Where(entry => IsIncluded(entry, matchesWindow, query))
-            .Concat(
-                registeredActionCommands.Where(entry => IsIncluded(entry, matchesAction, query))
-            )
-            .Concat(
-                registeredLevelCommands.Where(entry => IsIncluded(entry, matchesLevel, query))
-            )
+        return registeredActionCommands.Where(entry => IsIncluded(entry, matchesAction, query))
             .Concat(
                 registeredSpawnCommands.Where(entry => IsIncluded(entry, matchesSpawn, query))
             )
@@ -215,6 +210,13 @@ internal class ConsoleManager : ImpLifecycleObject
             )
             .Concat(
                 registeredToggleCommands.Where(entry => IsIncluded(entry, matchesToggle, query))
+            )
+            .Concat(
+                registeredLevelCommands.Where(entry => IsIncluded(entry, matchesLevel, query))
+            )
+            .Concat(
+                registeredWindowCommands
+                    .Where(entry => IsIncluded(entry, matchesWindow, query))
             )
             .Select(entry => entry.Value)
             .ToArray();

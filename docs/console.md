@@ -174,6 +174,10 @@ Action commands are simple function commands that execute arbitrary functionalit
 
 ![Imperium Console Action](https://github.com/giosuel/imperium-repo/blob/development/assets/screenshots/console-action.png?raw=true)
 
+**Arguments:** Arguments depend on the action.
+
+**Availability:** Availability depends on the action.
+
 #### Syntax
 
 ```bash

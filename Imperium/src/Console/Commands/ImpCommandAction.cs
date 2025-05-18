@@ -14,7 +14,7 @@ namespace Imperium.Console.Commands;
 /// <param name="customIcon">A custom icon that is displayed next to the command</param>
 internal class ImpCommandAction(
     string name,
-    Action<ConsoleQuery> onExec,
+    Func<ConsoleQuery, bool> onExec,
     Func<ConsoleQuery, string> displayNameOverride,
     string interfacePath = null,
     Sprite customIcon = null,
@@ -27,9 +27,7 @@ internal class ImpCommandAction(
 
     internal override bool Execute(ConsoleQuery query)
     {
-        onExec?.Invoke(query);
-
-        return true;
+        return onExec?.Invoke(query) ?? true;
     }
 
     internal override void OnIconClick()

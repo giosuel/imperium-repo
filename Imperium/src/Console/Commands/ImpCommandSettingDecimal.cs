@@ -14,12 +14,14 @@ namespace Imperium.Console.Commands;
 /// <param name="binding">The binding that will be changed</param>
 /// <param name="minValue">Optional min value that is allowed in the binding</param>
 /// <param name="maxValue">Optional max value that is allowed in the binding</param>
+/// <param name="valueUnit">The displayed unit of the value (e.g. % or units)</param>
 /// <param name="customIcon">A custom icon that is displayed next to the command</param>
 internal class ImpCommandSettingDecimal(
     string name,
     IBinding<float> binding,
     float? minValue,
     float? maxValue,
+    string valueUnit = null,
     string interfacePath = null,
     Sprite customIcon = null,
     bool enabledBindingInverted = false,
@@ -54,7 +56,7 @@ internal class ImpCommandSettingDecimal(
         if (maxValue.HasValue) value = Mathf.Min(value, maxValue.Value);
         binding.Set(value);
 
-        Imperium.IO.Send($"{Name} has been set to {binding.Value:0.#}.");
+        Imperium.IO.Send($"{Name} has been set to {binding.Value:0.#}{valueUnit}.");
         return true;
     }
 
@@ -63,7 +65,7 @@ internal class ImpCommandSettingDecimal(
         if (query.Keyword == QueryKeyword.Reset ||
             query.Args.Length > 0 && ImpConstants.ResetStrings.Contains(query.Args.Last()))
         {
-            return $"Reset {Name} to {binding.DefaultValue:0.#}";
+            return $"Reset {Name} to {binding.DefaultValue:0.#}{valueUnit}";
         }
 
         if (query.Args.Length > 0)
@@ -72,7 +74,7 @@ internal class ImpCommandSettingDecimal(
             {
                 if (minValue.HasValue) value = Mathf.Max(value, minValue.Value);
                 if (maxValue.HasValue) value = Mathf.Min(value, maxValue.Value);
-                return $"Set {Name} to {value:0.#}";
+                return $"Set {Name} to {value:0.#}{valueUnit}";
             }
         }
 

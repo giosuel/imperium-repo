@@ -15,12 +15,14 @@ namespace Imperium.Console.Commands;
 /// <param name="binding">The binding that will be changed</param>
 /// <param name="minValue">The min value that is allowed in the binding</param>
 /// <param name="maxValue">The max value that is allowed in the binding</param>
+/// <param name="valueUnit">The displayed unit of the value (e.g. % or units)</param>
 /// <param name="customIcon">A custom icon that is displayed next to the command</param>
 internal class ImpCommandSettingNumber(
     string name,
     IBinding<int> binding,
     int? minValue,
     int? maxValue,
+    string valueUnit = null,
     string interfacePath = null,
     Sprite customIcon = null,
     bool enabledBindingInverted = false,
@@ -49,7 +51,7 @@ internal class ImpCommandSettingNumber(
         if (maxValue.HasValue) value = Math.Min(value, maxValue.Value);
         binding.Set(value);
 
-        Imperium.IO.Send($"{Name} has been set to {binding.Value}.");
+        Imperium.IO.Send($"{Name} has been set to {binding.Value}{valueUnit}.");
         return true;
     }
 
@@ -58,7 +60,7 @@ internal class ImpCommandSettingNumber(
         if (query.Keyword == QueryKeyword.Reset ||
             query.Args.Length > 0 && ImpConstants.ResetStrings.Contains(query.Args.Last()))
         {
-            return $"Reset {Name} to {binding.DefaultValue}";
+            return $"Reset {Name} to {binding.DefaultValue}{valueUnit}";
         }
 
         if (query.Args.Length > 0)
@@ -67,7 +69,7 @@ internal class ImpCommandSettingNumber(
             {
                 if (minValue.HasValue) value = Math.Max(value, minValue.Value);
                 if (maxValue.HasValue) value = Math.Min(value, maxValue.Value);
-                return $"Set {Name} to {value})";
+                return $"Set {Name} to {value}{valueUnit}";
             }
         }
 

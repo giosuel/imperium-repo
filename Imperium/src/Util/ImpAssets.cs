@@ -68,9 +68,10 @@ internal static class ImpAssets
     internal static Sprite IconCommandSpawn;
     internal static Sprite IconCommandWindow;
     internal static Sprite IconCommandSetting;
-    internal static Sprite IconCommandVisualizer;
+    internal static Sprite IconVisualizer;
     internal static Sprite IconKillPlayer;
     internal static Sprite IconRevivePlayer;
+    internal static Sprite IconGrabber;
 
     /*
      * Window Icons
@@ -177,7 +178,7 @@ internal static class ImpAssets
             LoadAsset(ImperiumAssets, "Materials/wireframe_red.mat", out WireframeRed),
             LoadAsset(ImperiumAssets, "Materials/shig.mat", out ShiggyMaterial),
             LoadAsset(ImperiumAssets, "Materials/navmesh.mat", out NavmeshMaterial),
-            LoadAsset(ImperiumAssets, "Icons/visualizer.png", out IconCommandVisualizer),
+            LoadAsset(ImperiumAssets, "Icons/visualizer.png", out IconVisualizer),
             LoadAsset(ImperiumAssets, "Icons/setting.png", out IconCommandSetting),
             LoadAsset(ImperiumAssets, "Icons/action.png", out IconCommandAction),
             LoadAsset(ImperiumAssets, "Icons/reload.png", out IconCommandReload),
@@ -185,6 +186,7 @@ internal static class ImpAssets
             LoadAsset(ImperiumAssets, "Icons/window.png", out IconCommandWindow),
             LoadAsset(ImperiumAssets, "Icons/kill.png", out IconKillPlayer),
             LoadAsset(ImperiumAssets, "Icons/revive.png", out IconRevivePlayer),
+            LoadAsset(ImperiumAssets, "Icons/grabber.png", out IconGrabber),
             LoadAsset(ImperiumAssets, "ImperiumSprites/control.png", out IconControlCenter),
             LoadAsset(ImperiumAssets, "ImperiumSprites/notebook.png", out IconEventLog),
             LoadAsset(ImperiumAssets, "ImperiumSprites/game.png", out IconGameControl),

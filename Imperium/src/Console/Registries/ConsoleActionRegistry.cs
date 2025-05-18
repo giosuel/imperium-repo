@@ -9,7 +9,11 @@ public static class ConsoleActionRegistry
     {
         manager.RegisterAction(
             "Reload Level",
-            _ => Core.Lifecycle.GameManager.ReloadLevel(),
+            _ =>
+            {
+                Core.Lifecycle.GameManager.ReloadLevel();
+                return true;
+            },
             customIcon: ImpAssets.IconCommandReload,
             interfacePath: "ReloadLevel",
             enabledBinding: Imperium.IsGameLevel
@@ -17,7 +21,11 @@ public static class ConsoleActionRegistry
 
         manager.RegisterAction(
             "Advance Level",
-            _ => Core.Lifecycle.GameManager.AdvanceLevel(),
+            _ =>
+            {
+                Core.Lifecycle.GameManager.AdvanceLevel();
+                return true;
+            },
             customIcon: ImpAssets.IconCommandReload,
             interfacePath: "AdvanceLevel",
             enabledBinding: Imperium.IsGameLevel
@@ -25,14 +33,22 @@ public static class ConsoleActionRegistry
 
         manager.RegisterAction(
             "Kill Local Player",
-            _ => Imperium.PlayerManager.KillPlayer(PlayerAvatar.instance.GetSteamId()),
+            _ =>
+            {
+                Imperium.PlayerManager.KillPlayer(PlayerAvatar.instance.GetSteamId());
+                return true;
+            },
             customIcon: ImpAssets.IconKillPlayer,
             enabledBinding: Imperium.IsGameLevel
         );
 
         manager.RegisterAction(
             "Revive Local Player",
-            _ => Imperium.PlayerManager.RevivePlayer(PlayerAvatar.instance.GetSteamId()),
+            _ =>
+            {
+                Imperium.PlayerManager.RevivePlayer(PlayerAvatar.instance.GetSteamId());
+                return true;
+            },
             customIcon: ImpAssets.IconRevivePlayer,
             enabledBinding: Imperium.IsGameLevel
         );
