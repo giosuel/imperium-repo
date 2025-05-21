@@ -67,9 +67,9 @@ internal class PlayerManager : ImpLifecycleObject
 
     protected override void OnLevelLoad()
     {
-        if (TruckTPAnchor == null)
-            TruckTPAnchor =
-                new ImpExternalBinding<Vector3?, bool>(() => GameObject.Find("Truck Item Shelf")?.transform.position);
+        TruckTPAnchor ??= new ImpExternalBinding<Vector3?, bool>(
+            () => GameObject.Find("Truck Item Shelf")?.transform.position
+        );
 
         TruckTPAnchor.Refresh();
 

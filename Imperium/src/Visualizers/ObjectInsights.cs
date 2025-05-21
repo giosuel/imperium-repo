@@ -125,9 +125,9 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .SetIsDisabledGenerator(enemy => !enemy.Spawned)
             .RegisterInsight("Health", enemy => $"{enemy.Enemy.Health.health} HP")
             .RegisterInsight("Current State", Core.Lifecycle.GameManager.GetEnemyState)
-            .RegisterInsight("Spawn Timer", enemy => Formatting.FormatSecondsMinutes(enemy.SpawnedTimer))
-            .RegisterInsight("Spawn Paused", enemy => Formatting.FormatSecondsMinutes(enemy.spawnedTimerPauseTimer))
-            .RegisterInsight("Despawn Timer", enemy => Formatting.FormatSecondsMinutes(enemy.DespawnedTimer))
+            .RegisterInsight("Spawned Paused", enemy => Formatting.FormatSecondsMinutes(enemy.spawnedTimerPauseTimer))
+            .RegisterInsight("Spawned Timer", enemy => Formatting.FormatSecondsMinutes(enemy.SpawnedTimer))
+            .RegisterInsight("Despawned Timer", enemy => Formatting.FormatSecondsMinutes(enemy.DespawnedTimer))
             .RegisterInsight("Valuable Timer", enemy => Formatting.FormatSecondsMinutes(enemy.valuableSpawnTimer))
             .RegisterInsight("No Vision Timer",
                 enemy => enemy.Enemy.Vision ? Formatting.FormatSecondsMinutes(enemy.Enemy.Vision.DisableTimer) : "?"
@@ -135,6 +135,9 @@ internal class ObjectInsights : BaseVisualizer<HashSet<Component>, ObjectInsight
             .RegisterInsight("Player Close", enemy => enemy.playerClose.ToString())
             .RegisterInsight("Spawn Idle Timer",
                 _ => Formatting.FormatSecondsMinutes(EnemyDirector.instance.spawnIdlePauseTimer)
+            )
+            .RegisterInsight("Action Timer",
+                _ => Formatting.FormatSecondsMinutes(EnemyDirector.instance.enemyActionAmount)
             )
             .SetPositionOverride(enemy => enemy.Enemy.transform.position)
             .SetConfigKey("Enemies");

@@ -60,20 +60,6 @@ internal class GameSettings(ConfigFile config) : SettingsContainer(config)
         false
     );
 
-    [ImpAttributes.HostMasterBinding] internal readonly ImpConfig<float> SpawnTimer = new(
-        config,
-        "Game.Arena.Enemies",
-        "SpawnTimer",
-        -1
-    );
-
-    [ImpAttributes.HostMasterBinding] internal readonly ImpConfig<float> DespawnTimer = new(
-        config,
-        "Game.Arena.Enemies",
-        "DespawnTimer",
-        -1
-    );
-
     [ImpAttributes.HostMasterBinding] internal readonly ImpConfig<bool> EnemyGrabInfiniteDuration = new(
         config,
         "Game.Arena.Enemies",

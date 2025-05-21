@@ -19,6 +19,9 @@ This is the official R.E.P.O. port of the original [Imperium for Lethal Company]
     The user-interface is the core of Imperium and ensures a smooth and simple experience when using the many features it offers. Now with the brand new themes REPO and Shade!
 * **Full Multiplayer Support**  
     Imperium works in singleplayer as well as multiplayer, as long as the host has it installed. It is recommended though, that everyone in the lobby has Imperium installed.
+* **In-Game Console**  
+	Quick access to your most used settings and spawn commands via an in-game console.
+
 * **Spawning of Enemies, Items and Valuables**  
     Imperium allows you to spawn, despawn and move enemies, items and valuable on command.
 * **Creative Mode Tools**  

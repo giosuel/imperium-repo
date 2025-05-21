@@ -9,7 +9,8 @@ namespace Imperium.Core.Input;
 
 internal sealed class ImpInputBaseMap : LcInputActions
 {
-    [InputAction("", Name = "Movement")] internal InputAction Movement { get; set; }
+    [InputAction("", Name = "Movement")]
+    internal InputAction Movement { get; set; }
 
     [InputAction("<Pointer>/delta", Name = "Look")]
     internal InputAction Look { get; set; }

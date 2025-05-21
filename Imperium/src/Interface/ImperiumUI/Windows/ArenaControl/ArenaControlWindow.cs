@@ -11,8 +11,6 @@ namespace Imperium.Interface.ImperiumUI.Windows.ArenaControl;
 
 internal class GameControlWindow : ImperiumWindow
 {
-    private Transform content;
-
     protected override void InitWindow()
     {
         InitQuotaAndCredits();

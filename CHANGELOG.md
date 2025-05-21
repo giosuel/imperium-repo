@@ -1,5 +1,20 @@
 # Changelog
 
+## Imperium v0.2.2 - Bug fixes
+
+### Bug Fixes
+
+- Fixed a bug that made the console crash on duplicate level names.
+- Fixed the disable enemies option in the game control window.
+- Fixed the spawn timer settings in the game control window.
+- Fixed a bug that made it so duplicate enemy, item and valuable names crashed the console.
+
+### QoL Changes
+
+- Added the enemy action timer to the enemy insights.
+- Removed the minimap settings window and button.
+- Removed multiple unnecessary sliders from the grabber settings menu.
+
 ## Imperium v0.2.1 - The Console
 
 ### Changes

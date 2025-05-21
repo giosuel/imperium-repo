@@ -31,7 +31,8 @@ internal class ConsoleManager : ImpLifecycleObject
 
     internal void RegisterWindow<T>(string windowName) where T : ImperiumWindow
     {
-        registeredWindowCommands.Add(NormalizeCommand(windowName), new ImpCommandWindow<T>(windowName));
+        var wasAdded = registeredWindowCommands.TryAdd(NormalizeCommand(windowName), new ImpCommandWindow<T>(windowName));
+        if (!wasAdded) Imperium.IO.LogWarning($"[CMD] Duplicate window detected: {windowName}");
     }
 
     internal void RegisterAction(
@@ -44,7 +45,7 @@ internal class ConsoleManager : ImpLifecycleObject
         IBinding<bool> enabledBinding = null
     )
     {
-        registeredActionCommands.Add(
+        var wasAdded = registeredActionCommands.TryAdd(
             NormalizeCommand(actionName),
             new ImpCommandAction(
                 actionName, onExec, displayNameOverride,
@@ -52,6 +53,8 @@ internal class ConsoleManager : ImpLifecycleObject
                 enabledBindingInverted, enabledBinding
             )
         );
+
+        if (!wasAdded) Imperium.IO.LogWarning($"[CMD] Action command with name {actionName} already exist.");
     }
 
     internal void RegisterSetting(
@@ -63,13 +66,15 @@ internal class ConsoleManager : ImpLifecycleObject
         IBinding<bool> enabledBinding = null
     )
     {
-        registeredToggleCommands.Add(
+        var wasAdded = registeredToggleCommands.TryAdd(
             NormalizeCommand(commandName),
             new ImpCommandSettingToggle(
                 commandName, binding, interfacePath, customIcon,
                 enabledBindingInverted, enabledBinding
             )
         );
+
+        if (!wasAdded) Imperium.IO.LogWarning($"[CMD] Toggle command with name {commandName} already exist.");
     }
 
     internal void RegisterSetting(
@@ -81,13 +86,15 @@ internal class ConsoleManager : ImpLifecycleObject
         IBinding<bool> enabledBinding = null
     )
     {
-        registeredSettingCommands.Add(
+        var wasAdded = registeredSettingCommands.TryAdd(
             NormalizeCommand(commandName),
             new ImpCommandSettingString(
                 commandName, binding, interfacePath, customIcon,
                 enabledBindingInverted, enabledBinding
             )
         );
+
+        if (!wasAdded) Imperium.IO.LogWarning($"[CMD] Setting command with name {commandName} already exist.");
     }
 
     internal void RegisterSetting(
@@ -102,7 +109,7 @@ internal class ConsoleManager : ImpLifecycleObject
         IBinding<bool> enabledBinding = null
     )
     {
-        registeredSettingCommands.Add(
+        var wasAdded = registeredSettingCommands.TryAdd(
             NormalizeCommand(commandName),
             new ImpCommandSettingNumber(
                 commandName, binding,
@@ -111,6 +118,8 @@ internal class ConsoleManager : ImpLifecycleObject
                 enabledBindingInverted, enabledBinding
             )
         );
+
+        if (!wasAdded) Imperium.IO.LogWarning($"[CMD] Setting command with name {commandName} already exist.");
     }
 
     internal void RegisterSetting(
@@ -125,7 +134,7 @@ internal class ConsoleManager : ImpLifecycleObject
         IBinding<bool> enabledBinding = null
     )
     {
-        registeredSettingCommands.Add(
+        var wasAdded = registeredSettingCommands.TryAdd(
             NormalizeCommand(commandName),
             new ImpCommandSettingDecimal(
                 commandName, binding,
@@ -134,6 +143,8 @@ internal class ConsoleManager : ImpLifecycleObject
                 enabledBindingInverted, enabledBinding
             )
         );
+
+        if (!wasAdded) Imperium.IO.LogWarning($"[CMD] Setting command with name {commandName} already exist.");
     }
 
     /// <summary>
@@ -273,7 +284,11 @@ internal class ConsoleManager : ImpLifecycleObject
     {
         foreach (var level in Imperium.ObjectManager.LoadedLevels.Value)
         {
-            registeredLevelCommands.Add(NormalizeCommand(level.NarrativeName), new ImpCommandLevel(level));
+            var wasAdded = registeredLevelCommands.TryAdd(
+                NormalizeCommand(level.NarrativeName),
+                new ImpCommandLevel(level)
+            );
+            if (!wasAdded) Imperium.IO.LogWarning($"[CMD] Skipped duplicate level command: {level.NarrativeName}");
         }
     }
 
@@ -281,28 +296,31 @@ internal class ConsoleManager : ImpLifecycleObject
     {
         registeredSpawnCommands.Clear();
 
-        foreach (var entity in Imperium.ObjectManager.LoadedEntities.Value)
+        foreach (var enemy in Imperium.ObjectManager.LoadedEntities.Value)
         {
-            registeredSpawnCommands.Add(
-                NormalizeCommand(entity.EnemyName),
-                new ImpCommandSpawn(entity.EnemyName, entity.EnemyName, SpawnObjectType.Entity)
+            var wasAdded = registeredSpawnCommands.TryAdd(
+                NormalizeCommand(enemy.EnemyName),
+                new ImpCommandSpawn(enemy.EnemyName, enemy.EnemyName, SpawnObjectType.Entity)
             );
+            if (!wasAdded) Imperium.IO.LogWarning($"[CMD] Skipped duplicate enemy command: {enemy.EnemyName}");
         }
 
         foreach (var item in Imperium.ObjectManager.LoadedItems.Value)
         {
-            registeredSpawnCommands.Add(
+            var wasAdded = registeredSpawnCommands.TryAdd(
                 NormalizeCommand(item.itemName),
                 new ImpCommandSpawn(item.itemName, item.itemName, SpawnObjectType.Item)
             );
+            if (!wasAdded) Imperium.IO.LogWarning($"[CMD] Skipped duplicate item command: {item.itemName}");
         }
 
         foreach (var valuable in Imperium.ObjectManager.LoadedValuables.Value)
         {
-            registeredSpawnCommands.Add(
+            var wasAdded = registeredSpawnCommands.TryAdd(
                 NormalizeCommand(valuable.name),
                 new ImpCommandSpawn(valuable.name, valuable.name, SpawnObjectType.Valuable)
             );
+            if (!wasAdded) Imperium.IO.LogWarning($"[CMD] Skipped duplicate valuable command: {valuable.name}");
         }
     }
 

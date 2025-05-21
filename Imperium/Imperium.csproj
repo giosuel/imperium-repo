@@ -20,7 +20,6 @@
 
         <RepositoryUrl>https://github.com/giosuel/imperium-repo</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     </PropertyGroup>
 
     <ItemGroup>
@@ -37,7 +36,6 @@
         <PackageReference Include="Zehs.REPOLib" Version="2.1.0" />
         <PackageReference Include="rainbowblood.UniverseLib.Mono" Version="2.*" Publicize="true" />
         <PackageReference Include="R.E.P.O.GameLibs.Steam" Version="*-*" PrivateAssets="all" Publicize="true" />
-        <PackageReference Include="FuzzySharp" Version="*-*" />
 
         <PackageReference Include="MinVer" Version="4.3.0">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
