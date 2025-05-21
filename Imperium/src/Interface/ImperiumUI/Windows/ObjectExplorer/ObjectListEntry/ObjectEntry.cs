@@ -229,6 +229,7 @@ internal class ObjectEntry : MonoBehaviour
 
             ObjectEntryGenerator.IntervalUpdate(this);
             objectName = ObjectEntryGenerator.GetObjectName(this);
+            objectNameText.text = objectName;
         }
     }
 }

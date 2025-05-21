@@ -1,6 +1,7 @@
 #region
 
 using BepInEx.Configuration;
+using HarmonyLib;
 using Imperium.Core.Settings;
 
 #endregion
@@ -46,6 +47,17 @@ public class ImpSettings(ConfigFile config)
     {
         IsLoading = true;
 
+        Imperium.Visualization.EnemyGizmos.EntityInfoConfigs.Values.Do(enemyConfig =>
+        {
+            enemyConfig.Info.Reset();
+            enemyConfig.Pathfinding.Reset();
+            enemyConfig.Proximity.Reset();
+            enemyConfig.Vision.Reset();
+            enemyConfig.Hearing.Reset();
+            enemyConfig.Vitality.Reset();
+            enemyConfig.Custom.Reset();
+        });
+
         Player.Reset();
         Grabber.Reset();
         Game.Reset();
@@ -57,7 +69,5 @@ public class ImpSettings(ConfigFile config)
         Freecam.Reset();
 
         IsLoading = false;
-
-        Imperium.Reload();
     }
 }

@@ -206,7 +206,7 @@ public abstract class ImpInput
         string placeholder = "",
         bool negativeIsEmpty = false,
         bool updateOnSubmit = false,
-        bool allowReset = false,
+        bool allowReset = true,
         IBinding<ImpTheme> theme = null,
         TooltipDefinition tooltipDefinition = null,
         ImperiumWindow parentWindow = null,
@@ -229,6 +229,9 @@ public abstract class ImpInput
             ? ""
             : valueBinding.Value.ToString(CultureInfo.InvariantCulture);
 
+        SetInputValue(valueBinding.Value);
+        valueBinding.OnUpdate += SetInputValue;
+
         input.onValueChanged.AddListener(value =>
         {
             OnFloatFieldInput(input, value, min, max);
@@ -237,14 +240,6 @@ public abstract class ImpInput
         });
 
         if (updateOnSubmit) input.onSubmit.AddListener(UpdateBinding);
-
-        valueBinding.OnUpdate += value =>
-        {
-            // If value is below zero and negativeIsEmpty is true, set input field empty
-            input.text = valueBinding.Value < 0 && negativeIsEmpty
-                ? ""
-                : value.ToString(CultureInfo.InvariantCulture);
-        };
 
         // Set label test if label element exists
         var labelText = inputParent.Find("Text")?.GetComponent<TMP_Text>();
@@ -326,6 +321,12 @@ public abstract class ImpInput
                 // Update binding if binding value is not already equal to input value
                 if (!Mathf.Approximately(parsed, valueBinding.Value)) valueBinding.Set(parsed);
             }
+        }
+
+        void SetInputValue(float value)
+        {
+            // If value is below zero and negativeIsEmpty is true, set input field empty
+            input.text = value < 0 && negativeIsEmpty ? "" : value.ToString(CultureInfo.InvariantCulture);
         }
     }
 

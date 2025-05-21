@@ -39,6 +39,8 @@ internal static class LevelGeneratorPatch
             }
         }
 
+        if (Imperium.ArenaManager.DisableEnemies.Value) LevelGenerator.Instance.DebugNoEnemy = true;
+
         if (Imperium.GameManager.NextLevelOverride)
         {
             // The user manually switched to a level so we ignore the override here

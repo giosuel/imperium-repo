@@ -1,6 +1,9 @@
 #region
 
+using System.Linq;
+using HarmonyLib;
 using Imperium.Networking;
+using UnityEngine;
 
 #endregion
 
@@ -56,15 +59,37 @@ internal class ArenaManager : ImpLifecycleObject
     internal readonly ImpNetworkBinding<float> SpawnTimer = new(
         "EnemySpawnTimer",
         Imperium.Networking,
-        masterBinding: Imperium.Settings.Game.SpawnTimer,
-        onUpdateClient: value => EnemyDirector.instance.debugEnemyEnableTime = value
+        currentValue: -1,
+        onUpdateClient: value =>
+        {
+            if (value < 0) return;
+
+            EnemyDirector.instance.debugEnemyEnableTime = value;
+            FindObjectsByType<EnemyParent>(FindObjectsSortMode.None).Do(enemy =>
+            {
+                enemy.SpawnedTimer = value;
+                enemy.SpawnedTimeMin = value;
+                enemy.SpawnedTimeMax = value;
+            });
+        }
     );
 
     internal readonly ImpNetworkBinding<float> DespawnTimer = new(
         "EnemyDespawnTimer",
         Imperium.Networking,
-        masterBinding: Imperium.Settings.Game.DespawnTimer,
-        onUpdateClient: value => EnemyDirector.instance.debugEnemyDisableTime = value
+        currentValue: -1,
+        onUpdateClient: value =>
+        {
+            if (value < 0) return;
+
+            EnemyDirector.instance.debugEnemyDisableTime = value;
+            FindObjectsByType<EnemyParent>(FindObjectsSortMode.None).Do(enemy =>
+            {
+                enemy.DespawnedTimer = value;
+                enemy.DespawnedTimeMin = value;
+                enemy.DespawnedTimeMax = value;
+            });
+        }
     );
 
     internal readonly ImpNetworkBinding<bool> EnemyGrabInfiniteDuration = new(
