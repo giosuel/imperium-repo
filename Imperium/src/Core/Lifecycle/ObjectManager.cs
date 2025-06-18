@@ -378,6 +378,8 @@ internal class ObjectManager : ImpLifecycleObject
 
                 var enemy = obj.GetComponentInChildren<Enemy>();
                 if (enemy) enemy.EnemyTeleported(request.SpawnPosition);
+
+                enemyParent.firstSpawnPointUsed = true;
             }
 
             if (request.SendNotification)
