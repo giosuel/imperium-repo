@@ -53,6 +53,8 @@ internal class UpgradesWindow : ImperiumWindow
 
     private void BuildElement(string upgradeName)
     {
+        if (!StatsManager.instance.dictionaryOfDictionaries.ContainsKey(upgradeName)) return;
+
         var element = Instantiate(template, content);
         element.SetActive(true);
 
