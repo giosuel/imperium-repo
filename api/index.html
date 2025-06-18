@@ -1,0 +1,915 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="The official Imperium Repo wiki. A powerful and highly performant all-in-one debugging tool to test and explore game mechanics and functionality in R.E.P.O.">
+      
+      
+        <meta name="author" content="giosuel">
+      
+      
+        <link rel="canonical" href="https://giosuel.github.io/imperium-repo/api/index.html">
+      
+      
+        <link rel="prev" href="../console.html">
+      
+      
+        <link rel="next" href="visualization/static.html">
+      
+      
+      <link rel="icon" href="https://github.com/giosuel/imperium-repo/blob/development/assets/icon_256x256.png?raw=true">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.14">
+    
+    
+      
+        <title>Imperium API - Imperium Repo Wiki</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.342714a4.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+        <script src="https://unpkg.com/iframe-worker/shim"></script>
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../assets/mkdocs_puml/puml.css">
+    
+      <link rel="stylesheet" href="../assets/mkdocs_puml/interaction.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+
+<!-- Determine title -->
+
+
+
+
+
+<meta property="og:title" content="Imperium Repo Wiki - Imperium API" />
+<meta property="og:type" content="website" />
+<meta property="og:description" content="The official Imperium Repo wiki. A powerful and highly performant all-in-one debugging tool to test and explore game mechanics and functionality in R.E.P.O." />
+<meta property="og:url" content="https://giosuel.github.io/imperium-repo/api/index.html" />
+<meta property="og:image" content="" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="1092" />
+<meta property="og:image:height" content="954" />
+
+<meta name="twitter:title" content="Imperium Repo Wiki - Imperium API" />
+<meta name="twitter:description" content="The official Imperium Repo wiki. A powerful and highly performant all-in-one debugging tool to test and explore game mechanics and functionality in R.E.P.O." />
+<meta name="twitter:image" content="" />
+<meta name="twitter:site" content="@ntdvps" />
+<meta name="twitter:creator" content="@ntdvps" />
+<meta name="twitter:card" content="summary_large_image" />
+
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#imperium-api" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../index.html" title="Imperium Repo Wiki" class="md-header__button md-logo" aria-label="Imperium Repo Wiki" data-md-component="logo">
+      
+  <img src="https://github.com/giosuel/imperium-repo/blob/development/assets/icon_256x256.png?raw=true" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Imperium Repo Wiki
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Imperium API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 6H7c-3.31 0-6 2.69-6 6s2.69 6 6 6h10c3.31 0 6-2.69 6-6s-2.69-6-6-6m0 10H7c-2.21 0-4-1.79-4-4s1.79-4 4-4h10c2.21 0 4 1.79 4 4s-1.79 4-4 4M7 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 7H7a5 5 0 0 0-5 5 5 5 0 0 0 5 5h10a5 5 0 0 0 5-5 5 5 0 0 0-5-5m0 8a3 3 0 0 1-3-3 3 3 0 0 1 3-3 3 3 0 0 1 3 3 3 3 0 0 1-3 3"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/giosuel/imperium-repo" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    giosuel/imperium-repo
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../index.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../quick-start.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick Start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../console.html" class="md-tabs__link">
+        
+  
+  
+    
+  
+  The Console
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="index.html" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Imperium API
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="https://github.com/giosuel/imperium-repo/issues/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Issues
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../index.html" title="Imperium Repo Wiki" class="md-nav__button md-logo" aria-label="Imperium Repo Wiki" data-md-component="logo">
+      
+  <img src="https://github.com/giosuel/imperium-repo/blob/development/assets/icon_256x256.png?raw=true" alt="logo">
+
+    </a>
+    Imperium Repo Wiki
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/giosuel/imperium-repo" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    giosuel/imperium-repo
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quick-start.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Quick Start
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../console.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    The Console
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="index.html" class="md-nav__link md-nav__link--active">
+              
+  
+  
+  <span class="md-ellipsis">
+    Imperium API
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link md-nav__link--active" for="__nav_4" id="__nav_4_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Imperium API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Visualization API
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Visualization API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="visualization/static.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Static Visualizers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="visualization/insights.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Insights
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="portal.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Portal API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="event-log.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Event Log API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="world.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    World API
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/giosuel/imperium-repo/issues/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Issues
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      Quick Start
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-imperium-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Imperium Binding
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api-availability" class="md-nav__link">
+    <span class="md-ellipsis">
+      API Availability
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+
+                  
+
+
+  
+    <a href="https://github.com/giosuel/imperium-repo/edit/master/docs/api/index.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="imperium-api">Imperium API</h1>
+<p>The Imperium API provides debugging tools and visualizers for mod developers to speed up their debugging and testing workflows. The API consists of the following modules.</p>
+<ul>
+<li><strong><a href="visualization/static.html">Visualization API</a></strong><br />
+  Tools to visualize position, hitboxes and custom information for various game objects.</li>
+<li><strong><a href="portal.html">Portal API</a></strong><br />
+  An interface to add your own custom UI elements to the Imperium's Interaction window.</li>
+<li><strong><a href="event-log.html">Event Logging API</a></strong><br />
+  Tools to log events in-game to Imperium's event log with additional event information.</li>
+<li><strong><a href="world.html">World API (WIP)</a></strong><br />
+  Tools to spawn and otherwise interact with game objects such as enemies or valuables.</li>
+</ul>
+<p>To complement your debugging experience with Imperium, it is recommended to use the tools available in <a href="https://github.com/giosuel/librarium">Librarium</a>, a library that contains core utility that Imperium is using. For more information, please refer to librarium's code documentation.</p>
+<h2 id="quick-start">Quick Start</h2>
+<p>In the following sections I will briefly go over how Imperium works and some tips for working with the Imperium API.</p>
+<h3 id="the-imperium-binding">The Imperium Binding</h3>
+<p>Imperium is built on top of an event system called <em>bindings</em>. Bindings are value containers that can be subscribed to. Subscribers of a binding will be notified whenever the binding's value has been updated.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For example, Imperium uses bindings internally to separate mod logic from the UI frontend. You can think of bindings as the model in the popular MVP architecture that is widely used for UIs.</p>
+</div>
+<div class='puml-container'><div class="puml light" style=""><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="CLASS" height="328px" preserveAspectRatio="xMidYMid meet" style="width:867px;height:328px;" version="1.1" viewBox="0 0 867 328" width="867px" zoomAndPan="magnify" class="diagram"><defs/><g><g class="cluster" data-entity="Librarium" data-source-line="7" data-uid="ent0002" id="cluster_Librarium"><path d="M8.5,6 L85.8506,6 A3.75,3.75 0 0 1 88.3506,8.5 L95.3506,28.2969 L599.5,28.2969 A2.5,2.5 0 0 1 602,30.7969 L602,318.5 A2.5,2.5 0 0 1 599.5,321 L8.5,321 A2.5,2.5 0 0 1 6,318.5 L6,8.5 A2.5,2.5 0 0 1 8.5,6" fill="none" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="6" x2="95.3506" y1="28.2969" y2="28.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="76.3506" x="10" y="20.9951">Librarium</text></g><g class="cluster" data-entity="Imperium" data-source-line="27" data-uid="ent0009" id="cluster_Imperium"><path d="M628.5,114 L705.0713,114 A3.75,3.75 0 0 1 707.5713,116.5 L714.5713,136.2969 L857.5,136.2969 A2.5,2.5 0 0 1 860,138.7969 L860,210.5 A2.5,2.5 0 0 1 857.5,213 L628.5,213 A2.5,2.5 0 0 1 626,210.5 L626,116.5 A2.5,2.5 0 0 1 628.5,114" fill="none" style="stroke:#000000;stroke-width:1.5;"/><line style="stroke:#000000;stroke-width:1.5;" x1="626" x2="714.5713" y1="136.2969" y2="136.2969"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="75.5713" x="630" y="128.9951">Imperium</text></g><g class="entity" data-entity="IBinding.T." data-source-line="8" data-uid="ent0003" id="entity_IBinding.T."><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="121.0449" x="415.48" y="41"/><ellipse cx="430.48" cy="57" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/><path d="M426.4019,52.7656 L426.4019,50.6094 L433.7925,50.6094 L433.7925,52.7656 L431.3238,52.7656 L431.3238,60.8438 L433.7925,60.8438 L433.7925,63 L426.4019,63 L426.4019,60.8438 L428.8706,60.8438 L428.8706,52.7656 L426.4019,52.7656 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="89.0449" x="444.48" y="61.8467">IBinding&lt;T&gt;</text><line style="stroke:#181818;stroke-width:0.5;" x1="416.48" x2="535.5249" y1="73" y2="73"/><line style="stroke:#181818;stroke-width:0.5;" x1="416.48" x2="535.5249" y1="81" y2="81"/></g><g class="entity" data-entity="ImpBinding.T." data-source-line="11" data-uid="ent0004" id="entity_ImpBinding.T."><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="143.5693" x="188.22" y="149"/><ellipse cx="203.22" cy="165" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/><path d="M206.1888,170.6406 Q205.6106,170.9375 204.97,171.0781 Q204.3294,171.2344 203.6263,171.2344 Q201.1263,171.2344 199.7981,169.5938 Q198.4856,167.9375 198.4856,164.8125 Q198.4856,161.6875 199.7981,160.0313 Q201.1263,158.375 203.6263,158.375 Q204.3294,158.375 204.97,158.5313 Q205.6263,158.6875 206.1888,158.9844 L206.1888,161.7031 Q205.5638,161.125 204.97,160.8594 Q204.3763,160.5781 203.7513,160.5781 Q202.4075,160.5781 201.72,161.6563 Q201.0325,162.7188 201.0325,164.8125 Q201.0325,166.9063 201.72,167.9844 Q202.4075,169.0469 203.7513,169.0469 Q204.3763,169.0469 204.97,168.7813 Q205.5638,168.5 206.1888,167.9219 L206.1888,170.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="111.5693" x="217.22" y="169.8467">ImpBinding&lt;T&gt;</text><line style="stroke:#181818;stroke-width:0.5;" x1="189.22" x2="330.7893" y1="181" y2="181"/><line style="stroke:#181818;stroke-width:0.5;" x1="189.22" x2="330.7893" y1="189" y2="189"/></g><g class="entity" data-entity="ImpConfig.T." data-source-line="14" data-uid="ent0005" id="entity_ImpConfig.T."><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="135.585" x="22.21" y="257"/><ellipse cx="37.21" cy="273" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/><path d="M40.1788,278.6406 Q39.6006,278.9375 38.96,279.0781 Q38.3194,279.2344 37.6163,279.2344 Q35.1163,279.2344 33.7881,277.5938 Q32.4756,275.9375 32.4756,272.8125 Q32.4756,269.6875 33.7881,268.0313 Q35.1163,266.375 37.6163,266.375 Q38.3194,266.375 38.96,266.5313 Q39.6163,266.6875 40.1788,266.9844 L40.1788,269.7031 Q39.5538,269.125 38.96,268.8594 Q38.3663,268.5781 37.7413,268.5781 Q36.3975,268.5781 35.71,269.6563 Q35.0225,270.7188 35.0225,272.8125 Q35.0225,274.9063 35.71,275.9844 Q36.3975,277.0469 37.7413,277.0469 Q38.3663,277.0469 38.96,276.7813 Q39.5538,276.5 40.1788,275.9219 L40.1788,278.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="103.585" x="51.21" y="277.8467">ImpConfig&lt;T&gt;</text><line style="stroke:#181818;stroke-width:0.5;" x1="23.21" x2="156.795" y1="289" y2="289"/><line style="stroke:#181818;stroke-width:0.5;" x1="23.21" x2="156.795" y1="297" y2="297"/></g><g class="entity" data-entity="ImpBinaryBinding" data-source-line="17" data-uid="ent0006" id="entity_ImpBinaryBinding"><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="156.5439" x="192.73" y="257"/><ellipse cx="207.73" cy="273" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/><path d="M210.6988,278.6406 Q210.1206,278.9375 209.48,279.0781 Q208.8394,279.2344 208.1363,279.2344 Q205.6363,279.2344 204.3081,277.5938 Q202.9956,275.9375 202.9956,272.8125 Q202.9956,269.6875 204.3081,268.0313 Q205.6363,266.375 208.1363,266.375 Q208.8394,266.375 209.48,266.5313 Q210.1363,266.6875 210.6988,266.9844 L210.6988,269.7031 Q210.0738,269.125 209.48,268.8594 Q208.8863,268.5781 208.2613,268.5781 Q206.9175,268.5781 206.23,269.6563 Q205.5425,270.7188 205.5425,272.8125 Q205.5425,274.9063 206.23,275.9844 Q206.9175,277.0469 208.2613,277.0469 Q208.8863,277.0469 209.48,276.7813 Q210.0738,276.5 210.6988,275.9219 L210.6988,278.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="124.5439" x="221.73" y="277.8467">ImpBinaryBinding</text><line style="stroke:#181818;stroke-width:0.5;" x1="193.73" x2="348.2739" y1="289" y2="289"/><line style="stroke:#181818;stroke-width:0.5;" x1="193.73" x2="348.2739" y1="297" y2="297"/></g><g class="entity" data-entity="ImpExternalBinding.T." data-source-line="20" data-uid="ent0007" id="entity_ImpExternalBinding.T."><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="201.9004" x="384.05" y="257"/><ellipse cx="399.05" cy="273" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/><path d="M402.0188,278.6406 Q401.4406,278.9375 400.8,279.0781 Q400.1594,279.2344 399.4563,279.2344 Q396.9563,279.2344 395.6281,277.5938 Q394.3156,275.9375 394.3156,272.8125 Q394.3156,269.6875 395.6281,268.0313 Q396.9563,266.375 399.4563,266.375 Q400.1594,266.375 400.8,266.5313 Q401.4563,266.6875 402.0188,266.9844 L402.0188,269.7031 Q401.3938,269.125 400.8,268.8594 Q400.2063,268.5781 399.5813,268.5781 Q398.2375,268.5781 397.55,269.6563 Q396.8625,270.7188 396.8625,272.8125 Q396.8625,274.9063 397.55,275.9844 Q398.2375,277.0469 399.5813,277.0469 Q400.2063,277.0469 400.8,276.7813 Q401.3938,276.5 402.0188,275.9219 L402.0188,278.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="169.9004" x="413.05" y="277.8467">ImpExternalBinding&lt;T&gt;</text><line style="stroke:#181818;stroke-width:0.5;" x1="385.05" x2="584.9504" y1="289" y2="289"/><line style="stroke:#181818;stroke-width:0.5;" x1="385.05" x2="584.9504" y1="297" y2="297"/></g><g class="entity" data-entity="ImpImmutableBinding.T." data-source-line="23" data-uid="ent0008" id="entity_ImpImmutableBinding.T."><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="219.3047" x="366.35" y="149"/><ellipse cx="381.35" cy="165" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/><path d="M384.3188,170.6406 Q383.7406,170.9375 383.1,171.0781 Q382.4594,171.2344 381.7563,171.2344 Q379.2563,171.2344 377.9281,169.5938 Q376.6156,167.9375 376.6156,164.8125 Q376.6156,161.6875 377.9281,160.0313 Q379.2563,158.375 381.7563,158.375 Q382.4594,158.375 383.1,158.5313 Q383.7563,158.6875 384.3188,158.9844 L384.3188,161.7031 Q383.6938,161.125 383.1,160.8594 Q382.5063,160.5781 381.8813,160.5781 Q380.5375,160.5781 379.85,161.6563 Q379.1625,162.7188 379.1625,164.8125 Q379.1625,166.9063 379.85,167.9844 Q380.5375,169.0469 381.8813,169.0469 Q382.5063,169.0469 383.1,168.7813 Q383.6938,168.5 384.3188,167.9219 L384.3188,170.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="187.3047" x="395.35" y="169.8467">ImpImmutableBinding&lt;T&gt;</text><line style="stroke:#181818;stroke-width:0.5;" x1="367.35" x2="584.6547" y1="181" y2="181"/><line style="stroke:#181818;stroke-width:0.5;" x1="367.35" x2="584.6547" y1="189" y2="189"/></g><g class="entity" data-entity="ImpNetworkBinding.T." data-source-line="28" data-uid="ent0010" id="entity_ImpNetworkBinding.T."><rect fill="#F1F1F1" height="48" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="202.0234" x="641.99" y="149"/><ellipse cx="656.99" cy="165" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1;"/><path d="M659.9588,170.6406 Q659.3806,170.9375 658.74,171.0781 Q658.0994,171.2344 657.3963,171.2344 Q654.8963,171.2344 653.5681,169.5938 Q652.2556,167.9375 652.2556,164.8125 Q652.2556,161.6875 653.5681,160.0313 Q654.8963,158.375 657.3963,158.375 Q658.0994,158.375 658.74,158.5313 Q659.3963,158.6875 659.9588,158.9844 L659.9588,161.7031 Q659.3338,161.125 658.74,160.8594 Q658.1463,160.5781 657.5213,160.5781 Q656.1775,160.5781 655.49,161.6563 Q654.8025,162.7188 654.8025,164.8125 Q654.8025,166.9063 655.49,167.9844 Q656.1775,169.0469 657.5213,169.0469 Q658.1463,169.0469 658.74,168.7813 Q659.3338,168.5 659.9588,167.9219 L659.9588,170.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="170.0234" x="670.99" y="169.8467">ImpNetworkBinding&lt;T&gt;</text><line style="stroke:#181818;stroke-width:0.5;" x1="642.99" x2="843.0134" y1="181" y2="181"/><line style="stroke:#181818;stroke-width:0.5;" x1="642.99" x2="843.0134" y1="189" y2="189"/></g><g class="link" data-entity-1="IBinding.T." data-entity-2="ImpBinding.T." data-source-line="32" data-uid="lnk12" id="link_IBinding.T._ImpBinding.T."><path codeLine="32" d="M397.26,65 C333.37,65 260,65 260,65 C260,65 260,116.92 260,148.76" fill="none" id="IBinding&lt;T&gt;-backto-ImpBinding&lt;T&gt;" style="stroke:#181818;stroke-width:1;"/><polygon fill="none" points="415.26,65,397.26,59,397.26,71,415.26,65" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="IBinding.T." data-entity-2="ImpImmutableBinding.T." data-source-line="33" data-uid="lnk14" id="link_IBinding.T._ImpImmutableBinding.T."><path codeLine="33" d="M476,95.24 C476,113.02 476,131.08 476,148.84" fill="none" id="IBinding&lt;T&gt;-backto-ImpImmutableBinding&lt;T&gt;" style="stroke:#181818;stroke-width:1;"/><polygon fill="#181818" points="476,89.24,472,98.24,476,94.24,480,98.24,476,89.24" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ImpBinding.T." data-entity-2="ImpBinaryBinding" data-source-line="34" data-uid="lnk16" id="link_ImpBinding.T._ImpBinaryBinding"><path codeLine="34" d="M262.26,215.24 C262.26,233.02 262.26,239.08 262.26,256.84" fill="none" id="ImpBinding&lt;T&gt;-backto-ImpBinaryBinding" style="stroke:#181818;stroke-width:1;"/><polygon fill="none" points="262.26,197.24,256.26,215.24,268.26,215.24,262.26,197.24" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ImpBinding.T." data-entity-2="ImpExternalBinding.T." data-source-line="35" data-uid="lnk18" id="link_ImpBinding.T._ImpExternalBinding.T."><path codeLine="35" d="M350.11,173 C364.77,173 357.81,173 357.81,173 C357.81,173 357.81,281 357.81,281 C357.81,281 368.58,281 383.86,281" fill="none" id="ImpBinding&lt;T&gt;-backto-ImpExternalBinding&lt;T&gt;" style="stroke:#181818;stroke-width:1;"/><polygon fill="none" points="332.11,173,350.11,179,350.11,167,332.11,173" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="ImpBinding.T." data-entity-2="ImpConfig.T." data-source-line="36" data-uid="lnk20" id="link_ImpBinding.T._ImpConfig.T."><path codeLine="36" d="M169.9,173 C123.57,173 90,173 90,173 C90,173 90,224.92 90,256.76" fill="none" id="ImpBinding&lt;T&gt;-backto-ImpConfig&lt;T&gt;" style="stroke:#181818;stroke-width:1;"/><polygon fill="none" points="187.9,173,169.9,167,169.9,179,187.9,173" style="stroke:#181818;stroke-width:1;"/></g><g class="link" data-entity-1="IBinding.T." data-entity-2="ImpNetworkBinding.T." data-source-line="37" data-uid="lnk22" id="link_IBinding.T._ImpNetworkBinding.T."><path codeLine="37" d="M554.92,65 C633.72,65 743,65 743,65 C743,65 743,116.92 743,148.76" fill="none" id="IBinding&lt;T&gt;-backto-ImpNetworkBinding&lt;T&gt;" style="stroke:#181818;stroke-width:1;"/><polygon fill="none" points="536.92,65,554.92,71,554.92,59,536.92,65" style="stroke:#181818;stroke-width:1;"/></g></g></svg></div><div class="puml dark" style=""><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" data-diagram-type="CLASS" height="328px" preserveAspectRatio="xMidYMid meet" style="width:867px;height:328px;" version="1.1" viewBox="0 0 867 328" width="867px" zoomAndPan="magnify" class="diagram"><defs/><g><g class="cluster" data-entity="Librarium" data-source-line="7" data-uid="ent0002" id="cluster_Librarium"><path d="M8.5,6 L85.8506,6 A3.75,3.75 0 0 1 88.3506,8.5 L95.3506,28.2969 L599.5,28.2969 A2.5,2.5 0 0 1 602,30.7969 L602,318.5 A2.5,2.5 0 0 1 599.5,321 L8.5,321 A2.5,2.5 0 0 1 6,318.5 L6,8.5 A2.5,2.5 0 0 1 8.5,6" fill="none" style="stroke:#FFFFFF;stroke-width:1.5;"/><line style="stroke:#FFFFFF;stroke-width:1.5;" x1="6" x2="95.3506" y1="28.2969" y2="28.2969"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="76.3506" x="10" y="20.9951">Librarium</text></g><g class="cluster" data-entity="Imperium" data-source-line="27" data-uid="ent0009" id="cluster_Imperium"><path d="M628.5,114 L705.0713,114 A3.75,3.75 0 0 1 707.5713,116.5 L714.5713,136.2969 L857.5,136.2969 A2.5,2.5 0 0 1 860,138.7969 L860,210.5 A2.5,2.5 0 0 1 857.5,213 L628.5,213 A2.5,2.5 0 0 1 626,210.5 L626,116.5 A2.5,2.5 0 0 1 628.5,114" fill="none" style="stroke:#FFFFFF;stroke-width:1.5;"/><line style="stroke:#FFFFFF;stroke-width:1.5;" x1="626" x2="714.5713" y1="136.2969" y2="136.2969"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="75.5713" x="630" y="128.9951">Imperium</text></g><g class="entity" data-entity="IBinding.T." data-source-line="8" data-uid="ent0003" id="entity_IBinding.T."><rect fill="#313139" height="48" rx="2.5" ry="2.5" style="stroke:#E7E7E7;stroke-width:0.5;" width="121.0449" x="415.48" y="41"/><ellipse cx="430.48" cy="57" fill="#352866" rx="11" ry="11" style="stroke:#E7E7E7;stroke-width:1;"/><path d="M426.4019,52.7656 L426.4019,50.6094 L433.7925,50.6094 L433.7925,52.7656 L431.3238,52.7656 L431.3238,60.8438 L433.7925,60.8438 L433.7925,63 L426.4019,63 L426.4019,60.8438 L428.8706,60.8438 L428.8706,52.7656 L426.4019,52.7656 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="89.0449" x="444.48" y="61.8467">IBinding&lt;T&gt;</text><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="416.48" x2="535.5249" y1="73" y2="73"/><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="416.48" x2="535.5249" y1="81" y2="81"/></g><g class="entity" data-entity="ImpBinding.T." data-source-line="11" data-uid="ent0004" id="entity_ImpBinding.T."><rect fill="#313139" height="48" rx="2.5" ry="2.5" style="stroke:#E7E7E7;stroke-width:0.5;" width="143.5693" x="188.22" y="149"/><ellipse cx="203.22" cy="165" fill="#2E5233" rx="11" ry="11" style="stroke:#E7E7E7;stroke-width:1;"/><path d="M206.1888,170.6406 Q205.6106,170.9375 204.97,171.0781 Q204.3294,171.2344 203.6263,171.2344 Q201.1263,171.2344 199.7981,169.5938 Q198.4856,167.9375 198.4856,164.8125 Q198.4856,161.6875 199.7981,160.0313 Q201.1263,158.375 203.6263,158.375 Q204.3294,158.375 204.97,158.5313 Q205.6263,158.6875 206.1888,158.9844 L206.1888,161.7031 Q205.5638,161.125 204.97,160.8594 Q204.3763,160.5781 203.7513,160.5781 Q202.4075,160.5781 201.72,161.6563 Q201.0325,162.7188 201.0325,164.8125 Q201.0325,166.9063 201.72,167.9844 Q202.4075,169.0469 203.7513,169.0469 Q204.3763,169.0469 204.97,168.7813 Q205.5638,168.5 206.1888,167.9219 L206.1888,170.6406 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="111.5693" x="217.22" y="169.8467">ImpBinding&lt;T&gt;</text><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="189.22" x2="330.7893" y1="181" y2="181"/><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="189.22" x2="330.7893" y1="189" y2="189"/></g><g class="entity" data-entity="ImpConfig.T." data-source-line="14" data-uid="ent0005" id="entity_ImpConfig.T."><rect fill="#313139" height="48" rx="2.5" ry="2.5" style="stroke:#E7E7E7;stroke-width:0.5;" width="135.585" x="22.21" y="257"/><ellipse cx="37.21" cy="273" fill="#2E5233" rx="11" ry="11" style="stroke:#E7E7E7;stroke-width:1;"/><path d="M40.1788,278.6406 Q39.6006,278.9375 38.96,279.0781 Q38.3194,279.2344 37.6163,279.2344 Q35.1163,279.2344 33.7881,277.5938 Q32.4756,275.9375 32.4756,272.8125 Q32.4756,269.6875 33.7881,268.0313 Q35.1163,266.375 37.6163,266.375 Q38.3194,266.375 38.96,266.5313 Q39.6163,266.6875 40.1788,266.9844 L40.1788,269.7031 Q39.5538,269.125 38.96,268.8594 Q38.3663,268.5781 37.7413,268.5781 Q36.3975,268.5781 35.71,269.6563 Q35.0225,270.7188 35.0225,272.8125 Q35.0225,274.9063 35.71,275.9844 Q36.3975,277.0469 37.7413,277.0469 Q38.3663,277.0469 38.96,276.7813 Q39.5538,276.5 40.1788,275.9219 L40.1788,278.6406 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="103.585" x="51.21" y="277.8467">ImpConfig&lt;T&gt;</text><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="23.21" x2="156.795" y1="289" y2="289"/><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="23.21" x2="156.795" y1="297" y2="297"/></g><g class="entity" data-entity="ImpBinaryBinding" data-source-line="17" data-uid="ent0006" id="entity_ImpBinaryBinding"><rect fill="#313139" height="48" rx="2.5" ry="2.5" style="stroke:#E7E7E7;stroke-width:0.5;" width="156.5439" x="192.73" y="257"/><ellipse cx="207.73" cy="273" fill="#2E5233" rx="11" ry="11" style="stroke:#E7E7E7;stroke-width:1;"/><path d="M210.6988,278.6406 Q210.1206,278.9375 209.48,279.0781 Q208.8394,279.2344 208.1363,279.2344 Q205.6363,279.2344 204.3081,277.5938 Q202.9956,275.9375 202.9956,272.8125 Q202.9956,269.6875 204.3081,268.0313 Q205.6363,266.375 208.1363,266.375 Q208.8394,266.375 209.48,266.5313 Q210.1363,266.6875 210.6988,266.9844 L210.6988,269.7031 Q210.0738,269.125 209.48,268.8594 Q208.8863,268.5781 208.2613,268.5781 Q206.9175,268.5781 206.23,269.6563 Q205.5425,270.7188 205.5425,272.8125 Q205.5425,274.9063 206.23,275.9844 Q206.9175,277.0469 208.2613,277.0469 Q208.8863,277.0469 209.48,276.7813 Q210.0738,276.5 210.6988,275.9219 L210.6988,278.6406 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="124.5439" x="221.73" y="277.8467">ImpBinaryBinding</text><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="193.73" x2="348.2739" y1="289" y2="289"/><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="193.73" x2="348.2739" y1="297" y2="297"/></g><g class="entity" data-entity="ImpExternalBinding.T." data-source-line="20" data-uid="ent0007" id="entity_ImpExternalBinding.T."><rect fill="#313139" height="48" rx="2.5" ry="2.5" style="stroke:#E7E7E7;stroke-width:0.5;" width="201.9004" x="384.05" y="257"/><ellipse cx="399.05" cy="273" fill="#2E5233" rx="11" ry="11" style="stroke:#E7E7E7;stroke-width:1;"/><path d="M402.0188,278.6406 Q401.4406,278.9375 400.8,279.0781 Q400.1594,279.2344 399.4563,279.2344 Q396.9563,279.2344 395.6281,277.5938 Q394.3156,275.9375 394.3156,272.8125 Q394.3156,269.6875 395.6281,268.0313 Q396.9563,266.375 399.4563,266.375 Q400.1594,266.375 400.8,266.5313 Q401.4563,266.6875 402.0188,266.9844 L402.0188,269.7031 Q401.3938,269.125 400.8,268.8594 Q400.2063,268.5781 399.5813,268.5781 Q398.2375,268.5781 397.55,269.6563 Q396.8625,270.7188 396.8625,272.8125 Q396.8625,274.9063 397.55,275.9844 Q398.2375,277.0469 399.5813,277.0469 Q400.2063,277.0469 400.8,276.7813 Q401.3938,276.5 402.0188,275.9219 L402.0188,278.6406 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="169.9004" x="413.05" y="277.8467">ImpExternalBinding&lt;T&gt;</text><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="385.05" x2="584.9504" y1="289" y2="289"/><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="385.05" x2="584.9504" y1="297" y2="297"/></g><g class="entity" data-entity="ImpImmutableBinding.T." data-source-line="23" data-uid="ent0008" id="entity_ImpImmutableBinding.T."><rect fill="#313139" height="48" rx="2.5" ry="2.5" style="stroke:#E7E7E7;stroke-width:0.5;" width="219.3047" x="366.35" y="149"/><ellipse cx="381.35" cy="165" fill="#2E5233" rx="11" ry="11" style="stroke:#E7E7E7;stroke-width:1;"/><path d="M384.3188,170.6406 Q383.7406,170.9375 383.1,171.0781 Q382.4594,171.2344 381.7563,171.2344 Q379.2563,171.2344 377.9281,169.5938 Q376.6156,167.9375 376.6156,164.8125 Q376.6156,161.6875 377.9281,160.0313 Q379.2563,158.375 381.7563,158.375 Q382.4594,158.375 383.1,158.5313 Q383.7563,158.6875 384.3188,158.9844 L384.3188,161.7031 Q383.6938,161.125 383.1,160.8594 Q382.5063,160.5781 381.8813,160.5781 Q380.5375,160.5781 379.85,161.6563 Q379.1625,162.7188 379.1625,164.8125 Q379.1625,166.9063 379.85,167.9844 Q380.5375,169.0469 381.8813,169.0469 Q382.5063,169.0469 383.1,168.7813 Q383.6938,168.5 384.3188,167.9219 L384.3188,170.6406 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="187.3047" x="395.35" y="169.8467">ImpImmutableBinding&lt;T&gt;</text><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="367.35" x2="584.6547" y1="181" y2="181"/><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="367.35" x2="584.6547" y1="189" y2="189"/></g><g class="entity" data-entity="ImpNetworkBinding.T." data-source-line="28" data-uid="ent0010" id="entity_ImpNetworkBinding.T."><rect fill="#313139" height="48" rx="2.5" ry="2.5" style="stroke:#E7E7E7;stroke-width:0.5;" width="202.0234" x="641.99" y="149"/><ellipse cx="656.99" cy="165" fill="#2E5233" rx="11" ry="11" style="stroke:#E7E7E7;stroke-width:1;"/><path d="M659.9588,170.6406 Q659.3806,170.9375 658.74,171.0781 Q658.0994,171.2344 657.3963,171.2344 Q654.8963,171.2344 653.5681,169.5938 Q652.2556,167.9375 652.2556,164.8125 Q652.2556,161.6875 653.5681,160.0313 Q654.8963,158.375 657.3963,158.375 Q658.0994,158.375 658.74,158.5313 Q659.3963,158.6875 659.9588,158.9844 L659.9588,161.7031 Q659.3338,161.125 658.74,160.8594 Q658.1463,160.5781 657.5213,160.5781 Q656.1775,160.5781 655.49,161.6563 Q654.8025,162.7188 654.8025,164.8125 Q654.8025,166.9063 655.49,167.9844 Q656.1775,169.0469 657.5213,169.0469 Q658.1463,169.0469 658.74,168.7813 Q659.3338,168.5 659.9588,167.9219 L659.9588,170.6406 Z " fill="#FFFFFF"/><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="170.0234" x="670.99" y="169.8467">ImpNetworkBinding&lt;T&gt;</text><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="642.99" x2="843.0134" y1="181" y2="181"/><line style="stroke:#E7E7E7;stroke-width:0.5;" x1="642.99" x2="843.0134" y1="189" y2="189"/></g><g class="link" data-entity-1="IBinding.T." data-entity-2="ImpBinding.T." data-source-line="32" data-uid="lnk12" id="link_IBinding.T._ImpBinding.T."><path codeLine="32" d="M397.26,65 C333.37,65 260,65 260,65 C260,65 260,116.92 260,148.76" fill="none" id="IBinding&lt;T&gt;-backto-ImpBinding&lt;T&gt;" style="stroke:#E7E7E7;stroke-width:1;"/><polygon fill="none" points="415.26,65,397.26,59,397.26,71,415.26,65" style="stroke:#E7E7E7;stroke-width:1;"/></g><g class="link" data-entity-1="IBinding.T." data-entity-2="ImpImmutableBinding.T." data-source-line="33" data-uid="lnk14" id="link_IBinding.T._ImpImmutableBinding.T."><path codeLine="33" d="M476,95.24 C476,113.02 476,131.08 476,148.84" fill="none" id="IBinding&lt;T&gt;-backto-ImpImmutableBinding&lt;T&gt;" style="stroke:#E7E7E7;stroke-width:1;"/><polygon fill="#E7E7E7" points="476,89.24,472,98.24,476,94.24,480,98.24,476,89.24" style="stroke:#E7E7E7;stroke-width:1;"/></g><g class="link" data-entity-1="ImpBinding.T." data-entity-2="ImpBinaryBinding" data-source-line="34" data-uid="lnk16" id="link_ImpBinding.T._ImpBinaryBinding"><path codeLine="34" d="M262.26,215.24 C262.26,233.02 262.26,239.08 262.26,256.84" fill="none" id="ImpBinding&lt;T&gt;-backto-ImpBinaryBinding" style="stroke:#E7E7E7;stroke-width:1;"/><polygon fill="none" points="262.26,197.24,256.26,215.24,268.26,215.24,262.26,197.24" style="stroke:#E7E7E7;stroke-width:1;"/></g><g class="link" data-entity-1="ImpBinding.T." data-entity-2="ImpExternalBinding.T." data-source-line="35" data-uid="lnk18" id="link_ImpBinding.T._ImpExternalBinding.T."><path codeLine="35" d="M350.11,173 C364.77,173 357.81,173 357.81,173 C357.81,173 357.81,281 357.81,281 C357.81,281 368.58,281 383.86,281" fill="none" id="ImpBinding&lt;T&gt;-backto-ImpExternalBinding&lt;T&gt;" style="stroke:#E7E7E7;stroke-width:1;"/><polygon fill="none" points="332.11,173,350.11,179,350.11,167,332.11,173" style="stroke:#E7E7E7;stroke-width:1;"/></g><g class="link" data-entity-1="ImpBinding.T." data-entity-2="ImpConfig.T." data-source-line="36" data-uid="lnk20" id="link_ImpBinding.T._ImpConfig.T."><path codeLine="36" d="M169.9,173 C123.57,173 90,173 90,173 C90,173 90,224.92 90,256.76" fill="none" id="ImpBinding&lt;T&gt;-backto-ImpConfig&lt;T&gt;" style="stroke:#E7E7E7;stroke-width:1;"/><polygon fill="none" points="187.9,173,169.9,167,169.9,179,187.9,173" style="stroke:#E7E7E7;stroke-width:1;"/></g><g class="link" data-entity-1="IBinding.T." data-entity-2="ImpNetworkBinding.T." data-source-line="37" data-uid="lnk22" id="link_IBinding.T._ImpNetworkBinding.T."><path codeLine="37" d="M554.92,65 C633.72,65 743,65 743,65 C743,65 743,116.92 743,148.76" fill="none" id="IBinding&lt;T&gt;-backto-ImpNetworkBinding&lt;T&gt;" style="stroke:#E7E7E7;stroke-width:1;"/><polygon fill="none" points="536.92,65,554.92,71,554.92,59,536.92,65" style="stroke:#E7E7E7;stroke-width:1;"/></g></g></svg></div></div>
+
+<p>All bindings implement the <code>IBinding&lt;T&gt;</code> interface that defines the basic functionality of the binding. If you want, you can implement your own binding logic, but it is recommended to use the three ready-to-use binding implementations that Librarium already provides.</p>
+<table>
+<thead>
+<tr>
+<th><div style="width:180px">Binding Implementation</div></th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ImpBinding&lt;T&gt;</code></td>
+<td>Librarium</td>
+<td>The most basic implementation of a multi-purpose binding. Is used extensively throughout Imperium's codebase.</td>
+</tr>
+<tr>
+<td><code>ImpBinaryBinding</code></td>
+<td>Librarium</td>
+<td>A more specific implementation of the <code>ImpBinding</code> where <code>T</code> is a boolean value.</td>
+</tr>
+<tr>
+<td><code>ImpExternalBinding&lt;T&gt;</code></td>
+<td>Librarium</td>
+<td>A more specific implementation of the <code>ImpBinding</code> that gets its value via a provided function and updates whenever a provided master binding updates.</td>
+</tr>
+<tr>
+<td><code>ImpConfigBinding&lt;T&gt;</code></td>
+<td>Librarium</td>
+<td>A binding that internally syncs with a BepInEx config.</td>
+</tr>
+<tr>
+<td><code>ImpImmutableBinding&lt;T&gt;</code></td>
+<td>Librarium</td>
+<td>A binding that is read-only. Mainly used to expose an existing binding for the Imperium API without enabling API users to change its value.</td>
+</tr>
+<tr>
+<td><code>ImpNetworkBinding&lt;T&gt;</code></td>
+<td>Imperium</td>
+<td>A binding that is synchronized across the network for all clients in the lobby. This binding only works in the context of Imperium and requires an instance of <code>Imperium.ImpNetworking</code> to work properly.</td>
+</tr>
+</tbody>
+</table>
+<p>For more information on how to use the bindings, please refer to the code documentations of <a href="https://github.com/giosuel/librarium/tree/main/Librarium/src/Binding">Librarium</a> and <a href="https://github.com/giosuel/imperium-repo/tree/main/Imperium/src">Imperium</a>.</p>
+<h3 id="api-availability">API Availability</h3>
+<p>API modules are only available as soon as Imperium has been <strong>initialized</strong> and <strong>launched</strong>. When Imperium has not yet been launched, all calls to those modules will result in an <code>ImperiumAPIException</code>.</p>
+<p>Imperium is <strong>launched</strong> as soon as the main menu is loaded for the first time and remains active until the game is closed. When entering a lobby where the local client is not the host, Imperium requests access from the host of the lobby. If the host does not have Imperium installed or does not allow Imperium access, Imperium will disable itself until leaving that lobby or the host enables Imperium access.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The binding <code>Imperium.API.State.IsImperiumEnabled</code> indicates whether Imperium has been enabled, and by extension is ready to serve API calls.</p>
+</div>
+<p><img alt="Imperium Startup Routine" src="https://github.com/giosuel/imperium-repo/blob/development/assets/startup.png?raw=true" /></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+    
+    
+    Made by
+    <a href="https://github.com/giosuel/imperium-repo" target="_blank" rel="noopener">
+        giosuel
+    </a>
+    
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.top", "navigation.tabs", "search.suggest", "content.code.annotate", "content.code.copy", "content.action.edit", "toc.follow", "content.tooltips", "navigation.indexes", "content.footnote.tooltips"], "search": "../assets/javascripts/workers/search.d50fe291.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.13a4f30d.min.js"></script>
+      
+        <script src="../assets/mkdocs_puml/puml.js"></script>
+      
+        <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+      
+        <script src="../assets/mkdocs_puml/interaction.js"></script>
+      
+    
+  </body>
+</html>
