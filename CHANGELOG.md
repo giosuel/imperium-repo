@@ -1,5 +1,12 @@
 # Changelog
 
+## Imperium v0.2.3 - Bug fixes
+
+### Bug Fixes
+
+- Fixed a bug that made it so spawned enemies entered an infinite spawn-despawn loop.
+- Added support for tumble wings and the crouch rest upgrades.
+
 ## Imperium v0.2.2 - Bug fixes
 
 ### Bug Fixes
