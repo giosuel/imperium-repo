@@ -6,6 +6,7 @@ using Imperium.Core;
 using Imperium.Interface.Common;
 using Imperium.Types;
 using Librarium.Binding;
+using Steamworks;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -43,6 +44,11 @@ internal class UpgradesWindow : ImperiumWindow
         BuildElement("playerUpgradeThrow");
         BuildElement("playerUpgradeLaunch");
         BuildElement("playerUpgradeMapPlayerCount");
+        if (SteamApps.BuildId >= 18628033)
+        {
+            BuildElement("playerUpgradeTumbleWings");
+            BuildElement("playerUpgradeCrouchRest");
+        }
     }
 
     private void BuildElement(string upgradeName)

@@ -113,5 +113,7 @@ public struct ImpConstants
         { "playerUpgradeStrength", "Strength" },
         { "playerUpgradeRange", "Range" },
         { "playerUpgradeThrow", "Throw" },
+        { "playerUpgradeTumbleWings", "Tumble Wings" },
+        { "playerUpgradeCrouchRest", "Crouch Rest" },
     };
 }
