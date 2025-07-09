@@ -58,7 +58,6 @@ internal static class PreInitPatches
 
         if (mode == LaunchMode.Singleplayer)
         {
-            RunManager.instance.skipMainMenu = true;
             if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu)
             {
                 RunManager.instance.ChangeLevel(
