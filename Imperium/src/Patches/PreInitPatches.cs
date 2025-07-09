@@ -58,12 +58,9 @@ internal static class PreInitPatches
 
         if (mode == LaunchMode.Singleplayer)
         {
-            if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu)
-            {
-                RunManager.instance.ChangeLevel(
-                    _completedLevel: true, _levelFailed: false, RunManager.ChangeLevelType.RunLevel
-                );
-            }
+            RunManager.instance.ChangeLevel(
+                _completedLevel: true, _levelFailed: false, RunManager.ChangeLevelType.RunLevel
+            );
         }
 
         if (mode == LaunchMode.Multiplayer)
