@@ -1,9 +1,11 @@
 #region
 
+using System.IO;
 using HarmonyLib;
 using Imperium.Core;
 using Imperium.Util;
 using TMPro;
+using UnityEngine;
 
 #endregion
 
@@ -44,6 +46,17 @@ internal static class PreInitPatches
 
     private static bool hasAutoLoaded;
 
+    [HarmonyPatch(typeof(RunManager), "Awake")]
+    [HarmonyPrefix]
+    private static void AwakeRunManagerPatch(RunManager __instance)
+    {
+        var autoLaunch = Imperium.Settings.Preferences.QuickloadAutoLaunch.Value;
+        
+        if (!autoLaunch || hasAutoLoaded) return;
+        
+        __instance.levelCurrent = __instance.levelMainMenu;
+    }
+
     [HarmonyPostfix]
     [HarmonyPatch(typeof(MainMenuOpen), "Awake")]
     private static void AwakePlayerAvatarPatch(MainMenuOpen __instance)
@@ -56,21 +69,18 @@ internal static class PreInitPatches
 
         if (!autoLaunch) return;
 
+        string saveFilePath = $"{Application.persistentDataPath}/saves/{ImpConstants.ImperiumSaveFile}/{ImpConstants.ImperiumSaveFile}.es3";
+        if (!File.Exists(saveFilePath))
+            StatsManager.instance.SaveGame(ImpConstants.ImperiumSaveFile);
+        
         if (mode == LaunchMode.Singleplayer)
         {
-            RunManager.instance.skipMainMenu = true;
-            if (RunManager.instance.levelCurrent == RunManager.instance.levelMainMenu)
-            {
-                RunManager.instance.ChangeLevel(
-                    _completedLevel: true, _levelFailed: false, RunManager.ChangeLevelType.RunLevel
-                );
-            }
+            __instance.MainMenuSetState((int)MainMenuOpen.MainMenuGameModeState.SinglePlayer);
+            SemiFunc.MenuActionSingleplayerGame(ImpConstants.ImperiumSaveFile);
         }
 
         if (mode == LaunchMode.Multiplayer)
         {
-            StatsManager.instance.SaveGame(ImpConstants.ImperiumSaveFile);
-
             __instance.MainMenuSetState((int)MainMenuOpen.MainMenuGameModeState.MultiPlayer);
             SemiFunc.MenuActionHostGame(ImpConstants.ImperiumSaveFile);
         }
