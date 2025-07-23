@@ -1,5 +1,12 @@
 # Changelog
 
+## Imperium v0.2.4 - Bug fixes
+
+### Bug Fixes
+
+- Removed an unused boolean that caused Quickload to throw an exception.
+- Fixed Quickload in singleplayer and multiplayer.
+
 ## Imperium v0.2.3 - Bug fixes
 
 ### Bug Fixes
