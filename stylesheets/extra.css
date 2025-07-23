@@ -1,0 +1,41 @@
+@font-face {
+  font-family: Figtree;
+  src: local('Figtree'), url("../fonts/Figtree-VariableFont_wght.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "AwaitaMono";
+    src: local('AwaitaMono'), url("../fonts/AdwaitaMono-Regular.ttf") format("truetype");
+}
+
+:root {
+    --md-text-font: "Figtree", Roboto;
+    --md-code-font: "AwaitaMono", monospace; 
+}
+
+
+.md-tabs__link {
+  &[href^="//"]::after,
+  &[href^="http://"]::after,
+  &[href^="https://"]::after {
+      content: "↗";
+      font-size: 12px;
+      margin-left: .2em;
+      vertical-align: top;
+  }
+}
+
+@media screen and (min-width: 500px) {
+  .float-right-img {
+    float: right;
+    margin: 0 0 0 16px !important;
+  }
+  .float-right-img img {
+    width: 380px;
+  }
+}
+
+figcaption {
+  margin: 0 auto !important;
+}
+  
