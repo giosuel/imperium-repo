@@ -46,6 +46,7 @@ internal static class PreInitPatches
             }
             else
             {
+                // Fixes imperium not working when using a mod that enables the lobby menu in singleplayer
                 Imperium.Networking.OnAuthenticateResponse();
             }
         }
