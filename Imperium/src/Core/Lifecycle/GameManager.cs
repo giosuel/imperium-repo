@@ -68,10 +68,7 @@ internal class GameManager : ImpLifecycleObject
 
     internal static bool IsGameLevel()
     {
-        return RunManager.instance.levelCurrent != RunManager.instance.levelLobbyMenu &&
-               RunManager.instance.levelCurrent != RunManager.instance.levelMainMenu &&
-               RunManager.instance.levelCurrent != RunManager.instance.levelLobby &&
-               RunManager.instance.levelCurrent != RunManager.instance.levelTutorial;
+        return SemiFunc.RunIsArena() || SemiFunc.RunIsLevel() || SemiFunc.RunIsShop() || SemiFunc.RunIsRecording();
     }
 
     internal static string GetEnemyState(EnemyParent enemyParent)

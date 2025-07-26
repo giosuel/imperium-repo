@@ -40,7 +40,16 @@ internal static class PreInitPatches
         }
         else if (RunManager.instance.levelCurrent == RunManager.instance.levelLobbyMenu)
         {
-            Imperium.Networking.RequestImperiumAccess();
+            if (SemiFunc.IsMultiplayer())
+            {
+                Imperium.Networking.RequestImperiumAccess();
+            }
+            else
+            {
+                // Fixes imperium being disabled when using a mod that can enable the lobby menu in singleplayer
+                // Example: https://thunderstore.io/c/repo/p/Dev1A3/LobbyImprovements_REPO/
+                Imperium.Networking.OnAuthenticateResponse();
+            }
         }
     }
 

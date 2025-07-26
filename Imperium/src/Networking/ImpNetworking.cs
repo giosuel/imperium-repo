@@ -204,7 +204,7 @@ public class ImpNetworking
     }
 
     [ImpAttributes.LocalMethod]
-    private void OnAuthenticateResponse()
+    internal void OnAuthenticateResponse()
     {
         ImperiumAccessGranted = true;
 

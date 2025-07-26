@@ -32,9 +32,9 @@
         <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.1" PrivateAssets="all" ExcludeAssets="runtime" />
         <PackageReference Include="UnityEngine.Modules" Version="2022.3.21" IncludeAssets="compile" />
 
-        <PackageReference Include="Rune580.Mods.Repo.RepoSteamNetworking" Version="0.1.0" />
+        <PackageReference Include="Rune580.Mods.Repo.RepoSteamNetworking" Version="0.1.2-dev.1" />
         <PackageReference Include="Zehs.REPOLib" Version="2.1.0" />
-        <PackageReference Include="rainbowblood.UniverseLib.Mono" Version="2.*" Publicize="true" />
+        <PackageReference Include="rainbowblood.UniverseLib.Mono" Version="2.*" />
         <PackageReference Include="R.E.P.O.GameLibs.Steam" Version="*-*" PrivateAssets="all" Publicize="true" />
 
         <PackageReference Include="MinVer" Version="4.3.0">
@@ -44,7 +44,7 @@
 
         <ProjectReference Include="..\librarium\Librarium\Librarium.csproj" />
 
-        <Reference Include="UnityExplorer.BIE5.Mono" HintPath="..\deps\UnityExplorer.BIE5.Mono.dll" Publicize="true" />
+        <Reference Include="UnityExplorer.BIE5.Mono" HintPath="..\deps\UnityExplorer.BIE5.Mono.dll" />
     </ItemGroup>
 
     <!-- Enable debug symbols. This will show source code line numbers in stack traces. -->

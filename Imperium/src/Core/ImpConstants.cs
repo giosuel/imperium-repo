@@ -98,7 +98,7 @@ public struct ImpConstants
     [
         "Lobby Menu",
         "Main Menu",
-        "Recording",
+        "Splash Screen",
         "Tutorial"
     ];
 
