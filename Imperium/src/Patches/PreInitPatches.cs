@@ -40,7 +40,14 @@ internal static class PreInitPatches
         }
         else if (RunManager.instance.levelCurrent == RunManager.instance.levelLobbyMenu)
         {
-            Imperium.Networking.RequestImperiumAccess();
+            if (SemiFunc.IsMultiplayer())
+            {
+                Imperium.Networking.RequestImperiumAccess();
+            }
+            else
+            {
+                Imperium.Networking.OnAuthenticateResponse();
+            }
         }
     }
 
