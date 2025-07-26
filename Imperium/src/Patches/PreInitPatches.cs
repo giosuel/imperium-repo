@@ -46,7 +46,8 @@ internal static class PreInitPatches
             }
             else
             {
-                // Fixes imperium being disabled when using a mod that enables the lobby menu in singleplayer
+                // Fixes imperium being disabled when using a mod that can enable the lobby menu in singleplayer
+                // Example: https://thunderstore.io/c/repo/p/Dev1A3/LobbyImprovements_REPO/
                 Imperium.Networking.OnAuthenticateResponse();
             }
         }
