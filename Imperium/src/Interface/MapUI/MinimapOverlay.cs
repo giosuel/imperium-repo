@@ -117,6 +117,7 @@ internal class MinimapOverlay : BaseUI
             || Imperium.Interface.IsOpen()
             || MenuManager.instance.IsOpen()
             || ChatManager.instance.IsOpen()
+            || DebugConsoleUI.instance.IsOpen()
             || Imperium.Freecam.IsFreecamEnabled.Value
             || !Imperium.IsImperiumEnabled.Value
             || Imperium.GameManager.IsGameLoading

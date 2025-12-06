@@ -93,6 +93,7 @@ public class WaypointManager : ImpLifecycleObject
         if (Imperium.Interface.IsOpen() ||
             MenuManager.instance.IsOpen() ||
             ChatManager.instance.IsOpen() ||
+            DebugConsoleUI.instance.IsOpen() ||
             currentHoverWaypoint == null) return;
 
         if (deleteHandlers.TryGetValue(currentHoverWaypoint, out var handler))
@@ -109,6 +110,7 @@ public class WaypointManager : ImpLifecycleObject
         if (Imperium.Interface.IsOpen() ||
             MenuManager.instance.IsOpen() ||
             ChatManager.instance.IsOpen() ||
+            DebugConsoleUI.instance.IsOpen() ||
             currentHoverWaypoint == null) return;
 
         Imperium.PlayerManager.TeleportLocalPlayer(currentHoverWaypoint.Position);
