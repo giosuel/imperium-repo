@@ -108,9 +108,7 @@ public class WaypointManager : ImpLifecycleObject
     private void OnWaypointTeleport(InputAction.CallbackContext _)
     {
         if (Imperium.Interface.IsOpen() ||
-            MenuManager.instance.IsOpen() ||
-            ChatManager.instance.IsOpen() ||
-            DebugConsoleUI.instance.IsOpen() ||
+!SemiFunc.NoTextInputsActive() ||
             currentHoverWaypoint == null) return;
 
         Imperium.PlayerManager.TeleportLocalPlayer(currentHoverWaypoint.Position);
