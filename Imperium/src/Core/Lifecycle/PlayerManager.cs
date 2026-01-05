@@ -105,7 +105,7 @@ internal class PlayerManager : ImpLifecycleObject
 
     private static void ToggleHUD(InputAction.CallbackContext callbackContext)
     {
-        if (Imperium.Interface.IsOpen() || ChatManager.instance.IsOpen() || DebugConsoleUI.instance.IsOpen()) return;
+        if (Imperium.Interface.IsOpen() || !SemiFunc.NoTextInputsActive()) return;
 
         GameDirector.instance.CommandRecordingDirectorToggle();
     }
