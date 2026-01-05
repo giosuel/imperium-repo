@@ -109,9 +109,7 @@ public class ImpFreecam : ImpScript
     private void OnMinicamFullscreenToggle(InputAction.CallbackContext callbackContext)
     {
         if (Imperium.Interface.IsOpen() ||
-            MenuManager.instance.IsOpen() ||
-            ChatManager.instance.IsOpen() ||
-            DebugConsoleUI.instance.IsOpen() ||
+ !SemiFunc.NoTextInputsActive() ||
             !IsMinicamEnabled.Value) return;
 
         IsMinicamFullscreenEnabled.Toggle();
@@ -182,7 +180,7 @@ public class ImpFreecam : ImpScript
 
     private void OnFreecamReset(InputAction.CallbackContext callbackContext)
     {
-        if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen() || DebugConsoleUI.instance.IsOpen()) return;
+        if (Imperium.Interface.IsOpen() || !SemiFunc.NoTextInputsActive()) return;
 
         camera.transform.position = PlayerAvatar.instance.localCamera.transform.position + Vector3.up * 2;
         Imperium.Settings.Freecam.FreecamFieldOfView.Set(ImpConstants.DefaultFOV);
@@ -212,7 +210,7 @@ public class ImpFreecam : ImpScript
 
     private void OnToggleLayerSelector(InputAction.CallbackContext callbackContext)
     {
-        if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen() || DebugConsoleUI.instance.IsOpen()) return;
+        if (Imperium.Interface.IsOpen() || !SemiFunc.NoTextInputsActive()) return;
 
         Imperium.Settings.Freecam.LayerSelector.Set(!layerSelector.IsOpen);
         if (layerSelector.IsOpen)

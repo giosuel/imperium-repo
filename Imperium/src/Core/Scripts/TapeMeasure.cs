@@ -148,7 +148,7 @@ public class TapeMeasure : ImpScript
         {
             OnExitAction();
         }
-        else if (!Imperium.Interface.IsOpen() && !MenuManager.instance.IsOpen() && !ChatManager.instance.IsOpen() && !DebugConsoleUI.instance.IsOpen())
+        else if (!Imperium.Interface.IsOpen() && SemiFunc.NoTextInputsActive())
         {
             Activate();
         }
