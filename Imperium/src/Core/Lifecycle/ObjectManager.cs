@@ -282,7 +282,7 @@ internal class ObjectManager : ImpLifecycleObject
         ).OrderBy(x => x.PrefabName).ToList();
         var allValuables = RunManager.instance.levels.SelectMany(l => l.ValuablePresets
             .SelectMany(p => p.tiny.Concat(p.small).Concat(p.medium).Concat(p.big).Concat(p.wide).Concat(p.tall).Concat(p.veryTall)))
-            .OrderBy(x => x.PrefabName).ToList();
+            .Distinct().OrderBy(x => x.PrefabName).ToList();
 
         LoadedItems.Set(allItems);
         LoadedLevels.Set(allLevels);
