@@ -51,6 +51,6 @@ public abstract class LcInputActions
     public void Disable()
     {
         actionMap.Disable();
-        Asset.Disable();
+        if (Asset) Asset.Disable();
     }
 }

@@ -59,7 +59,7 @@ internal class UpgradesWindow : ImperiumWindow
         element.SetActive(true);
 
         var upgradeBinding = new ImpExternalBinding<int, int>(
-            () => StatsManager.instance.dictionaryOfDictionaries[upgradeName][Imperium.Player.steamID]
+            () => StatsManager.instance.dictionaryOfDictionaries[upgradeName].GetValueOrDefault(Imperium.Player.steamID, 0)
         );
 
         upgradeBinding.OnUpdateSecondary += value =>
@@ -105,7 +105,7 @@ internal class UpgradesWindow : ImperiumWindow
     {
         // We use secondary here to skip setting the value again (see above)
         Imperium.PlayerManager.PlayerUpgradeBinding.Do(entry => entry.Value.Set(
-            StatsManager.instance.dictionaryOfDictionaries[entry.Key][Imperium.Player.steamID],
+            StatsManager.instance.dictionaryOfDictionaries[entry.Key].GetValueOrDefault(Imperium.Player.steamID),
             invokeSecondary: false
         ));
     }

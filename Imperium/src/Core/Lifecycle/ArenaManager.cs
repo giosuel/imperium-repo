@@ -3,6 +3,7 @@
 using System.Linq;
 using HarmonyLib;
 using Imperium.Networking;
+using Photon.Pun;
 using UnityEngine;
 
 #endregion
@@ -46,7 +47,31 @@ internal class ArenaManager : ImpLifecycleObject
         "EnemyDisableVision",
         Imperium.Networking,
         masterBinding: Imperium.Settings.Game.DisableVision,
-        onUpdateClient: value => EnemyDirector.instance.debugNoVision = value
+        onUpdateClient: value =>
+        {
+            string steamID = PlayerController.instance.playerSteamID;
+            if(value){
+                if(!DebugCommandHandler.instance.enemyNoVision.Contains(steamID)){
+                    DebugCommandHandler.instance.enemyNoVision.Add(steamID);
+ 
+                    if(SemiFunc.IsMultiplayer()){
+                        PunManager.instance.photonView.RPC("TesterNoAggroCommandRPC", RpcTarget.MasterClient, steamID, true);
+                    }else{
+                        PunManager.instance.TesterNoAggroCommandRPC(steamID, true);
+                    }
+                }
+            }else{
+                if(DebugCommandHandler.instance.enemyNoVision.Contains(steamID)){
+                    DebugCommandHandler.instance.enemyNoVision.Remove(steamID);
+
+                    if(SemiFunc.IsMultiplayer()){
+                        PunManager.instance.photonView.RPC("TesterNoAggroCommandRPC", RpcTarget.MasterClient, steamID, false);
+                    }else{
+                        PunManager.instance.TesterNoAggroCommandRPC(steamID, false);
+                    }
+                }
+            }
+        }
     );
 
     internal readonly ImpNetworkBinding<bool> ShortAction = new(

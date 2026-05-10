@@ -1,5 +1,6 @@
 #region
 
+using System.Collections.Generic;
 using BepInEx.Configuration;
 using Librarium;
 using Librarium.Binding;
@@ -74,7 +75,7 @@ internal class PlayerSettings(ConfigFile config) : SettingsContainer(config)
             PlayerController.instance.playerOriginalMoveSpeed = value;
 
             // The ratio between the default move speed and sprint speed is 2.5
-            var sprintSpeed = value * 2.5f + StatsManager.instance.playerUpgradeSpeed[Imperium.Player.steamID];
+            var sprintSpeed = value * 2.5f + StatsManager.instance.playerUpgradeSpeed.GetValueOrDefault(Imperium.Player.steamID, 0);
             PlayerController.instance.SprintSpeed = sprintSpeed;
             PlayerController.instance.playerOriginalSprintSpeed = sprintSpeed;
 
