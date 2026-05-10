@@ -124,6 +124,7 @@ public class GameSettings : ImpWidget
     protected override void OnOpen()
     {
         // Update this here as it can change from outside of Imperium
-        Imperium.Settings.Game.DisableVision.Set(EnemyDirector.instance.debugNoVision);
+        string steamID = PlayerController.instance.playerSteamID;
+        Imperium.Settings.Game.DisableVision.Set(EnemyDirector.instance.debugNoVision.Contains(steamID));
     }
 }

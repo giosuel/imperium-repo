@@ -1,5 +1,6 @@
 #region
 
+using System.Collections.Generic;
 using BepInEx.Configuration;
 using Librarium;
 using Librarium.Binding;
@@ -26,7 +27,7 @@ internal class GrabberSettings(ConfigFile config) : SettingsContainer(config)
         primaryUpdate: value =>
         {
             PhysGrabber.instance.grabStrength =
-                value + StatsManager.instance.playerUpgradeStrength[Imperium.Player.steamID] * 0.2f;
+                value + StatsManager.instance.playerUpgradeStrength.GetValueOrDefault(Imperium.Player.steamID, 0) * 0.2f;
         }
     );
 
@@ -38,7 +39,7 @@ internal class GrabberSettings(ConfigFile config) : SettingsContainer(config)
         primaryUpdate: value =>
         {
             PhysGrabber.instance.throwStrength =
-                value + StatsManager.instance.playerUpgradeThrow[Imperium.Player.steamID] * 0.3f;
+                value + StatsManager.instance.playerUpgradeThrow.GetValueOrDefault(Imperium.Player.steamID, 0) * 0.3f;
         }
     );
 
@@ -50,7 +51,7 @@ internal class GrabberSettings(ConfigFile config) : SettingsContainer(config)
         primaryUpdate: value =>
         {
             PhysGrabber.instance.grabRange =
-                value + StatsManager.instance.playerUpgradeRange[Imperium.Player.steamID] * 1;
+                value + StatsManager.instance.playerUpgradeRange.GetValueOrDefault(Imperium.Player.steamID, 0) * 1;
         }
     );
 
