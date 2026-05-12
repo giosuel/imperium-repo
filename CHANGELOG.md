@@ -1,6 +1,26 @@
 # Changelog
 
+## Imperium v0.4.0 - Compatibility with Cosmetics Update
+
+### Bug Fixes
+
+- Fixed compatibility with the version v0.4.2 of the game.
+- Fixed keybinds activating when typing in the debug console.
+- Fixed level point visualizer nullref.
+- Fixed some valuables being duplicated.
+
+### QoL Changes
+
+- Simplified detecting if an input field is active in multiple places.
+- Replaced local UE dependency with NuGet one.
+
+### Compatibility
+
+Compatible with REPO release version  `v0.4.1` and beta version `v0.4.2`.
+
 ## Imperium v0.3.0 - Bug fixes
+
+### Bug Fixes
 
 - Fixed compatibility with the version v0.3.0 of the game.
 - Fixed default value for night vision.
