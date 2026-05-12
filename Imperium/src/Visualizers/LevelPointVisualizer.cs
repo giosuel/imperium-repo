@@ -46,6 +46,8 @@ internal class LevelPointVisualizer : BaseVisualizer<bool, Component>
 
             foreach (var connectedPoint in levelPoint.ConnectedPoints)
             {
+                if (!connectedPoint) continue;
+                
                 var connection = new Edge(levelPoint.transform.position, connectedPoint.transform.position);
                 if (!connections.TryGetValue(connection, out var connectionLine))
                 {

@@ -1,12 +1,13 @@
 #region
 
-using System.Collections.Generic;
 using Imperium.API.Types.Networking;
+using Imperium.Extensions;
 using Imperium.Networking;
 using Imperium.Util;
 using Librarium.Binding;
 using RepoSteamNetworking.API;
 using Steamworks;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -104,6 +105,8 @@ internal class PlayerManager : ImpLifecycleObject
 
     private static void ToggleHUD(InputAction.CallbackContext callbackContext)
     {
+        if (Imperium.Interface.IsOpen() || !SemiFunc.NoTextInputsActive()) return;
+
         GameDirector.instance.CommandRecordingDirectorToggle();
     }
 

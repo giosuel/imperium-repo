@@ -154,7 +154,7 @@ internal class
 
     private static void OnMinimapToggle(InputAction.CallbackContext _)
     {
-        if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
+        if (Imperium.Interface.IsOpen() || !SemiFunc.NoTextInputsActive()) return;
 
         Imperium.Settings.Map.MinimapEnabled.Set(!Imperium.Settings.Map.MinimapEnabled.Value);
     }

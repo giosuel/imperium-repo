@@ -181,7 +181,7 @@ public class
 
     private static void OnInteractiveTeleport(InputAction.CallbackContext callbackContext)
     {
-        if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
+        if (Imperium.Interface.IsOpen() || !SemiFunc.NoTextInputsActive()) return;
 
         if (Imperium.PositionIndicator.IsActive)
         {

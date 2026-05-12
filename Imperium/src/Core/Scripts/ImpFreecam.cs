@@ -93,7 +93,7 @@ public class ImpFreecam : ImpScript
 
     private void OnFreecamToggle(InputAction.CallbackContext callbackContext)
     {
-        if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
+        if (Imperium.Interface.IsOpen() || !SemiFunc.NoTextInputsActive()) return;
 
         IsFreecamEnabled.Toggle();
     }
@@ -102,15 +102,14 @@ public class ImpFreecam : ImpScript
     {
         // Minicam is currently disabled
 
-        // if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
+        // if (Imperium.Interface.IsOpen() || !SemiFunc.NoTextInputsActive()) return;
         // IsMinicamEnabled.Toggle();
     }
 
     private void OnMinicamFullscreenToggle(InputAction.CallbackContext callbackContext)
     {
         if (Imperium.Interface.IsOpen() ||
-            MenuManager.instance.IsOpen() ||
-            ChatManager.instance.IsOpen() ||
+            !SemiFunc.NoTextInputsActive() ||
             !IsMinicamEnabled.Value) return;
 
         IsMinicamFullscreenEnabled.Toggle();
@@ -181,7 +180,7 @@ public class ImpFreecam : ImpScript
 
     private void OnFreecamReset(InputAction.CallbackContext callbackContext)
     {
-        if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
+        if (Imperium.Interface.IsOpen() || !SemiFunc.NoTextInputsActive()) return;
 
         camera.transform.position = PlayerAvatar.instance.localCamera.transform.position + Vector3.up * 2;
         Imperium.Settings.Freecam.FreecamFieldOfView.Set(ImpConstants.DefaultFOV);
@@ -211,7 +210,7 @@ public class ImpFreecam : ImpScript
 
     private void OnToggleLayerSelector(InputAction.CallbackContext callbackContext)
     {
-        if (Imperium.Interface.IsOpen() || MenuManager.instance.IsOpen() || ChatManager.instance.IsOpen()) return;
+        if (Imperium.Interface.IsOpen() || !SemiFunc.NoTextInputsActive()) return;
 
         Imperium.Settings.Freecam.LayerSelector.Set(!layerSelector.IsOpen);
         if (layerSelector.IsOpen)

@@ -115,8 +115,7 @@ internal class MinimapOverlay : BaseUI
         // Automatically open this UI when nothing else is open
         if (!Imperium.Settings.Map.MinimapEnabled.Value
             || Imperium.Interface.IsOpen()
-            || MenuManager.instance.IsOpen()
-            || ChatManager.instance.IsOpen()
+            || !SemiFunc.NoTextInputsActive()
             || Imperium.Freecam.IsFreecamEnabled.Value
             || !Imperium.IsImperiumEnabled.Value
             || Imperium.GameManager.IsGameLoading

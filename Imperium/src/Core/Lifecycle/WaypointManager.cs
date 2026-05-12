@@ -91,8 +91,7 @@ public class WaypointManager : ImpLifecycleObject
     private void OnWaypointDelete(InputAction.CallbackContext _)
     {
         if (Imperium.Interface.IsOpen() ||
-            MenuManager.instance.IsOpen() ||
-            ChatManager.instance.IsOpen() ||
+            !SemiFunc.NoTextInputsActive() ||
             currentHoverWaypoint == null) return;
 
         if (deleteHandlers.TryGetValue(currentHoverWaypoint, out var handler))
@@ -107,8 +106,7 @@ public class WaypointManager : ImpLifecycleObject
     private void OnWaypointTeleport(InputAction.CallbackContext _)
     {
         if (Imperium.Interface.IsOpen() ||
-            MenuManager.instance.IsOpen() ||
-            ChatManager.instance.IsOpen() ||
+            !SemiFunc.NoTextInputsActive() ||
             currentHoverWaypoint == null) return;
 
         Imperium.PlayerManager.TeleportLocalPlayer(currentHoverWaypoint.Position);
