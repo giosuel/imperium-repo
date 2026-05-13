@@ -270,6 +270,10 @@ internal class ObjectManager : ImpLifecycleObject
             loadedEntityNames.Add(parent.enemyName);
         }
 
+        if(StatsManager.instance.itemDictionary.Count == 0){
+            StatsManager.instance.LoadItemsFromFolder();
+        }
+
         var allItems = StatsManager.instance.itemDictionary.Values.Select(x => x.prefab).OrderBy(x => x.PrefabName).ToList();
         var allLevels = Resources.FindObjectsOfTypeAll<Level>()
             .Where(level => !ImpConstants.LevelBlacklist.Contains(level.NarrativeName))
