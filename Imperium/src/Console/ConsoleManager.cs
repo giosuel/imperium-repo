@@ -26,6 +26,7 @@ internal class ConsoleManager : ImpLifecycleObject
     private void Awake()
     {
         RegisterLevelCommands();
+        RegisterSpawnCommands();
         Imperium.ObjectManager.CurrentLevelObjectsChanged += RegisterSpawnCommands;
     }
 

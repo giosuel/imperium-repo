@@ -141,7 +141,11 @@ internal class ObjectManager : ImpLifecycleObject
         }
     }
 
-    protected override void OnLevelLoad() => RefreshLevelObjects();
+    protected override void OnLevelLoad()
+    {
+        FetchGlobalSpawnLists();
+        RefreshLevelObjects();
+    }
 
     protected override void OnPlayersUpdate(int playersConnected) => FetchPlayers();
 
@@ -270,7 +274,29 @@ internal class ObjectManager : ImpLifecycleObject
             loadedEntityNames.Add(parent.enemyName);
         }
 
-        var allItems = StatsManager.instance.itemDictionary.Values.Select(x => x.prefab).OrderBy(x => x.PrefabName).ToList();
+        var resourceItems = Resources.FindObjectsOfTypeAll<Item>().Where(item => item != null).ToList();
+        var statsManagerItems = StatsManager.instance
+            ? StatsManager.instance.itemDictionary.Values.Where(item => item != null).ToList()
+            : [];
+        var shopItems = ShopManager.instance
+            ? ShopManager.instance.potentialItems
+                .Concat(ShopManager.instance.potentialItemConsumables)
+                .Concat(ShopManager.instance.potentialItemHealthPacks)
+                .Concat(ShopManager.instance.potentialItemUpgrades)
+                .Concat(ShopManager.instance.potentialSecretItems.Values.SelectMany(items => items))
+                .Where(item => item != null)
+                .ToList()
+            : [];
+
+        var allItems = resourceItems
+            .Concat(statsManagerItems)
+            .Concat(shopItems)
+            .Select(item => item.prefab)
+            .Where(prefab => prefab != null && prefab.IsValid())
+            .GroupBy(prefab => prefab.PrefabName)
+            .Select(group => group.First())
+            .OrderBy(prefab => prefab.PrefabName)
+            .ToList();
         var allLevels = Resources.FindObjectsOfTypeAll<Level>()
             .Where(level => !ImpConstants.LevelBlacklist.Contains(level.NarrativeName))
             .OrderBy(x => x.NarrativeName).ToList();
