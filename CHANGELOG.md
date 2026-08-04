@@ -1,5 +1,11 @@
 # Changelog
 
+## Imperium v0.5.0 - Bug Fixes
+
+### Bug Fixes
+
+-  Fixed items sometimes not being spawnable via the F2 menu.
+
 ## Imperium v0.4.0 - Compatibility with Cosmetics Update
 
 ### Bug Fixes
