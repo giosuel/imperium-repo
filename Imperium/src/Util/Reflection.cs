@@ -2,6 +2,8 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 #endregion
@@ -85,5 +87,42 @@ internal static class Reflection
     {
         var field = typeof(T).GetField(fieldName, bindingFlags)!;
         field.SetValue(target, field.GetValue(source));
+    }
+
+    private static readonly Dictionary<(Type, string, int), MethodInfo> optionalMethodCache = new();
+
+    /// <summary>
+    ///     Invokes a game method that gained new optional parameters in a later game version (e.g. v0.5.0).
+    ///     A direct call compiled against older game libraries throws a MissingMethodException there, so the
+    ///     method is looked up by name and any trailing optional parameters are filled with their defaults.
+    /// </summary>
+    internal static void InvokeWithOptionals<T>(
+        T instance,
+        string methodName,
+        params object[] parameters
+    )
+    {
+        var key = (typeof(T), methodName, parameters.Length);
+        if (!optionalMethodCache.TryGetValue(key, out var method))
+        {
+            method = typeof(T)
+                .GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                .Where(m => m.Name == methodName)
+                .Select(m => (method: m, args: m.GetParameters()))
+                .Where(m => m.args.Length >= parameters.Length && m.args.Skip(parameters.Length).All(p => p.IsOptional))
+                .OrderBy(m => m.args.Length)
+                .Select(m => m.method)
+                .First();
+            optionalMethodCache[key] = method;
+        }
+
+        var methodParameters = method.GetParameters();
+        var arguments = new object[methodParameters.Length];
+        for (var i = 0; i < arguments.Length; i++)
+        {
+            arguments[i] = i < parameters.Length ? parameters[i] : methodParameters[i].DefaultValue;
+        }
+
+        method.Invoke(instance, arguments);
     }
 }

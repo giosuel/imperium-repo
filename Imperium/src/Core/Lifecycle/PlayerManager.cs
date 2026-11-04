@@ -147,7 +147,7 @@ internal class PlayerManager : ImpLifecycleObject
     {
         if (request.PlayerId == RepoSteamNetwork.CurrentSteamId)
         {
-            Imperium.Player.Spawn(request.Destination, Quaternion.identity);
+            Reflection.InvokeWithOptionals(Imperium.Player, nameof(PlayerAvatar.Spawn), request.Destination, Quaternion.identity);
             Imperium.Player.rb.position = request.Destination;
             PlayerController.instance.rb.position = request.Destination;
         }

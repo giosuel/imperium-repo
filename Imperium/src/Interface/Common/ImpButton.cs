@@ -63,7 +63,10 @@ public abstract class ImpButton
 
             if (Imperium.Settings.Preferences.PlaySounds.Value && playClickSound)
             {
-                MenuManager.instance.MenuEffectClick(MenuManager.MenuClickEffectType.Tick, null, 1f, 1f, soundOnly: true);
+                Util.Reflection.InvokeWithOptionals(
+                    MenuManager.instance, nameof(MenuManager.MenuEffectClick),
+                    MenuManager.MenuClickEffectType.Tick, null, 1f, 1f, true
+                );
             }
         });
 
