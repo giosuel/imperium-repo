@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using TMPro;
 using UnityEngine;
 
 #endregion
@@ -115,7 +116,52 @@ internal static class ImpAssets
             return false;
         }
 
+        RebuildFontAssets();
+
         return true;
+    }
+
+    /// <summary>
+    ///     The asset bundle is built with Unity 2022, but the game runs on Unity 6 since v0.5.0. The bundled TMP font
+    ///     assets render as solid boxes there, so they are rebuilt from their source fonts with the game's TMP.
+    /// </summary>
+    private static void RebuildFontAssets()
+    {
+        if (!Application.unityVersion.StartsWith("6")) return;
+
+        var replacements = new Dictionary<TMP_FontAsset, TMP_FontAsset>();
+        var textCount = 0;
+
+        foreach (var prefab in ImperiumAssets.LoadAllAssets<GameObject>())
+        {
+            foreach (var text in prefab.GetComponentsInChildren<TMP_Text>(true))
+            {
+                if (!text.font) continue;
+
+                if (!replacements.TryGetValue(text.font, out var replacement))
+                {
+                    replacement = text.font.sourceFontFile
+                        ? TMP_FontAsset.CreateFontAsset(text.font.sourceFontFile)
+                        : null;
+                    if (replacement)
+                    {
+                        replacement.name = text.font.name;
+                    }
+                    else
+                    {
+                        replacement = TMP_Settings.defaultFontAsset;
+                    }
+
+                    replacements[text.font] = replacement;
+                }
+
+                if (!replacement || replacement == text.font) continue;
+                text.font = replacement;
+                textCount++;
+            }
+        }
+
+        Imperium.IO.LogInfo($"[INIT] Rebuilt {replacements.Count} font assets for {textCount} text components.");
     }
 
     private static bool LoadAssets()
